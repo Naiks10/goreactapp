@@ -10,7 +10,7 @@ import (
 	"github.com/zhexuany/wordGenerator"
 )
 
-var s string
+var sessionAdminKey string
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./build/index.html")
@@ -23,7 +23,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
-func indesHandler(w http.ResponseWriter, r *http.Request) {
+func subdomainIndexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./build/login.html")
 	if err != nil {
 		fmt.Println("IndexHandler status : Error => ", err)
@@ -35,7 +35,7 @@ func indesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func postHandler(w http.ResponseWriter, r *http.Request) {
-	if s == r.FormValue("key") {
+	if sessionAdminKey == r.FormValue("key") {
 		t, err := template.ParseFiles("./build/adminpanel.html")
 		if err != nil {
 			fmt.Println("IndexHandler status : Error => ", err)
@@ -47,19 +47,6 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintf(w, "Пользователь не авторизован")
 	}
-}
-
-type handler struct{}
-
-func (_ handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("./build/login.html")
-	if err != nil {
-		fmt.Println("IndexHandler status : Error => ", err)
-	} else {
-		fmt.Println("IndexHandler status : OK")
-	}
-
-	t.Execute(w, nil)
 }
 
 func main() {
@@ -75,16 +62,16 @@ func main() {
 
 	admin := r.Host("admin.localhost:1012").Subrouter()
 
-	admin.HandleFunc("/", indesHandler)
+	admin.HandleFunc("/", subdomainIndexHandler)
 	admin.HandleFunc("/login", postHandler).Methods("POST")
 
 	//r.HandleFunc("/accounts", functions.Accounts).Methods("GET")
 	routes.Register(r)
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./build/")))
 
-	s = wordGenerator.GetWord(128)
+	sessionAdminKey = wordGenerator.GetWord(128)
 
-	fmt.Println(s)
+	fmt.Println("session admin key => ", sessionAdminKey)
 
 	r.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":"+port, r)
