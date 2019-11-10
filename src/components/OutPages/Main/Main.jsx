@@ -1,0 +1,122 @@
+import React from "react"
+
+import MainPageElement from "./MainPageElement"
+
+import { Link } from "react-router-dom"
+
+import Helmet from "react-helmet"
+
+import { Container, Row, Col, Jumbotron, Button } from "react-bootstrap"
+
+class Main extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            back: 'background: linear-gradient(-90deg, rgba(219,219,219,1) 0%, rgba(255,255,255,1) 100%);'
+        }
+    }
+
+    render() {
+
+        var link = '/login'
+
+        if (localStorage.getItem('jwt') !== null) {
+            link = '/workspace'
+        }
+
+        return (
+            <Container style={styles.containerStyle}>
+                <Helmet bodyAttributes={{ style: this.state.back }} />
+                <div onMouseEnter={() => {
+                    this.setState({ back: 'background-color: #ffc107' })
+                }}
+                     onMouseLeave={()=> {
+                        this.setState({ back: 'background-color: whitesmoke' })
+                     }} className="bg-white" style={styles.containerStyle._mainPageStyle}>
+                    <Jumbotron className="bg-white">
+                        <div className="justify-content-md-center">
+                            <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/idea.png" width="200" height="200" />
+                        </div>
+                        <h1 style={{ marginTop: 45 }}>Пора осуществлять проекты!</h1>
+                        <p>
+                            Войдите или зарегистрируйтесь в системе, чтобы организовать свою мечту в мире реекламы и приложений.
+                        </p>
+                        <p>
+                            <Link to={link}>
+                                <Button variant="warning">Начать работы</Button>
+                            </Link>
+                        </p>
+                    </Jumbotron>
+                </div>
+                <div className="bg-white" style={styles.containerStyle._mainPageStyle} onMouseEnter={() => {
+                    this.setState({ back: 'background-color: #7c20d1' })}} onMouseLeave={()=> {
+                        this.setState({ back: 'background-color: whitesmoke' })
+                     }}>
+                    <Jumbotron className="bg-white">
+                        <div className="justify-content-md-center">
+                            <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/new.png" width="200" height="200" />
+                        </div>
+                        <h1 style={{ marginTop: 45 }}>Нужно узнать что-то новое?</h1>
+                        <p>
+                            Узнайте о последних нововведениях в проекте в отдельном разделе новостей
+                        </p>
+                        <p>
+                            <Link to="/p/news">
+                                <Button variant="purples">Узнать что-то новое</Button>
+                            </Link>
+                        </p>
+                    </Jumbotron>
+                </div>
+                <div className="bg-white" style={styles.containerStyle._mainPageStyle} onMouseEnter={() => {
+                    this.setState({ back: 'background-color: #28a745' })}} onMouseLeave={()=> {
+                        this.setState({ back: 'background-color: whitesmoke' })
+                     }}>
+                    <Jumbotron className="bg-white">
+                        <div className="justify-content-md-center">
+                            <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/faq.png" width="200" height="200" />
+                        </div>
+                        <h1 style={{ marginTop: 45 }}>А что это вообще и куда я попал?</h1>
+                        <p>
+                            Узнайте больше о данном проекте перейдя в одноимённый раздел
+                        </p>
+                        <p>
+                            <Link to="/p/about">
+                                <Button variant="success">О проекте</Button>
+                            </Link>
+                        </p>
+                    </Jumbotron>
+                </div>
+                <div className="bg-white" style={styles.containerStyle._mainPageStyle} onMouseEnter={() => {
+                    this.setState({ back: 'background-color: #2c6da1' })}} onMouseLeave={()=> {
+                        this.setState({ back: 'background-color: whitesmoke' })
+                     }}>
+                    <Jumbotron className="bg-white">
+                        <div className="justify-content-md-center">
+                            <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/code.png" width="200" height="200" />
+                        </div>
+                        <h1 style={{ marginTop: 45 }}>Мне понравилось! Хочу больше</h1>
+                        <p>
+                            Перейдите в раздел разработки и посмотрите как работает проект и какие технологии были использованы в проекте.
+                        </p>
+                        <p>
+                            <Button variant="primary">Разработка</Button>
+                        </p>
+                    </Jumbotron>
+                </div>
+            </Container>
+        )
+    }
+}
+
+const styles = {
+    containerStyle: {
+        marginTop: 20,
+        _mainPageStyle: {
+            boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+            borderRadius: 5,
+            marginBottom: 5,
+        }
+    }
+}
+
+export default Main;

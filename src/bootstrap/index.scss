@@ -1,0 +1,218 @@
+/* -------begin customization-------- */
+/* change the primary theme color to red */
+
+
+$btn-border-radius: 4px;
+
+$btn-border-width: 2px;
+
+$border-radius : 4px;
+
+$enable-gradients : false;
+
+$theme-colors: (
+  "primary": #2098D1, //329D9C
+  "purples": #6610f2
+);
+
+html, body {
+  height : 100%
+}
+
+body {
+    background-color: red;
+    transition: all 500ms linear 0s;
+}
+
+$newcolor : theme-color("danger");
+
+.BackMenuButton {
+  display: inline-block;
+  background-color: #34495e;
+  transition: all 200ms linear 0s;
+  width: 5.6rem;
+  height: 5.6rem;
+  cursor: pointer;
+}
+
+.BackMenuButton .col {
+  visibility: visible;
+  display: flex; 
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0ms linear 0s;
+  transition-delay: 0s;
+  font-size: 16pt;
+}
+
+.BackMenuButton img {
+  margin-top: 50%;
+  margin-left: 50%;
+  transition: all 200ms linear 0s;
+  transform: translate(-50%, -50%)
+}
+
+.BackMenuButton:hover {
+  background-color: #23384d;
+  transition: all 200ms linear 0s;
+  border-radius: 5px;
+  width: 270px;
+  height: 5.6rem;
+  //box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.BackMenuButton:hover .col {
+  visibility: visible;
+  color: whitesmoke;
+  position: relative;
+  transition: all 200ms linear 0s;
+  transition-delay: 0.2s;
+}
+
+.BackMenuButton:hover img {
+  margin-top: 50%;
+  margin-left: 60%;
+  transition: all 200ms linear 0s;
+}
+
+.MainMenuButton {
+  background-color: #34495e;
+  transition: all 200ms linear 0s;
+  width: 5.6rem;
+  height: 5.6rem;
+  cursor: pointer;
+}
+
+.MainMenuButton:hover {
+  background-color: #23384d;
+  transition: all 200ms linear 0s;
+  border-radius: 5px;
+}
+
+.MenuIMG {
+  margin-top: 50%;
+  margin-left: 50%;
+  transition: all 200ms linear 0s;
+  transform: translate(-50%, -50%)
+}
+
+.MenuIMG:hover {
+  margin-top: 50%;
+  margin-left: 60%;
+  transition: all 200ms linear 0s;
+}
+
+.back {
+  background-color: white;
+  transition: all 200ms linear 0s;
+  width: 5.6rem;
+  height: 5.6rem;
+}
+
+.back:hover {
+  background-color: white;
+  transition: all 200ms linear 0s;
+  border-radius: 5px;
+  width: 270px;
+  height: 5.6rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.MainButton {
+  background-color: white;
+  transition: all 100ms linear 0s;
+  cursor: pointer;
+}
+
+.MainButton:hover {
+  background-color: whitesmoke;
+  transition: all 100ms linear 0s;
+  border-radius: 0px;
+}
+
+.BackButton {
+  border-radius: 5px;
+  border-width: 3px;
+  width: 50px;
+  transition: all 300ms linear 0s;
+  height: 50px;
+  border-color: #4408d0;
+  background-color: transparent;
+}
+
+.def {
+  text-decoration: none
+}
+
+.BackButton:hover {
+  border-radius: 90px;
+  border-width: 3px;
+  width: 50px;
+  height: 50px;
+  border-color: #3207c9;
+  background-color: transparent;
+}
+
+.BackButton img {
+  position: relative;
+  margin-top: 75%;
+  margin-left: 50%;
+  width: 45px;
+  height: 45px;
+  transition: all 300ms linear 0s;
+  transform: translate(-50%, -50%)
+}
+
+.BackButton:hover img {
+  position: relative;
+  margin-top: 75%;
+  margin-left: 50%;
+  width: 35px;
+  height: 35px;
+  transform: translate(-50%, -50%);
+}
+
+
+
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.rotating {
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
+}
+
+
+.navbar { margin-bottom: 0 }
+/* -------end customization-------- */
+/* finally, import Bootstrap to set the changes! */
+@import "~bootstrap/scss/bootstrap.scss";
