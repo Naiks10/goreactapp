@@ -2,6 +2,7 @@ import React from "react"
 import MainNavigation from "./MainNavigation"
 import MainPage from "../OutPages/Main/Main"
 import NewsPage from "../OutPages/News/News"
+import DevelopmentPage from "../OutPages/Development/Development"
 import Helmet from "react-helmet"
 import AboutPage from "../OutPages/About/About"
 import { Route, Switch, HashRouter } from "react-router-dom"
@@ -23,7 +24,7 @@ class Main extends React.Component {
                     <Route path="/p/main" component={MainPage} />
                     <Route path="/p/news" component={NewsPage} />
                     <Route path="/p/about" component={AboutPage} />
-                    <Route path="/p/development" component={MainPage} />
+                    <Route path="/p/development" component={DevelopmentPage} />
                 </HashRouter>
             </div>
         )

@@ -30,9 +30,9 @@ class Main extends React.Component {
                 <div onMouseEnter={() => {
                     this.setState({ back: 'background-color: #ffc107' })
                 }}
-                     onMouseLeave={()=> {
+                    onMouseLeave={() => {
                         this.setState({ back: 'background-color: whitesmoke' })
-                     }} className="bg-white" style={styles.containerStyle._mainPageStyle}>
+                    }} className="bg-white" style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
                             <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/idea.png" width="200" height="200" />
@@ -49,9 +49,10 @@ class Main extends React.Component {
                     </Jumbotron>
                 </div>
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle} onMouseEnter={() => {
-                    this.setState({ back: 'background-color: #7c20d1' })}} onMouseLeave={()=> {
-                        this.setState({ back: 'background-color: whitesmoke' })
-                     }}>
+                    this.setState({ back: 'background-color: #7c20d1' })
+                }} onMouseLeave={() => {
+                    this.setState({ back: 'background-color: whitesmoke' })
+                }}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
                             <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/new.png" width="200" height="200" />
@@ -68,9 +69,10 @@ class Main extends React.Component {
                     </Jumbotron>
                 </div>
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle} onMouseEnter={() => {
-                    this.setState({ back: 'background-color: #28a745' })}} onMouseLeave={()=> {
-                        this.setState({ back: 'background-color: whitesmoke' })
-                     }}>
+                    this.setState({ back: 'background-color: #28a745' })
+                }} onMouseLeave={() => {
+                    this.setState({ back: 'background-color: whitesmoke' })
+                }}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
                             <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/faq.png" width="200" height="200" />
@@ -87,9 +89,10 @@ class Main extends React.Component {
                     </Jumbotron>
                 </div>
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle} onMouseEnter={() => {
-                    this.setState({ back: 'background-color: #2c6da1' })}} onMouseLeave={()=> {
-                        this.setState({ back: 'background-color: whitesmoke' })
-                     }}>
+                    this.setState({ back: 'background-color: #2c6da1' })
+                }} onMouseLeave={() => {
+                    this.setState({ back: 'background-color: whitesmoke' })
+                }}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
                             <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/code.png" width="200" height="200" />
@@ -99,7 +102,9 @@ class Main extends React.Component {
                             Перейдите в раздел разработки и посмотрите как работает проект и какие технологии были использованы в проекте.
                         </p>
                         <p>
-                            <Button variant="primary">Разработка</Button>
+                            <Link to="/p/development">
+                                <Button variant="primary">Разработка</Button>
+                            </Link>
                         </p>
                     </Jumbotron>
                 </div>

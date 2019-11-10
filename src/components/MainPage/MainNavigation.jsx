@@ -16,7 +16,7 @@ class MainNavigation extends React.Component {
                         <MainNavigationTabButton path="/p/main" text="Главная" />
                         <MainNavigationTabButton path="/p/news" text="Новости" />
                         <MainNavigationTabButton path="/p/about" text="О проекте" />
-                        <MainNavigationTabButton text="Разработка" />
+                        <MainNavigationTabButton path="/p/development" text="Разработка" />
                     </Row>
                 </Container>
             </div>
@@ -49,6 +49,7 @@ const styles = {
         paddingTop: 45,
         boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
         position : "sticky", 
+        zIndex: "999999",
         top : 0,
         _rowStyle: {
             height: 45,
