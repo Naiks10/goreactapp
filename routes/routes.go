@@ -4,13 +4,51 @@ import (
 	"fmt"
 	"goreactapp/database/functions"
 	"goreactapp/security"
+	"html/template"
+	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/zhexuany/wordGenerator"
 )
+
+var sessionAdminKey string
+
+func subdomainIndexHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("./build/login.html")
+	if err != nil {
+		fmt.Println("IndexHandler status : Error => ", err)
+	} else {
+		fmt.Println("IndexHandler status : OK")
+	}
+
+	t.Execute(w, nil)
+}
+
+func postHandler(w http.ResponseWriter, r *http.Request) {
+	if sessionAdminKey == r.FormValue("key") {
+		t, err := template.ParseFiles("./build/adminpanel.html")
+		if err != nil {
+			fmt.Println("IndexHandler status : Error => ", err)
+		} else {
+			fmt.Println("IndexHandler status : OK")
+		}
+
+		t.Execute(w, nil)
+	} else {
+		fmt.Fprintf(w, "Пользователь не авторизован")
+	}
+}
 
 func Register(r *mux.Router) {
 
 	//#--< GET >queries--#//
+	sessionAdminKey = wordGenerator.GetWord(128)
+
+	fmt.Println("session key for admin =>  | ", sessionAdminKey, " | ")
+
+	r.HandleFunc("/admin", subdomainIndexHandler)
+	r.HandleFunc("/admin/login", postHandler).Methods("POST")
+
 	r.Handle("/roles", security.JwtMiddleware.Handler(functions.Roles)).Methods("GET")
 	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET")
 	r.Handle("/orgs", security.JwtMiddleware.Handler(functions.Organizations)).Methods("GET")
