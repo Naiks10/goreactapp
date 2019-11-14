@@ -48,6 +48,7 @@ class ProjectsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
+                    <Button variant="success">Создать проект</Button>
                     <Button variant="primary">Обновить</Button>
                 </SearchContainer>
 
@@ -112,6 +113,7 @@ class WorkersView extends React.Component {
         return (
             <div>
                 <SearchContainer>
+                    <Button variant="success">Добавить сотрудника</Button>
                     <Button variant="primary">Обновить</Button>
                 </SearchContainer>
 
@@ -142,6 +144,7 @@ class ClientsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
+                    <Button variant="success">Добавить клиента</Button>
                     <Button variant="primary">Обновить</Button>
                 </SearchContainer>
 

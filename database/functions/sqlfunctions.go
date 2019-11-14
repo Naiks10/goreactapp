@@ -12,6 +12,8 @@ import (
 
 var db = database.DB()
 
+var pg = postgres.RunWith(db.DB)
+
 //#--ALL-SELECTIONS--#//
 
 func JsonGetAll(i, s interface{}, isEncode bool, w http.ResponseWriter, r *http.Request, query string, params ...interface{}) {
@@ -30,7 +32,6 @@ func JsonGetAll(i, s interface{}, isEncode bool, w http.ResponseWriter, r *http.
 
 var Roles = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	database.ExRole.Items = nil
-	//sql, args, err := squirrel.Select("*").From("roles").ToSql()
 	JsonGetAll(&database.ExRole, &database.ExRole.Items, true, w, r, SelectRoles)
 })
 
@@ -198,9 +199,7 @@ var CreateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query, args, _ := postgres.Insert("roles").Columns("role_name").Values(role.Name).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.Insert("roles").Columns("role_name").Values(role.Name).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -225,13 +224,11 @@ var CreateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Insert("users").
 		Columns("user_login", "user_password", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "user_role").
 		Values(user.UserLogin, user.UserPassword, user.UserSurname, user.UserName, user.UserMidname, user.UserBirthdate, user.UserPhone, user.UserMail, user.Roles.ID).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -256,13 +253,11 @@ var CreateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Insert("organisations").
 		Columns("organisation_name", "organisation_data").
 		Values(org.OrganizationName, org.OrganizationData).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -287,10 +282,8 @@ var CreateClient = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	query, args, _ := postgres.
-		Insert("clients").Values(cli.Users.UserLogin, cli.Organisations.OrganizationId).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.
+		Insert("clients").Values(cli.Users.UserLogin, cli.Organisations.OrganizationId).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -315,9 +308,7 @@ var CreateGroup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	query, args, _ := postgres.Insert("workgroups").Columns("workgroup_name").Values(wg.WorkGroupName).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.Insert("workgroups").Columns("workgroup_name").Values(wg.WorkGroupName).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -342,13 +333,11 @@ var CreateDeveloper = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Insert("developers").
 		Columns("developer_user_login", "workgroup_id", "is_general").
 		Values(dev.Users.UserLogin, dev.WorkGroups.ID, dev.IsGeneral).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -373,13 +362,11 @@ var CreateProject = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Insert("projects").
 		Columns("cost", "project_info", "project_workgroup_id", "project_status_id", "project_data", "client_user_login", "manager_user_login").
 		Values(pr.Cost, pr.ProjectInfo, pr.WorkGroups.ID, pr.ProjectStatuses.ID, pr.ProjectData, pr.Clients_dop.UserLogin, pr.Managers.UserLogin).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -404,9 +391,7 @@ var CreateManager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	query, args, _ := postgres.Insert("managers").Values(man.UserLogin).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.Insert("managers").Values(man.UserLogin).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -434,9 +419,7 @@ var UpdateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query, args, _ := postgres.Update("roles").Set("role_name", role.Name).Where("role_id = ?", params["id"]).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.Update("roles").Set("role_name", role.Name).Where("role_id = ?", params["id"]).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -465,7 +448,7 @@ var UpdateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Update("users").
 		Set("user_surname", user.UserSurname).
 		Set("user_name", user.UserName).
@@ -474,9 +457,7 @@ var UpdateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		Set("user_phone", user.UserPhone).
 		Set("user_email", user.UserMail).
 		Where("user_login = ?", params["login"]).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -506,14 +487,12 @@ var UpdateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Update("organisations").
 		Set("organisation_name", org.OrganizationName).
 		Set("organisation_data", org.OrganizationData).
 		Where("organisation_id = ?", params["id"]).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -544,9 +523,7 @@ var UpdateClients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 
 	fmt.Println(cli.Organisations.OrganizationId)
 
-	query, args, _ := postgres.Update("clients").Set("organisation_id", cli.Organisations.OrganizationId).Where("client_user_login = ?", params["login"]).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.Update("clients").Set("organisation_id", cli.Organisations.OrganizationId).Where("client_user_login = ?", params["login"]).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -575,9 +552,7 @@ var UpdateGroups = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	query, args, _ := postgres.Update("workgroups").Set("workgroup_name", wg.WorkGroupName).Where("workgroup_id = ?", params["id"]).ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+	res, er := pg.Update("workgroups").Set("workgroup_name", wg.WorkGroupName).Where("workgroup_id = ?", params["id"]).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -606,14 +581,12 @@ var UpdateDevelopers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Update("developers").
 		Set("workgroup_id", dev.WorkGroups.ID).
 		Set("is_general", dev.IsGeneral).
 		Where("developer_user_login = ?", params["login"]).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -642,7 +615,7 @@ var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	query, args, _ := postgres.
+	res, er := pg.
 		Update("projects").
 		Set("cost", pr.Cost).
 		Set("project_info", pr.ProjectInfo).
@@ -652,9 +625,7 @@ var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 		Set("client_user_login", pr.Clients_dop.UserLogin).
 		Set("manager_user_login", pr.Managers.UserLogin).
 		Where("project_id = ?", params["id"]).
-		ToSql()
-
-	res, er := db.ExecuteQueryNonResult(query, args)
+		Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -668,13 +639,13 @@ var DeleteRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("roles").Where("role_id = ?", params["id"]).ToSql()
-
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("roles").Where("role_id = ?", params["id"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -682,13 +653,13 @@ var DeleteUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("users").Where("user_login = ?", params["login"]).ToSql()
-
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("users").Where("user_login = ?", params["login"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -696,12 +667,13 @@ var DeleteOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("organisations").Where("organisation_id = ?", params["id"]).ToSql()
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("organisations").Where("organisation_id = ?", params["id"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -709,12 +681,13 @@ var DeleteClient = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("clients").Where("client_user_login = ?", params["login"]).ToSql()
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("clients").Where("client_user_login = ?", params["login"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -722,12 +695,13 @@ var DeleteGroup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("workgroups").Where("workgroup_id = ?", params["id"]).ToSql()
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("workgroups").Where("workgroup_id = ?", params["id"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -735,12 +709,13 @@ var DeleteDeveloper = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("developers").Where("developer_user_login = ?", params["login"]).ToSql()
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("developers").Where("developer_user_login = ?", params["login"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -748,12 +723,13 @@ var DeleteProject = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("projects").Where("project_id = ?", params["id"]).ToSql()
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("projects").Where("project_id = ?", params["id"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })
 
@@ -761,11 +737,12 @@ var DeleteManager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	query, args, _ := postgres.Delete("managers").Where("manager_user_login = ?", params["login"]).ToSql()
-	_, err := db.ExecuteQueryNonResult(query, args)
+	res, err := pg.Delete("managers").Where("manager_user_login = ?", params["login"]).Exec()
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	fmt.Println(res)
 
 })

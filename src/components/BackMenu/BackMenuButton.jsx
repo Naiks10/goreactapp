@@ -10,14 +10,19 @@ import { getRole } from "../Functions/Funcs"
 class MainMenuButton extends React.Component {
     constructor(props) {
         super(props)
+        this.state= {
+            size : "38"
+        }
     }
 
     render() {
         return (
-            <div className="MainMenuButton">
+            <div className="MainMenuButton" 
+                onMouseEnter={()=>{this.setState({size : "34"})}} 
+                onMouseLeave={()=>{this.setState({size : "38"})}}>
                 <Link className="def" style={{ textDecoration: "none" }} to="/">
                     <div style={{ width: "5.6rem", height: "5.6rem" }}>
-                        <img width="38" height="38" src="assets/img/users.png" />
+                        <img width={this.state.size} height={this.state.size} src="assets/img/menu.png" />
                     </div>
                 </Link>
             </div>

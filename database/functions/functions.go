@@ -1,10 +1,10 @@
 package functions
 
 import (
-	"github.com/Masterminds/squirrel"
+	"github.com/elgris/sqrl"
 )
 
-var postgres squirrel.StatementBuilderType = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
+var postgres = sqrl.StatementBuilder.PlaceholderFormat(sqrl.Dollar)
 
 var (
 	SelectRoles, _, _ = postgres.Select("*").From("roles").ToSql()
