@@ -3,6 +3,8 @@ package postgres
 import (
 	"database/sql"
 
+	_ "github.com/lib/pq"
+
 	"github.com/jmoiron/sqlx"
 
 	"fmt"
@@ -25,25 +27,25 @@ func (con *PostgreSQLConnection) ShowDrivers() {
 }
 
 func (con *PostgreSQLConnection) OpenConnection() (bool, error) {
-	var isnError bool
+	var isError bool
 	var what error
 
 	db, err := sqlx.Open(con.DriverName, con.ConnectionString)
 
 	if err != nil {
-		isnError, what = false, err
+		isError, what = true, err
 		fmt.Println(err)
 		defer func() {
 			con.DB = db
 			fmt.Println("database opened")
 		}()
 	} else {
-		isnError, what = true, err
+		isError, what = false, err
 		con.DB = db
 		fmt.Println("database opened")
 	}
 
-	return isnError, what
+	return isError, what
 }
 
 func (con *PostgreSQLConnection) ExecuteQueryNonResult(query string, args ...interface{}) (sql.Result, error) {

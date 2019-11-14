@@ -7,7 +7,7 @@ import (
 
 var mySiteDataBaseConnection postgres.PostgreSQLConnection
 
-func Inizialize(connection, driver string) {
+func Inizialize(connection, driver string) (bool, error) {
 
 	if connection != "" && driver != "" {
 		mySiteDataBaseConnection = postgres.PostgreSQLConnection{
@@ -23,6 +23,7 @@ func Inizialize(connection, driver string) {
 	isConnectedSuccessfully, err := mySiteDataBaseConnection.OpenConnection()
 	fmt.Println(isConnectedSuccessfully)
 	fmt.Println(err)
+	return isConnectedSuccessfully, err
 }
 
 func DB() *postgres.PostgreSQLConnection {
