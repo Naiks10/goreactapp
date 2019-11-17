@@ -30,7 +30,7 @@ func TestPostgreSQLConnection_GetConnectionString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.con.GetConnectionString(); got != tt.want {
+			if got, _ := tt.con.GetConnectionString(); got != tt.want {
 				t.Errorf("PostgreSQLConnection.GetConnectionString() = %v, want %v", got, tt.want)
 			}
 		})
