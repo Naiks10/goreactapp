@@ -1,16 +1,15 @@
 import React from "react"
 import { Button } from "react-bootstrap"
-import 
-{ 
-    ClientsTableModalView, 
-    ClientsTableModalEdit, 
-    ClientsTableModalDelete, 
-    ManagersTableModalView, 
-    ManagersTableModalEdit, 
-    ManagersTableModalDelete, 
-    DevelopersTableModalView, 
-    DevelopersTableModalEdit, 
-    DevelopersTableModalDelete, 
+import {
+    ClientsTableModalView,
+    ClientsTableModalEdit,
+    ClientsTableModalDelete,
+    ManagersTableModalView,
+    ManagersTableModalEdit,
+    ManagersTableModalDelete,
+    DevelopersTableModalView,
+    DevelopersTableModalEdit,
+    DevelopersTableModalDelete,
     ProjectsTableModalView
 } from "../Modals/Modals"
 
@@ -59,6 +58,7 @@ class TableButton extends React.Component {
                                 case "delete":
                                     return (
                                         <ClientsTableModalDelete
+                                            velt={this.props.velt}
                                             items={this.props.items}
                                             show={this.state.modalShow}
                                             onHide={() => this.setState({ modalShow: false })}
@@ -102,6 +102,7 @@ class TableButton extends React.Component {
                                 case "delete":
                                     return (
                                         <ManagersTableModalDelete
+                                            velt={this.props.velt}
                                             items={this.props.items}
                                             show={this.state.modalShow}
                                             onHide={() => this.setState({ modalShow: false })}
@@ -134,6 +135,7 @@ class TableButton extends React.Component {
                                 case "delete":
                                     return (
                                         <DevelopersTableModalDelete
+                                            velt={this.props.velt}
                                             items={this.props.items}
                                             show={this.state.modalShow}
                                             onHide={() => this.setState({ modalShow: false })}

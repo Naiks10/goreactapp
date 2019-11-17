@@ -34,7 +34,7 @@ class SearchContainer extends React.Component {
                     <div style={{ marginRight: 20 }}>
                         <Form.Control placeholder="Что ищем?" />
                     </div>
-                    <Button style={{ marginRight: 50 }} variant="outline-primary">Поиск</Button>
+                    <Button style={{ marginRight: 50 }} variant="outline-primary">Поиск <i class="far fa-search"></i></Button>
                     {React.Children.map(this.props.children, (child, i) => {
                         return (
                             <div className="animated fadeInRight" style={{marginRight : 15}}>

@@ -1,9 +1,12 @@
 import React from "react"
 import { Button, Row, Col, Modal, Form, Popover, OverlayTrigger, FormCheck } from "react-bootstrap"
 import Tass from "./Chart"
+import { OrgContext } from "../Data/Tables"
 import { getJWT } from "../Functions/Funcs"
 
 import "animate.css"
+
+var jwt = getJWT()
 
 export function ClientsTableModalView(props) {
     return (
@@ -294,7 +297,7 @@ export function ManagersTableModalView(props) {
     );
 }
 
-export class ClientsTableModalEdit extends React.Component {
+export class ClientsTableModalAdd extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -336,7 +339,7 @@ export class ClientsTableModalEdit extends React.Component {
         this.setState({ selectValue: e.target.value }, () => {
             s = this.state.selectValue;
             fetch("/clients/" + this.props.items.user.login, {
-                method: "put",
+                method: "post",
                 headers: {
                     'Authorization': `Bearer ${jwt}`,
                     'Content-Type': 'application/json'
@@ -350,6 +353,9 @@ export class ClientsTableModalEdit extends React.Component {
 
     render() {
         const { isLoaded, Orgs, error } = this.state
+        var login = React.createRef();
+        var password = React.createRef();
+        var password_check = React.createRef();
         var fstname = React.createRef();
         var midname = React.createRef();
         var lstname = React.createRef();
@@ -366,7 +372,7 @@ export class ClientsTableModalEdit extends React.Component {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Редактирование учётной записи <b>{this.props.items.user.login}</b>
+                        Создание учётной записи клиента
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -408,13 +414,28 @@ export class ClientsTableModalEdit extends React.Component {
                             </Form.Control>
                         </Col>
                     </Form.Group>
+                    <h5>Данные аккаунта</h5>
+                    <Form.Group>
+                        <Form.Label column sm="3">Логин</Form.Label>
+                        <Col sm="7">
+                            <Form.Control ref={login} placeholder="Логин" />
+                        </Col>
+                        <Form.Label column sm="3">Пароль</Form.Label>
+                        <Col sm="7">
+                            <Form.Control ref={password} placeholder="Придумайте пароль" />
+                        </Col>
+                        <Form.Label column sm="3">Пароль</Form.Label>
+                        <Col sm="7">
+                            <Form.Control ref={password_check} placeholder="Повторите пароль" />
+                        </Col>
+                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="warning" onClick={() => {
                         var jwt = getJWT()
-                        fetch("/users/" + this.props.items.user.login,
+                        fetch("/users",
                             {
-                                method: "put",
+                                method: "post",
                                 headers: {
                                     'Authorization': `Bearer ${jwt}`,
                                     'Content-Type': 'application/json'
@@ -424,8 +445,12 @@ export class ClientsTableModalEdit extends React.Component {
                                     midname: midname.current.value,
                                     surname: lstname.current.value,
                                     phone: phone.current.value,
+                                    mail: email.current.value,
                                     birthdate: birthdate.current.value,
                                 })
+                            })
+                            .then(() => {
+                                fetch("/clients")
                             })
                             .then(this.props.velt())
                             .then(this.props.onHide())
@@ -437,6 +462,175 @@ export class ClientsTableModalEdit extends React.Component {
         );
     }
 }
+
+export class ClientsTableModalEdit extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: null,
+            isLoaded: true,
+            SelectValue: '',
+            Orgs: [],
+        }
+    }
+    callThis = (e) => {
+        alert('1')
+        var jwt = getJWT()
+        var s = ''
+        this.setState({ selectValue: e.target.value }, () => {
+            s = this.state.selectValue;
+            fetch("/clients/" + this.props.items.user.login, {
+                method: "put",
+                headers: {
+                    'Authorization': `Bearer ${jwt}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    organisation: { id: s }
+                })
+            }).then(this.setState({ isLoaded: false }))
+        })
+    }
+
+    componentDidMount() {
+        fetch("/orgs", {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        Orgs: result.items
+                    })
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    render() {
+        const { isLoaded, Orgs, error } = this.state
+        var fstname = React.createRef();
+        var midname = React.createRef();
+        var lstname = React.createRef();
+        var phone = React.createRef();
+        var email = React.createRef();
+        var birthdate = React.createRef();
+        return (
+            <Modal
+                {...this.props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                {(() => {
+                    if (isLoaded) {
+                        return (
+                            <div>
+                                <Modal.Header closeButton>
+                                    <Modal.Title id="contained-modal-title-vcenter">
+                                        Редактирование учётной записи <b>{this.props.items.user.login}</b>
+                                    </Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <h5>Персональные данные</h5>
+                                    <Form.Group as={Col}>
+                                        <Form.Label column sm="2">Фамилия</Form.Label>
+                                        <Col sm="7">
+                                            <Form.Control ref={lstname} defaultValue={this.props.items.user.surname} />
+                                        </Col>
+                                        <Form.Label column sm="2">Имя</Form.Label>
+                                        <Col sm="7">
+                                            <Form.Control ref={fstname} defaultValue={this.props.items.user.name} />
+                                        </Col>
+                                        <Form.Label column sm="2">Отчество</Form.Label>
+                                        <Col sm="7">
+                                            <Form.Control ref={midname} defaultValue={this.props.items.user.midname} />
+                                        </Col>
+                                        <Form.Label column sm="2">Дата рождения</Form.Label>
+                                        <Col sm="7">
+                                            <Form.Control ref={birthdate} defaultValue={this.props.items.user.birthdate} />
+                                        </Col>
+                                        <Form.Label column sm="2">Телефон</Form.Label>
+                                        <Col sm="7">
+                                            <Form.Control ref={phone} defaultValue={this.props.items.user.phone} />
+                                        </Col>
+                                        <Form.Label column sm="2">E-mail</Form.Label>
+                                        <Col sm="7">
+                                            <Form.Control ref={email} type="email" placeholder="Email" defaultValue={this.props.items.user.mail} />
+                                        </Col>
+                                    </Form.Group>
+                                    <h5>Информация об организации</h5>
+                                    <Form.Group as={Col}>
+                                        <Form.Label column sm="3">Организация</Form.Label>
+                                        <Col sm="7">
+                                            <OrgContext.Consumer>
+                                                {context =>
+                                                    (
+                                                        <Form.Control as="select"
+                                                            defaultValue={this.props.items.organisation.id}
+                                                            onChange={() => {
+                                                                this.callThis()
+                                                            }}>
+                                                            {context.Orgs.map(item => (
+                                                                <option value={item.id}>{item.name}</option>
+                                                            ))}
+                                                        </Form.Control>
+                                                    )
+                                                }
+                                            </OrgContext.Consumer>
+                                        </Col>
+                                    </Form.Group>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="warning" onClick={() => {
+                                        var jwt = getJWT()
+                                        fetch("/users/" + this.props.items.user.login,
+                                            {
+                                                method: "put",
+                                                headers: {
+                                                    'Authorization': `Bearer ${jwt}`,
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({
+                                                    name: fstname.current.value,
+                                                    midname: midname.current.value,
+                                                    surname: lstname.current.value,
+                                                    phone: phone.current.value,
+                                                    mail: email.current.value,
+                                                    birthdate: birthdate.current.value,
+                                                })
+                                            })
+                                            .then(this.props.velt())
+                                            .then(this.props.onHide())
+                                    }}>Сохранить изменения</Button>
+                                    <Button variant="primary" onClick={() => { this.props.velt(); this.props.onHide() }}>Сохранить как копию</Button>
+                                    <Button variant="danger" onClick={() => { this.props.onHide() }}>Отменить и закрыть</Button>
+                                </Modal.Footer>
+                            </div>
+                        )
+                    } else {
+                        return (
+                            <Modal.Header closeButton>
+                                <Modal.Title id="contained-modal-title-vcenter">
+                                    ЗАГРУЗКА
+                                </Modal.Title>
+                            </Modal.Header>
+                        )
+                    }
+                })()}
+            </Modal>
+        );
+    }
+}
+
+ClientsTableModalEdit.contextType = OrgContext;
 
 export class DevelopersTableModalEdit extends React.Component {
     constructor(props) {
@@ -720,7 +914,21 @@ export function ClientsTableModalDelete(props) {
                 <h5>Удалить учётную запись <i>"{props.items.user.login}"</i>?</h5>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={props.onHide}>Удалить</Button>
+                <Button variant="danger" onClick={() => {
+                    fetch("/clients/" + props.items.user.login,
+                        {
+                            method: "delete",
+                            headers: {
+                                'Authorization': `Bearer ${jwt}`,
+                                'Content-Type': 'application/json'
+                            }
+
+                        }
+                    )
+                        .then(props.velt)
+                        .then(props.onHide)
+                }
+                }>Удалить</Button>
                 <Button variant="primary" onClick={props.onHide}>Отмена</Button>
             </Modal.Footer>
         </Modal>

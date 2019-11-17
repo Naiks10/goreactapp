@@ -1,8 +1,10 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { ClientsTable, ProjetcsTable, ManagersTable, DevelopersTable } from "../Data/Tables"
+import { ClientsTable, ProjetcsTable, ManagersTable, DevelopersTable, GroupsTable, OrgsTable } from "../Data/Tables"
 import { Button, Form, Col, Row, Container, Tab, Tabs } from "react-bootstrap"
 import { BodyContainer, SearchContainer } from "./BodyContainer"
+import "hover.css"
+import "../../fa/css/all.css"
 
 class MainNavigation extends React.Component {
     constructor(props) {
@@ -21,7 +23,7 @@ class MainNavigation extends React.Component {
                     <Row style={{ width: "100%" }}>
                         <Col className="d-flex align-items-center">
                             <div>
-                                <Link to="../" style={{ textDecoration: "none" }} className="btn btn-outline-primary"><b>НАЗАД</b></Link>
+                                <Link to="../" style={{ textDecoration: "none" }} className="btn btn-outline-primary hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> <b>НАЗАД</b></Link>
                             </div>
                         </Col>
                         <Col>
@@ -48,8 +50,8 @@ class ProjectsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success">Создать проект</Button>
-                    <Button variant="primary">Обновить</Button>
+                    <Button variant="success" className="hvr-icon-wobble-vertical">Создать проект <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button variant="primary" className="hvr-icon-spin">Обновить <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
@@ -90,7 +92,7 @@ class MessagesView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button style={{ marginRight: 50 }} variant="primary">Написать новое сообщение</Button>
+                    <Button style={{ marginRight: 50 }} variant="primary" className="hvr-icon-wobble-vertical">Написать новое сообщение <i className="fal fa-plus hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
@@ -113,20 +115,20 @@ class WorkersView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success">Добавить сотрудника</Button>
-                    <Button variant="primary">Обновить</Button>
+                    <Button variant="success" className="hvr-icon-wobble-vertical">Добавить сотрудника <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button variant="primary" className="hvr-icon-spin">Обновить <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
                     <Tabs variant="pills" defaultActiveKey="managers" id="uncontrolled-tab-example">
-                        <Tab eventKey="managers" title="Менеджеры">
+                        <Tab eventKey="managers" title={<a>Менеджеры <i class="fas fa-user-tie"></i></a>}>
                             <ManagersTable />
                         </Tab>
-                        <Tab eventKey="devs" title="Разработчики">
+                        <Tab eventKey="devs" title={<a>Разработчики <i class="far fa-user-hard-hat"></i></a>}>
                             <DevelopersTable />
                         </Tab>
-                        <Tab eventKey="groups" title="Группы">
-                            
+                        <Tab eventKey="groups" title={<a>Группы <i class="fas fa-user-friends"></i></a>}>
+                            <GroupsTable />
                         </Tab>
                     </Tabs>
                 </BodyContainer>
@@ -144,12 +146,19 @@ class ClientsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success">Добавить клиента</Button>
-                    <Button variant="primary">Обновить</Button>
+                    <Button variant="success" className="hvr-icon-wobble-vertical">Добавить клиента <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button variant="primary" className="hvr-icon-spin">Обновить <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
-                    <ClientsTable />
+                    <Tabs variant="pills" defaultActiveKey="clients" id="uncontrolled-tab-example">
+                        <Tab eventKey="clients" title={<a>Клиенты <i class="fas fa-user-friends"></i></a>}>
+                            <ClientsTable />
+                        </Tab>
+                        <Tab eventKey="orgs" title={<a>Организации <i class="fas fa-building"></i></a>}>
+                            <OrgsTable />
+                        </Tab>
+                    </Tabs>
                 </BodyContainer>
             </div>
         )

@@ -42,6 +42,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 func Register(r *mux.Router) {
 
 	//#--< GET >queries--#//
+
 	sessionAdminKey = wordGenerator.GetWord(128)
 
 	fmt.Println("session key for admin =>  | ", sessionAdminKey, " | ")

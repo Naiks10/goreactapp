@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "css-loader": "^3.2.0",
     "style-loader": "^1.0.0"
   }

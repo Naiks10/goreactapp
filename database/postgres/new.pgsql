@@ -17,7 +17,8 @@ CREATE TABLE users (
     user_birthdate  VARCHAR(10) NOT NULL,
     user_phone      VARCHAR(11) NOT NULL,
     user_email      VARCHAR(50) NOT NULL, 
-    user_role       INTEGER REFERENCES roles(role_id)    
+    user_role       INTEGER REFERENCES roles(role_id),   
+    user_logical_delete BOOLEAN DEFAULT FALSE
 );
 
 INSERT INTO users (

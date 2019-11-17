@@ -1,5 +1,5 @@
 import React from "react"
-import { Table, Container, Row, Spinner, Form } from "react-bootstrap"
+import { Table, Container, Row, Spinner, Form, Button } from "react-bootstrap"
 import TableButton from "./TableButton"
 import { getJWT } from "../Functions/Funcs"
 
@@ -10,10 +10,12 @@ class ClientsTable extends React.Component {
         super(props)
         this.state = {
             error: null,
+            nensy: 'Hello World',
             isLoaded: false,
             modalShow: false,
             setModalShow: false,
             Items: [],
+            Orgs: [],
         }
         this.updateMethod = this.updateMethod.bind(this)
     }
@@ -41,10 +43,30 @@ class ClientsTable extends React.Component {
                     });
                 }
             )
+            .then(
+                fetch("/orgs", {
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`
+                    }
+                })
+                    .then(res => res.json())
+                    .then(
+                        (result) => {
+                            this.setState({
+                                Orgs: result.items
+                            })
+                        },
+                        (error) => {
+                            this.setState({
+                                isLoaded: true,
+                                error
+                            });
+                        }
+                    ))
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if ( !_.isEqual(prevState.Items, this.state.Items) ) {
+        if (!_.isEqual(prevState.Items, this.state.Items)) {
             this.updateMethod()
         }
     }
@@ -55,6 +77,7 @@ class ClientsTable extends React.Component {
 
     render() {
         const { error, isLoaded, Items } = this.state;
+        const Awes = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -62,42 +85,44 @@ class ClientsTable extends React.Component {
         } else {
             return (
                 <div style={{ marginRight: "20px" }}>
-                    <Table striped hover responsive>
-                        <thead style={{ borderRadius: 30 }} className="text-white bg-primary">
-                            <tr>
-                                <th style={styles.colStyle} scope="col">Логин</th>
-                                <th style={styles.colStyle} scope="col">Имя</th>
-                                <th style={styles.colStyle} scope="col">Фамилия</th>
-                                <th style={styles.colStyle} scope="col">Отчество</th>
-                                <th style={styles.colStyle} scope="col">Телефон</th>
-                                <th style={styles.colStyle} scope="col">E-mail</th>
-                                <th style={styles.colStyle} scope="col">Организация</th>
-                                <th style={styles.colStyle} scope="col">Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Items.map(item => (
+                    <OrgContext.Provider value={Awes}>
+                        <Table striped hover responsive>
+                            <thead style={{ borderRadius: 30 }} className="text-white bg-primary">
                                 <tr>
-                                    <th style={styles.rowStyle} scope="row">{item.user.login}</th>
-                                    <td style={styles.rowStyle}>{item.user.name}</td>
-                                    <td style={styles.rowStyle}>{item.user.surname}</td>
-                                    <td style={styles.rowStyle}>{item.user.midname}</td>
-                                    <td style={styles.rowStyle}>{item.user.phone}</td>
-                                    <td style={styles.rowStyle}>{item.user.mail}</td>
-                                    <td style={styles.rowStyle}>{item.organisation.name}</td>
-                                    <td style={styles.actionsStyle}>
-                                        <Container fluid style={{ minWidth: 350 }}>
-                                            <Row className="justify-content-md-center">
-                                                <TableButton text="Просмотр" group="clients" type="info" variant="primary" items={item} />
-                                                <TableButton velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Редактировать" group="clients" type="edit" variant="warning" items={item} />
-                                                <TableButton text="Удалить" group="clients" type="delete" variant="danger" items={item} />
-                                            </Row>
-                                        </Container>
-                                    </td>
+                                    <th style={styles.colStyle} scope="col">Логин</th>
+                                    <th style={styles.colStyle} scope="col">Имя</th>
+                                    <th style={styles.colStyle} scope="col">Фамилия</th>
+                                    <th style={styles.colStyle} scope="col">Отчество</th>
+                                    <th style={styles.colStyle} scope="col">Телефон</th>
+                                    <th style={styles.colStyle} scope="col">E-mail</th>
+                                    <th style={styles.colStyle} scope="col">Организация</th>
+                                    <th style={styles.colStyle} scope="col">Действия</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                            </thead>
+                            <tbody>
+                                {Items.map(item => (
+                                    <tr>
+                                        <th style={styles.rowStyle} scope="row">{item.user.login}</th>
+                                        <td style={styles.rowStyle}>{item.user.name}</td>
+                                        <td style={styles.rowStyle}>{item.user.surname}</td>
+                                        <td style={styles.rowStyle}>{item.user.midname}</td>
+                                        <td style={styles.rowStyle}>{item.user.phone}</td>
+                                        <td style={styles.rowStyle}>{item.user.mail}</td>
+                                        <td style={styles.rowStyle}>{item.organisation.name}</td>
+                                        <td style={styles.actionsStyle}>
+                                            <Container fluid style={{ minWidth: 350 }}>
+                                                <Row className="justify-content-md-center">
+                                                    <TableButton text="Просмотр" group="clients" type="info" variant="primary" items={item} />
+                                                    <TableButton velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Редактировать" group="clients" type="edit" variant="warning" items={item} />
+                                                    <TableButton velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Удалить" group="clients" type="delete" variant="danger" items={item} />
+                                                </Row>
+                                            </Container>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </OrgContext.Provider>
                 </div>
             );
         }
@@ -147,7 +172,7 @@ class ProjetcsTable extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if ( !_.isEqual(prevState.Items, this.state.Items) ) {
+        if (!_.isEqual(prevState.Items, this.state.Items)) {
             this.updateMethod()
         }
     }
@@ -192,6 +217,187 @@ class ProjetcsTable extends React.Component {
                                         <Container fluid style={{ minWidth: 350 }}>
                                             <Row className="justify-content-md-center">
                                                 <TableButton text="Просмотр состояния проекта" group="projects" type="info" variant="primary" items={item} />
+                                                <Button variant="warning">Прогресс проекта</Button>
+                                            </Row>
+                                        </Container>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+            );
+        }
+    }
+}
+
+
+class GroupsTable extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: null,
+            isLoaded: false,
+            modalShow: false,
+            setModalShow: false,
+            Items: [],
+        }
+        this.updateMethod = this.updateMethod.bind(this)
+    }
+
+    updateMethod() {
+        var jwt = getJWT()
+
+        fetch("/groups", {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        Items: result.items
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!_.isEqual(prevState.Items, this.state.Items)) {
+            this.updateMethod()
+        }
+    }
+
+    componentDidMount() {
+        this.updateMethod()
+    }
+
+    render() {
+        const { error, isLoaded, Items } = this.state;
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        } else if (!isLoaded) {
+            return <div>Loading...</div>;
+        } else {
+            return (
+                <div style={{ marginRight: "20px" }}>
+                    <Table striped hover responsive>
+                        <thead style={{ borderRadius: 30 }} className="text-white bg-primary">
+                            <tr>
+                                <th style={styles.colStyle} scope="col">Код</th>
+                                <th style={styles.colStyle} scope="col">Наименование</th>
+                                <th style={styles.colStyle} scope="col">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Items.map(item => (
+                                <tr>
+                                    <th style={styles.rowStyle} scope="row">{item.id}</th>
+                                    <td style={styles.rowStyle}>{item.name}</td>
+                                    <td style={styles.actionsStyle}>
+                                        <Container fluid style={{ minWidth: 350 }}>
+                                            <Row className="justify-content-md-center">
+                                                <Button style={styles.buttonStyle} variant="primary">Состав группы</Button>
+                                                <Button style={styles.buttonStyle} variant="success">Назначить проект</Button>
+                                                <Button style={styles.buttonStyle} variant="warning">Назначить управляющего</Button>
+                                                <Button style={styles.buttonStyle} variant="outline-danger">Расформировать группу</Button>
+                                            </Row>
+                                        </Container>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+            );
+        }
+    }
+}
+
+class OrgsTable extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: null,
+            isLoaded: false,
+            modalShow: false,
+            setModalShow: false,
+            Items: [],
+        }
+        this.updateMethod = this.updateMethod.bind(this)
+    }
+
+    updateMethod() {
+        var jwt = getJWT()
+
+        fetch("/orgs", {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        Items: result.items
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!_.isEqual(prevState.Items, this.state.Items)) {
+            this.updateMethod()
+        }
+    }
+
+    componentDidMount() {
+        this.updateMethod()
+    }
+
+    render() {
+        const { error, isLoaded, Items } = this.state;
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        } else if (!isLoaded) {
+            return <div>Loading...</div>;
+        } else {
+            return (
+                <div style={{ marginRight: "20px" }}>
+                    <Table striped hover responsive>
+                        <thead style={{ borderRadius: 30 }} className="text-white bg-primary">
+                            <tr>
+                                <th style={styles.colStyle} scope="col">Код</th>
+                                <th style={styles.colStyle} scope="col">Наименование</th>
+                                <th style={styles.colStyle} scope="col">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Items.map(item => (
+                                <tr>
+                                    <th style={styles.rowStyle} scope="row">{item.id}</th>
+                                    <td style={styles.rowStyle}>{item.name}</td>
+                                    <td style={styles.actionsStyle}>
+                                        <Container fluid style={{ minWidth: 350 }}>
+                                            <Row className="justify-content-md-center">
+                                                <Button style={styles.buttonStyle} variant="primary">Просмотр</Button>
+                                                <Button style={styles.buttonStyle} variant="warning">Редактировать</Button>
+                                                <Button style={styles.buttonStyle} variant="danger">Удалить организацию</Button>
                                             </Row>
                                         </Container>
                                     </td>
@@ -248,7 +454,7 @@ class ManagersTable extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if ( !_.isEqual(prevState.Items, this.state.Items) ) {
+        if (!_.isEqual(prevState.Items, this.state.Items)) {
             this.updateMethod()
         }
     }
@@ -349,7 +555,7 @@ class DevelopersTable extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if ( !_.isEqual(prevState.Items, this.state.Items) ) {
+        if (!_.isEqual(prevState.Items, this.state.Items)) {
             this.updateMethod()
         }
     }
@@ -425,7 +631,13 @@ const styles = {
         maxWidth: 400,
         verticalAlign: "middle",
         textAlign: "center"
+    },
+    buttonStyle: {
+        marginLeft: 5,
+        marginRight: 5
     }
 }
 
-export { ClientsTable, ProjetcsTable, ManagersTable, DevelopersTable };
+const OrgContext = React.createContext();
+
+export { ClientsTable, ProjetcsTable, ManagersTable, DevelopersTable, OrgContext, GroupsTable, OrgsTable };

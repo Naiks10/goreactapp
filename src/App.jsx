@@ -4,11 +4,10 @@ import { getRole } from "./components/Functions/Funcs"
 
 import MainPage from './components/MainPage/MainPage'
 import BackMenu from './components/BackMenu/BackMenu'
-import { MainMenuButton, BackMenuButton, NewPage } from './components/BackMenu/BackMenuButton'
+import { Auth } from './components/Auth/Auth'
+import { MainMenuButton, BackMenuButton } from './components/BackMenu/BackMenuButton'
 import { ProjectsView, ClientsView, WorkersView, SettingsView, MessagesView, MainNavigation } from './components/BodyElements/BodyPanel'
 import { Switch, Route, HashRouter, Redirect } from 'react-router-dom'
-
-
 
 
 const Projects_View = () => (
@@ -36,7 +35,7 @@ const Settings_View = () => (
 )
 
 const LoginView = () => (
-  <NewPage />
+  <Auth />
 )
 
 function MainView() {
@@ -71,6 +70,16 @@ function MainView() {
             )
             break;
           case '3':
+            return (
+              <BackMenu>
+                <MainMenuButton />
+                <BackMenuButton path="/projects" text="Проекты" src="assets/img/orders.png" />
+                <BackMenuButton path="/messages" text="Сообщения" src="assets/img/messages.png" />
+                <BackMenuButton path="/settings" text="Настройки" src="assets/img/options.png" />
+              </BackMenu>
+            )
+            break;
+          case '4':
             return (
               <BackMenu>
                 <MainMenuButton />

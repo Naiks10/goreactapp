@@ -18,8 +18,20 @@ type PostgreSQLConnection struct {
 	DB               *sqlx.DB
 }
 
-func (con *PostgreSQLConnection) GetConnectionString() string {
-	return con.ConnectionString
+type Error struct {
+	What string
+}
+
+func (err *Error) Error() string {
+	return fmt.Sprintf(err.What)
+}
+
+func (con *PostgreSQLConnection) GetConnectionString() (string, error) {
+	if con.ConnectionString != "" {
+		return con.ConnectionString, nil
+	} else {
+		return con.ConnectionString, &Error{What: "ConnectionString is empty"}
+	}
 }
 
 func (con *PostgreSQLConnection) ShowDrivers() {

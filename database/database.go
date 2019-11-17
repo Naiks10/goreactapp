@@ -20,6 +20,7 @@ func Inizialize(connection, driver string) (bool, error) {
 			DriverName:       "pgx",
 		}
 	}
+
 	isConnectedSuccessfully, err := mySiteDataBaseConnection.OpenConnection()
 	fmt.Println(isConnectedSuccessfully)
 	fmt.Println(err)
