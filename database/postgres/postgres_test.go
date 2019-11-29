@@ -7,20 +7,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
+//#--TESTS--#//
 func TestPostgreSQLConnection_GetConnectionString(t *testing.T) {
 	tests := []struct {
 		name string
 		con  *PostgreSQLConnection
 		want string
 	}{
-		{
+		{ //#=> Test №1 - | correct connection |
 			name: "test1",
 			con: &PostgreSQLConnection{
 				ConnectionString: "host=localhost port=5432 password=12345",
 			},
 			want: "host=localhost port=5432 password=12345",
 		},
-		{
+		{ //#=> Test №2 - | non-correct connection |
 			name: "test2",
 			con: &PostgreSQLConnection{
 				ConnectionString: "host=localhost user=admin password=123",

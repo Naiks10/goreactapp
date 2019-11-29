@@ -2,19 +2,31 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import {
-  HighchartsChart, Chart, withHighcharts, XAxis, YAxis, Title, Subtitle, Legend, LineSeries
+  HighchartsChart, Chart, withHighcharts, XAxis, YAxis, Title, Subtitle, Legend, LineSeries, Annotation, Tooltip
 } from 'react-jsx-highcharts';
 
 const plotOptions = {
-  series: {
     series: {
-        pointStart: Date.UTC(2019, 0, 1),
-        pointInterval: 24 * 3600 * 1000
-    }
-  }
+      pointStart: Date.UTC(2019, 1, 1, 0, 0, 0),
+      pointInterval: 3600000 * 24, // one hour
+    },
 };
 
-const Tass = () => (
+//#--get-data-func--#//
+
+function getData(arr, value) {
+  var self = ''
+  arr.forEach((item, i) => {
+    if (item['name'] == value) {
+      self = item['desc']
+    }
+  })
+  return self
+}
+
+//#--Chart-class--#//
+
+const Tass = (props) => (
   <div className="justify-content-md-center">
     <HighchartsChart plotOptions={plotOptions}>
       <Chart />
@@ -23,13 +35,30 @@ const Tass = () => (
 
       <Subtitle>На основе данных исполнительной группы</Subtitle>
 
-      <XAxis>
+      <XAxis type="datetime" id="xas">
         <XAxis.Title>Время (д.)</XAxis.Title>
       </XAxis>
 
-      <YAxis max="100">
+      <Tooltip hideDelay={250} className="col" shape="square" formatter={function () {
+        var date = new Date(this.x)
+        var options = {
+          month: 'long',
+          day: 'numeric'
+        };
+        return (
+        `<div class="col">
+          <ol class="list-group">
+            <li class="list-group-item"><u>День</u> : <b> ${date.toLocaleString("ru", options)} </b>;</li><br/>
+            <li class="list-group-item"><u>Процент выполнения</u> : <b> ${this.y} </b>;</li><br/>
+            <li class="list-group-item"><u>Заметка</u> : ${getData(props.data, this.y)}</li><br/>
+          </ol>
+        </div>`
+        );
+      }} />
+
+      <YAxis id="yas" max="100">
         <YAxis.Title>Процент выполнения работы (%)</YAxis.Title>
-        <LineSeries name="Installation" data={[5, 10, 15, 20, 25, 35, 40, 55, 60, 65, 75, 90, 100]} />
+        <LineSeries name="Devs" data={props.data.map(result => result.name)} />
       </YAxis>
     </HighchartsChart>
   </div>

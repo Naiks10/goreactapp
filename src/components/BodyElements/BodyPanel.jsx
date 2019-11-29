@@ -3,8 +3,11 @@ import { Link } from "react-router-dom"
 import { ClientsTable, ProjetcsTable, ManagersTable, DevelopersTable, GroupsTable, OrgsTable } from "../Data/Tables"
 import { Button, Form, Col, Row, Container, Tab, Tabs } from "react-bootstrap"
 import { BodyContainer, SearchContainer } from "./BodyContainer"
+import { isMobile, getLogin } from '../Functions/Funcs'
 import "hover.css"
 import "../../fa/css/all.css"
+
+//#--MainNavigation-class--#//
 
 class MainNavigation extends React.Component {
     constructor(props) {
@@ -23,7 +26,7 @@ class MainNavigation extends React.Component {
                     <Row style={{ width: "100%" }}>
                         <Col className="d-flex align-items-center">
                             <div>
-                                <Link to="../" style={{ textDecoration: "none" }} className="btn btn-outline-primary hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> <b>НАЗАД</b></Link>
+                                <Link to="../" style={{ textDecoration: "none" }} className="btn btn-outline-primary hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> {(() => { if (isMobile() !== true) return <b>НАЗАД</b> })()} </Link>
                             </div>
                         </Col>
                         <Col>
@@ -31,7 +34,7 @@ class MainNavigation extends React.Component {
                                 <div className="d-flex align-items-center">
                                     <Link className="btn btn-outline-primary" style={{ textDecoration: "none", marginLeft: 20 }} to="/login"><b>ВЫЙТИ</b></Link>
                                 </div>
-                                <img width="50" height="50" src="assets/img/face.png" />
+                                <div className="hvr-icon-fade d-flex align-items-center"><a><b>@{getLogin()}</b> <i className="far fa-user hvr-icon"></i></a></div>
                             </div>
                         </Col>
                     </Row>
@@ -40,6 +43,8 @@ class MainNavigation extends React.Component {
         )
     }
 }
+
+//#--Projects-frame--#//
 
 class ProjectsView extends React.Component {
     constructor(props) {
@@ -50,8 +55,8 @@ class ProjectsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success" className="hvr-icon-wobble-vertical">Создать проект <i className="fal fa-plus hvr-icon"></i></Button>
-                    <Button variant="primary" className="hvr-icon-spin">Обновить <i className="fal fa-redo hvr-icon"></i></Button>
+                    <Button variant="success" className="hvr-icon-wobble-vertical">{(() => { if (isMobile() !== true) return 'Создать проект' })()} <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button variant="primary" className="hvr-icon-spin">{(() => { if (isMobile() !== true) return 'Обновить' })()} <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
@@ -61,6 +66,8 @@ class ProjectsView extends React.Component {
         )
     }
 }
+
+//#--Settings-frame--#//
 
 class SettingsView extends React.Component {
     constructor(props) {
@@ -75,13 +82,23 @@ class SettingsView extends React.Component {
                 <BodyContainer>
                     <div>
                         <h2>Настройки</h2>
-                        <p>Настроек пока нет, извините :)</p>
+                        <div>
+                            <Button variant="primary" onClick={()=> {
+                                if (localStorage.getItem("type") === "bottom") {
+                                    localStorage.setItem("type", "standart")
+                                } else {
+                                    localStorage.setItem("type", "bottom")
+                                }
+                            }}>Сменить положение</Button>
+                        </div>
                     </div>
                 </BodyContainer>
             </div>
         )
     }
 }
+
+//#--Messages-frame--#//
 
 class MessagesView extends React.Component {
     constructor(props) {
@@ -92,7 +109,7 @@ class MessagesView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button style={{ marginRight: 50 }} variant="primary" className="hvr-icon-wobble-vertical">Написать новое сообщение <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button style={{ marginRight: 50 }} variant="primary" className="hvr-icon-wobble-vertical">{(() => { if (isMobile() !== true) return 'Написать новое сообщение' })()} <i className="fal fa-plus hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
@@ -106,6 +123,8 @@ class MessagesView extends React.Component {
     }
 }
 
+//#--Workers-frame--#//
+
 class WorkersView extends React.Component {
     constructor(props) {
         super(props)
@@ -115,8 +134,8 @@ class WorkersView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success" className="hvr-icon-wobble-vertical">Добавить сотрудника <i className="fal fa-plus hvr-icon"></i></Button>
-                    <Button variant="primary" className="hvr-icon-spin">Обновить <i className="fal fa-redo hvr-icon"></i></Button>
+                    <Button variant="success" className="hvr-icon-wobble-vertical">{(() => { if (isMobile() !== true) return 'Добавить сотрудника' })()} <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button variant="primary" className="hvr-icon-spin">{(() => { if (isMobile() !== true) return 'Обновить' })()} <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>
@@ -137,6 +156,8 @@ class WorkersView extends React.Component {
     }
 }
 
+//#--Clients-frame--#//
+
 class ClientsView extends React.Component {
     constructor(props) {
         super(props)
@@ -146,8 +167,8 @@ class ClientsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success" className="hvr-icon-wobble-vertical">Добавить клиента <i className="fal fa-plus hvr-icon"></i></Button>
-                    <Button variant="primary" className="hvr-icon-spin">Обновить <i className="fal fa-redo hvr-icon"></i></Button>
+                    <Button variant="success" className="hvr-icon-wobble-vertical">{(() => { if (isMobile() !== true) return 'Добавить клиента' })()} <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Button variant="primary" className="hvr-icon-spin">{(() => { if (isMobile() !== true) return 'Обновить' })()} <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 
                 <BodyContainer>

@@ -3,9 +3,7 @@ package security
 import (
 	"encoding/json"
 	"fmt"
-	_ "fmt"
 	"goreactapp/database"
-	_ "goreactapp/database/functions"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -14,9 +12,15 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+//#--Inizialize-DataBase--#//
+
 var db = database.DBexist()
 
+//#--create-the-secret-key--#//
+
 var mySigningKey = []byte("thedayofthesecondmorning")
+
+//#--var-function-for-jwtMiddleWare--#//
 
 var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
@@ -24,6 +28,8 @@ var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	},
 	SigningMethod: jwt.SigningMethodHS256,
 })
+
+//#--get-token-for-authorization--#//
 
 var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter,
 	r *http.Request) {
@@ -35,15 +41,18 @@ var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter,
 	err = json.Unmarshal(tempResult, &tempAcc)
 	fmt.Println("error on json -> ", err)
 
-	var class string
-	err = db.ExecuteQueryRow("SELECT user_role FROM users WHERE user_login=$1 AND user_password=$2", tempAcc.UserLogin, tempAcc.UserPassword).Scan(&class)
+	var role string
+	err = db.ExecuteQueryRow(
+		"SELECT user_role FROM users WHERE user_login=$1 AND user_password=$2",
+		tempAcc.UserLogin, tempAcc.UserPassword).
+		Scan(&role)
 	fmt.Println("error on select -> ", err)
 
 	if err == nil {
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 			"login":    tempAcc.UserLogin,
 			"password": tempAcc.UserPassword,
-			"role":     class,
+			"role":     role,
 			"time":     time.Now().Add(time.Hour * 24).Unix(),
 		})
 

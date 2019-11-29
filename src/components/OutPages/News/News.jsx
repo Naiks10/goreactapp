@@ -2,6 +2,8 @@ import React from "react"
 
 import { Container, Row, Col, Jumbotron, Button } from "react-bootstrap"
 
+//#--news-class--#//
+
 class News extends React.Component {
     constructor(props) {
         super(props)
@@ -19,6 +21,8 @@ class News extends React.Component {
         )
     }
 }
+
+//#--STYLES--#//
 
 const styles = {
     containerStyle: {

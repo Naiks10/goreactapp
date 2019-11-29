@@ -1,5 +1,6 @@
 import React from "react"
 import { Button } from "react-bootstrap"
+import { isMobile } from '../Functions/Funcs'
 import {
     ClientsTableModalView,
     ClientsTableModalEdit,
@@ -10,8 +11,11 @@ import {
     DevelopersTableModalView,
     DevelopersTableModalEdit,
     DevelopersTableModalDelete,
-    ProjectsTableModalView
+    ProjectsTableModalView,
+    ProjectEdit
 } from "../Modals/Modals"
+
+//#--Table-button-class--#//
 
 class TableButton extends React.Component {
     constructor(props) {
@@ -25,18 +29,26 @@ class TableButton extends React.Component {
     render() {
         return (
             <div>
+
                 <Button
                     onClick={() => this.setState({ modalShow: true })}
                     style={{ marginRight: "5px" }}
                     variant={this.props.variant}
                 >
-                    {this.props.text}
+                    {(() => { //is it mobile?
+                        if (isMobile() === true) {
+                            return this.props.image
+                        } else {
+                            return this.props.text
+                        }
+                    })()}
                 </Button>
+
                 {(() => {
                     switch (this.props.group) {
-                        case "clients":
+                        case "clients": // is it clients?
                             switch (this.props.type) {
-                                case "info":
+                                case "info": //is it info?
                                     return (
                                         <ClientsTableModalView
                                             items={this.props.items}
@@ -45,7 +57,7 @@ class TableButton extends React.Component {
                                         />
                                     )
                                     break;
-                                case "edit":
+                                case "edit": //is it edit?
                                     return (
                                         <ClientsTableModalEdit
                                             velt={this.props.velt}
@@ -55,7 +67,7 @@ class TableButton extends React.Component {
                                         />
                                     )
                                     break;
-                                case "delete":
+                                case "delete": //is it delete?
                                     return (
                                         <ClientsTableModalDelete
                                             velt={this.props.velt}
@@ -68,7 +80,7 @@ class TableButton extends React.Component {
                             break;
                         case "projects":
                             switch (this.props.type) {
-                                case "info":
+                                case "info": //is it info?
                                     return (
                                         <ProjectsTableModalView
                                             items={this.props.items}
@@ -76,11 +88,21 @@ class TableButton extends React.Component {
                                             onHide={() => this.setState({ modalShow: false })}
                                         />
                                     )
+                                    break;
+                                case "edit": //is it edit?
+                                    return (
+                                        <ProjectEdit
+                                            items={this.props.items}
+                                            show={this.state.modalShow}
+                                            onHide={() => this.setState({ modalShow: false })}
+                                        />
+                                    )
+                                    break;
                             }
                             break;
-                        case "managers":
+                        case "managers": //is it managers?
                             switch (this.props.type) {
-                                case "info":
+                                case "info": //is it info?
                                     return (
                                         <ManagersTableModalView
                                             items={this.props.items}
@@ -89,7 +111,7 @@ class TableButton extends React.Component {
                                         />
                                     )
                                     break;
-                                case "edit":
+                                case "edit": //is it edit?
                                     return (
                                         <ManagersTableModalEdit
                                             velt={this.props.velt}
@@ -99,7 +121,7 @@ class TableButton extends React.Component {
                                         />
                                     )
                                     break;
-                                case "delete":
+                                case "delete": //is it delete?
                                     return (
                                         <ManagersTableModalDelete
                                             velt={this.props.velt}
@@ -111,9 +133,9 @@ class TableButton extends React.Component {
                                     break;
                             }
                             break;
-                        case "developers":
+                        case "developers": //is it developers?
                             switch (this.props.type) {
-                                case "info":
+                                case "info": //is it info?
                                     return (
                                         <DevelopersTableModalView
                                             items={this.props.items}
@@ -122,7 +144,7 @@ class TableButton extends React.Component {
                                         />
                                     )
                                     break;
-                                case "edit":
+                                case "edit": //is it edit?
                                     return (
                                         <DevelopersTableModalEdit
                                             velt={this.props.velt}
@@ -132,7 +154,7 @@ class TableButton extends React.Component {
                                         />
                                     )
                                     break;
-                                case "delete":
+                                case "delete": //is it delete?
                                     return (
                                         <DevelopersTableModalDelete
                                             velt={this.props.velt}

@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { getRole } from "./components/Functions/Funcs"
+import { Helmet } from 'react-helmet'
 
+import { getRole } from "./components/Functions/Funcs"
 import MainPage from './components/MainPage/MainPage'
 import BackMenu from './components/BackMenu/BackMenu'
 import { Auth } from './components/Auth/Auth'
@@ -9,6 +10,7 @@ import { MainMenuButton, BackMenuButton } from './components/BackMenu/BackMenuBu
 import { ProjectsView, ClientsView, WorkersView, SettingsView, MessagesView, MainNavigation } from './components/BodyElements/BodyPanel'
 import { Switch, Route, HashRouter, Redirect } from 'react-router-dom'
 
+//#--consts-with-pages--#//
 
 const Projects_View = () => (
   <ProjectsView />
@@ -38,9 +40,19 @@ const LoginView = () => (
   <Auth />
 )
 
+//#--return-all-components--#//
+
 function MainView() {
 
   var role = getRole()
+
+  var ves = 90
+
+  if (localStorage.getItem("type") === "bottom") {
+    ves = 0
+  } else {
+    ves = 90
+  }
 
   return (
     <div className="animated fadeIn">
@@ -93,7 +105,7 @@ function MainView() {
             return (<Redirect to="/login" />)
         }
       })()}
-      <div style={{ marginLeft: 90 }}>
+      <div style={{ marginLeft: ves }}>
         <HashRouter>
           <MainNavigation />
           {(() => {
@@ -145,7 +157,7 @@ const Main_View = () => (
 )
 
 
-
+//#--return-app--#//
 
 function App() {
   return (
@@ -158,7 +170,12 @@ function App() {
         if (role === 0) {
           return <Redirect to="/login" />
         } else {
-          return <Main_View />
+          return (
+            <div>
+              <Helmet title="Plan Active" />
+              <Main_View />
+            </div>
+          )
         }
       }} />
     </Switch>

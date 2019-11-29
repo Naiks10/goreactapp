@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet'
 import axios from 'axios'
 import { getJWT } from '../Functions/Funcs'
 
+//#--Auth-page-class--#//
+
 export class Auth extends React.Component {
     constructor(props) {
         super(props)
@@ -114,7 +116,7 @@ export class Auth extends React.Component {
             <div style={{ height: '100%' }}>
                 <div style={{ height: '30%' }}></div>
                 <Container className="bg-white animated fadeIn mx-auto" style={styles.bodyStyle}>
-                    <Helmet bodyAttributes={{ style: 'background-color : #2098D1' }} />
+                    <Helmet title="Авторизация" bodyAttributes={{ style: 'background-color : #2098D1' }} />
                     <Row style={{ verticalAlign: 'middle', height: "100%" }}>
                         <Col style={{ verticalAlign: "middle" }}>
                             <h1 style={{ textAlign: "center" }}>ВХОД</h1>
@@ -260,6 +262,8 @@ export class Auth extends React.Component {
         )
     }
 }
+
+//#--styles--#//
 
 const styles = {
     mainMenuStyle: {

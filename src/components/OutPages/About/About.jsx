@@ -1,5 +1,5 @@
 import React from "react"
-import { Jumbotron, Container, Carousel } from "react-bootstrap"
+import { Jumbotron, Container, Carousel, Row } from "react-bootstrap"
 
 class About extends React.Component {
     constructor(props) {
@@ -12,7 +12,10 @@ class About extends React.Component {
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
-                            <img style={{ display: "block", marginLeft: "auto", marginBottom: 90, marginRight: "auto" }} src="/assets/img/reu.png" width="250" height="250" />
+                            <Row>
+                                <img style={{ display: "block", marginLeft: "auto", marginBottom: 90, marginRight: "auto" }} src="/assets/img/reu.png" width="250" height="250" />
+                                <img style={{ display: "block", marginLeft: "auto", marginTop: 90, marginRight: "auto" }} src="/assets/img/logob.png" width="287" height="155" />
+                            </Row>
                         </div>
                         <h2>О проекте</h2>
                         <p>
@@ -25,18 +28,18 @@ class About extends React.Component {
                             Данный проект разрабатывается под контролем организации <b>ООО "Профинтерес"</b> (организация в которой проходит практика).
                         </p>
                         <div className="justify-content-md-center">
-                            <img style={{ display: "block", marginLeft: "auto", marginTop: 90, marginRight: "auto" }} src="/assets/img/logob.png" width="287" height="155" />
+
                         </div>
                     </Jumbotron>
                 </div>
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
-                    <h2>Галерея</h2>
-                    <br/>
+                        <h2>Галерея</h2>
+                        <br />
                         <Carousel indicators={false} interval={5000}>
                             <Carousel.Item>
                                 <img
-                                    style={{borderRadius : 8}}
+                                    style={{ borderRadius: 8 }}
                                     className="d-block w-100"
                                     src="/assets/img/slide1.png"
                                     alt="First slide"
@@ -50,7 +53,7 @@ class About extends React.Component {
                             </Carousel.Item>
                             <Carousel.Item>
                                 <img
-                                    style={{borderRadius : 8}}
+                                    style={{ borderRadius: 8 }}
                                     className="d-block w-100"
                                     src="/assets/img/slide2.png"
                                     alt="Third slide"
@@ -65,7 +68,7 @@ class About extends React.Component {
                             </Carousel.Item>
                             <Carousel.Item>
                                 <img
-                                    style={{borderRadius : 8}}
+                                    style={{ borderRadius: 8 }}
                                     className="d-block w-100"
                                     src="/assets/img/slide3.png"
                                     alt="Third slide"

@@ -3,6 +3,8 @@ import { Row, Container, Button } from "react-bootstrap"
 import "hover.css"
 import { Link } from "react-router-dom"
 
+
+//#--main-navigation-class--#//
 class MainNavigation extends React.Component {
     constructor(props) {
         super(props)
@@ -25,6 +27,8 @@ class MainNavigation extends React.Component {
 
 }
 
+//#--main-tab-class--#//
+
 class MainNavigationTabButton extends React.Component {
     constructor(props) {
         super(props)
@@ -42,6 +46,8 @@ class MainNavigationTabButton extends React.Component {
         )
     }
 }
+
+//#--styles--#//
 
 const styles = {
     mainNavigationStyle: {

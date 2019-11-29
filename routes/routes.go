@@ -13,6 +13,8 @@ import (
 
 var sessionAdminKey string
 
+//#--Subdomain-Handler-for-admin-panel--#//
+
 func subdomainIndexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./build/login.html")
 	if err != nil {
@@ -23,6 +25,8 @@ func subdomainIndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	t.Execute(w, nil)
 }
+
+//#--Post-Handler-for-admin-panel-(authorization)--#//
 
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	if sessionAdminKey == r.FormValue("key") {
@@ -38,6 +42,8 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Пользователь не авторизован")
 	}
 }
+
+//#--Register-all-RESTapi-funcs--#//
 
 func Register(r *mux.Router) {
 

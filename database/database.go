@@ -7,6 +7,8 @@ import (
 
 var mySiteDataBaseConnection postgres.PostgreSQLConnection
 
+//#--Inizialize--#//
+
 func Inizialize(connection, driver string) (bool, error) {
 
 	if connection != "" && driver != "" {
@@ -27,10 +29,14 @@ func Inizialize(connection, driver string) (bool, error) {
 	return isConnectedSuccessfully, err
 }
 
+//#--return-db--#//
+
 func DB() *postgres.PostgreSQLConnection {
 	Inizialize("", "")
 	return &mySiteDataBaseConnection
 }
+
+//#--return-existed-db--#//
 
 func DBexist() *postgres.PostgreSQLConnection {
 	return &mySiteDataBaseConnection

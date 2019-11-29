@@ -12,6 +12,8 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 )
 
+//#--PostgreSQL-connection-struct--#//
+
 type PostgreSQLConnection struct {
 	ConnectionString string
 	DriverName       string
@@ -26,6 +28,8 @@ func (err *Error) Error() string {
 	return fmt.Sprintf(err.What)
 }
 
+//#--PostgreSQL-get-connection-string--#//
+
 func (con *PostgreSQLConnection) GetConnectionString() (string, error) {
 	if con.ConnectionString != "" {
 		return con.ConnectionString, nil
@@ -34,9 +38,13 @@ func (con *PostgreSQLConnection) GetConnectionString() (string, error) {
 	}
 }
 
+//#--PostgreSQL-show-all-drivers-for this-db--#//
+
 func (con *PostgreSQLConnection) ShowDrivers() {
 	fmt.Println(sql.Drivers())
 }
+
+//#--PostgreSQL-open-connection--#//
 
 func (con *PostgreSQLConnection) OpenConnection() (bool, error) {
 	var isError bool
@@ -60,22 +68,32 @@ func (con *PostgreSQLConnection) OpenConnection() (bool, error) {
 	return isError, what
 }
 
+//#--PostgreSQL-execute-query-without-returning-any-result--#//
+
 func (con *PostgreSQLConnection) ExecuteQueryNonResult(query string, args ...interface{}) (sql.Result, error) {
 	return con.DB.Exec(query, args...)
 }
 
+//#--PostgreSQL-return-row--#//
+
 func (con *PostgreSQLConnection) ExecuteQueryRow(query string, args ...interface{}) *sql.Row {
 	return con.DB.QueryRow(query, args...)
 }
+
+//#--PostgreSQL-put-selected-data-to-struct--#//
 
 func (con *PostgreSQLConnection) ScanStruct(i interface{}, query string) {
 	err := con.DB.Select(&i, query)
 	fmt.Println(err)
 }
 
+//#--PostgreSQL-close--#//
+
 func (con *PostgreSQLConnection) CloseConnection() {
 	con.DB.Close()
 }
+
+//#--PostgreSQL-return-rowS--#//
 
 func (con *PostgreSQLConnection) ExecuteQueryRows(query string, args ...interface{}) (*sql.Rows, error) {
 	return con.DB.Query(query, args...)

@@ -7,6 +7,8 @@ import Helmet from "react-helmet"
 import { getRole } from "../Functions/Funcs"
 
 
+//Класс Главной кнопки
+
 class MainMenuButton extends React.Component {
     constructor(props) {
         super(props)
@@ -29,6 +31,8 @@ class MainMenuButton extends React.Component {
         );
     }
 }
+
+//Класс основной кнопки
 
 class BackMenuButton extends React.Component {
     constructor(props) {

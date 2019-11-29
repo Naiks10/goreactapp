@@ -8,6 +8,7 @@ import AboutPage from "../OutPages/About/About"
 import { Route, Switch, HashRouter } from "react-router-dom"
 
 
+//#--main-class--#//
 class Main extends React.Component {
     constructor(props) {
         super(props)

@@ -7,23 +7,25 @@ import (
 	"testing"
 )
 
+//#--TESTS--#//
+
 func TestOrganisationData_Value(t *testing.T) {
 
-	a1 := OrganisationData{
+	a1 := OrganisationData{ //first struct
 		"first": "1st",
 		"second": OrganisationData{
 			"second.first":  "anything",
 			"second.second": "something",
 		},
 	}
-	a2 := OrganisationData{
+	a2 := OrganisationData{ //second struct
 		"first": "1st",
 		"second": OrganisationData{
 			"second.fisrts": "something",
 		},
 	}
 
-	a3 := OrganisationData{
+	a3 := OrganisationData{ //third struct
 		"first": "1st",
 		"second": OrganisationData{
 			"second.first": OrganisationData{
@@ -43,17 +45,17 @@ func TestOrganisationData_Value(t *testing.T) {
 		want    driver.Value
 		wantErr bool
 	}{
-		{
+		{ //#=> Test №1
 			name: "test1",
 			a:    a1,
 			want: w1,
 		},
-		{
+		{ //#=> Test №2
 			name: "test2",
 			a:    a2,
 			want: w2,
 		},
-		{
+		{ //#=> Test №3
 			name: "test3",
 			a:    a3,
 			want: w3,

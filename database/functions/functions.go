@@ -7,13 +7,17 @@ import (
 var postgres = sqrl.StatementBuilder.PlaceholderFormat(sqrl.Dollar)
 
 var (
+	//#--ROLES--#//
 	SelectRoles, _, _ = postgres.Select("*").From("roles").ToSql()
+	//#--USERS--#//
 	SelectUsers, _, _ = postgres.Select(
 		"user_login", "user_password", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "role_id", "role_name").
 		From("users").
 		Join("roles ON user_role = role_id").
 		ToSql()
-	SelectOrgs, _, _    = postgres.Select("*").From("organisations").ToSql()
+	//#--ORGANISATIONS--#//
+	SelectOrgs, _, _ = postgres.Select("*").From("organisations").ToSql()
+	//#--CLIENTS--#//
 	SelectClients, _, _ = postgres.Select(
 		"user_login", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email",
 		"role_id", "role_name", "organisations.organisation_id", "organisations.organisation_name", "organisation_data").
@@ -22,15 +26,19 @@ var (
 		Join("roles on user_role = role_id").
 		Join("organisations on clients.organisation_id = organisations.organisation_id").
 		ToSql()
+	//#--GROUPS--#//
 	SelectWorkGroups, _, _ = postgres.Select("*").From("workgroups").ToSql()
-	SelectDevs, _, _       = postgres.
+	//#--DEVELOPERS--#//
+	SelectDevs, _, _ = postgres.
 				Select("user_login", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "role_id", "role_name", "workgroups.workgroup_id", "workgroup_name", "is_general").
 				From("developers").
 				Join("workgroups ON workgroups.workgroup_id = developers.workgroup_id").
 				Join("users ON users.user_login = developers.developer_user_login").
 				Join("roles ON users.user_role = role_id").
 				ToSql()
-	SelectStatus, _, _   = postgres.Select("*").From("project_statuses").ToSql()
+	//#--STATUS--#//
+	SelectStatus, _, _ = postgres.Select("*").From("project_statuses").ToSql()
+	//#--PROJECTS--#//
 	SelectProjects, _, _ = postgres.Select(
 		"project_id", "cost", "project_info",
 		"workgroup_id", "workgroup_name",
@@ -48,6 +56,7 @@ var (
 		Join("organisations on clients.organisation_id = organisations.organisation_id").
 		Join("project_statuses ON project_statuses.project_status_id = projects.project_status_id").
 		ToSql()
+	//#--MANAGERS--#//
 	SelectManagers, _, _ = postgres.
 				Select("user_login", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "role_id", "role_name").
 				From("managers").

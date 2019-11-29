@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Row, Col, Modal, Form, Popover, OverlayTrigger, FormCheck } from "react-bootstrap"
+import { Button, ButtonGroup, Row, Col, Modal, Form, Popover, OverlayTrigger, Table, Container, FormCheck, ListGroup } from "react-bootstrap"
 import Tass from "./Chart"
 import { OrgContext } from "../Data/Tables"
 import { getJWT } from "../Functions/Funcs"
@@ -165,7 +165,7 @@ export function ProjectsTableModalView(props) {
                 <h5>Основные данные</h5>
                 <Form.Group as={Col}>
                     <Row>
-                        <Form.Label column sm="2">Клиент:</Form.Label>
+                        <Form.Label column sm="3">Клиент:</Form.Label>
                         <Col sm="4">
                             <OverlayTrigger
                                 delay={{ show: 250, hide: 400 }}
@@ -188,7 +188,7 @@ export function ProjectsTableModalView(props) {
                         </Col>
                     </Row>
                     <Row>
-                        <Form.Label column sm="2">Менеджер:</Form.Label>
+                        <Form.Label column sm="3">Менеджер:</Form.Label>
                         <Col sm="4">
                             <OverlayTrigger
                                 delay={{ show: 250, hide: 400 }}
@@ -210,8 +210,14 @@ export function ProjectsTableModalView(props) {
                         </Col>
                     </Row>
                     <Row>
-                        <Form.Label column sm="2">Стоимость:</Form.Label>
-                        <Col sm="10">
+                        <Form.Label column sm="3">Рабочая группа:</Form.Label>
+                        <Col sm="7">
+                            <Form.Control plaintext readOnly defaultValue={props.items.workgroup.name} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Form.Label column sm="3">Стоимость:</Form.Label>
+                        <Col sm="7">
                             <Form.Control plaintext readOnly defaultValue={props.items.cost + '₽'} />
                         </Col>
                     </Row>
@@ -231,7 +237,7 @@ export function ProjectsTableModalView(props) {
                         </Col>
                     </Row>
                     <Row className="justify-content-md-center">
-                        <Tass />
+                        <Tass data={props.items.data.data} />
                     </Row>
                 </Form.Group>
             </Modal.Body>
@@ -240,6 +246,82 @@ export function ProjectsTableModalView(props) {
             </Modal.Footer>
         </Modal>
     );
+}
+
+export class ProjectEdit extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <Modal
+                {...this.props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Движение состояния проекта - код <b>{this.props.items.id}</b>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h5>Основные данные</h5>
+                    <Table striped hover responsive>
+                        <thead style={{ borderRadius: 30 }} className="text-white bg-primary">
+                            <tr>
+                                <th style={styles.colStyle} scope="col">Процент(%)</th>
+                                <th style={styles.colStyle} scope="col">Описание</th>
+                                <th style={styles.colStyle} scope="col">Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.props.items.data.data.map((item, index) => (
+                                <tr>
+                                    <th style={styles.rowStyle} scope="row">{item.name}</th>
+                                    <td style={styles.rowStyle}>{item.desc}</td>
+                                    <td style={styles.actionsStyle}>
+                                        <Container fluid style={{ minWidth: 350 }}>
+                                            <Row className="justify-content-md-center">
+                                                <ButtonGroup aria-label="Basic example">
+                                                    <Button variant="warning">Изменить</Button>
+                                                    <Button variant="danger">Удалить</Button>
+                                                </ButtonGroup>
+                                            </Row>
+                                        </Container>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success">Добавить этап</Button>
+                    <Button onClick={this.props.onHide}>Закрыть окно</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+}
+
+const styles = {
+    colStyle: {
+        textAlign: "center"
+    },
+    rowStyle: {
+        verticalAlign: "middle",
+        textAlign: "center"
+    },
+    actionsStyle: {
+        maxWidth: 400,
+        verticalAlign: "middle",
+        textAlign: "center"
+    },
+    buttonStyle: {
+        marginLeft: 5,
+        marginRight: 5
+    }
 }
 
 export function ManagersTableModalView(props) {

@@ -6,19 +6,21 @@ import (
 	"testing"
 )
 
+//#--TEST-EXIST--#//
+
 func TestDBexist(t *testing.T) {
 	tests := []struct {
 		name string
 		want *postgres.PostgreSQLConnection
 	}{
-		{
+		{ //#=> Test №1 - | PGX |
 			name: "TestPGX",
 			want: &postgres.PostgreSQLConnection{
 				ConnectionString: "user=postgres password=09102000 host=localhost port=5432 database=active_db sslmode=disable",
 				DriverName:       "pgx",
 			},
 		},
-		{
+		{ //#=> Test №2 - | PQ |
 			name: "TestPostgres",
 			want: &postgres.PostgreSQLConnection{
 				ConnectionString: "user=postgres password=09102000 host=localhost port=5432 database=active_db sslmode=disable",
@@ -39,6 +41,8 @@ func TestDBexist(t *testing.T) {
 	}
 }
 
+//#--TEST-FOR_INIZ--#//
+
 func TestInizialize(t *testing.T) {
 	type args struct {
 		connection string
@@ -50,14 +54,14 @@ func TestInizialize(t *testing.T) {
 		want    bool
 		wantErr bool
 	}{
-		{
+		{ //#=> Test №1 - | PGX |
 			name: "PGX",
 			args: args{
 				connection: "localhost",
 				driver:     "pgx",
 			},
 		},
-		{
+		{ //#=> Test №1 - | PQ |
 			name: "Postgres",
 			args: args{
 				connection: "localhost",

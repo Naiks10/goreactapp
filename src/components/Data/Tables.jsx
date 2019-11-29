@@ -5,6 +5,8 @@ import { getJWT } from "../Functions/Funcs"
 
 import _ from 'lodash'
 
+//#--Clients-table--#//
+
 class ClientsTable extends React.Component {
     constructor(props) {
         super(props)
@@ -112,9 +114,9 @@ class ClientsTable extends React.Component {
                                         <td style={styles.actionsStyle}>
                                             <Container fluid style={{ minWidth: 350 }}>
                                                 <Row className="justify-content-md-center">
-                                                    <TableButton text="Просмотр" group="clients" type="info" variant="primary" items={item} />
-                                                    <TableButton velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Редактировать" group="clients" type="edit" variant="warning" items={item} />
-                                                    <TableButton velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Удалить" group="clients" type="delete" variant="danger" items={item} />
+                                                    <TableButton image={<i className="far fa-eye"></i>} text="Просмотр" group="clients" type="info" variant="primary" items={item} />
+                                                    <TableButton image={<i className="fas fa-pen"></i>} velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Редактировать" group="clients" type="edit" variant="warning" items={item} />
+                                                    <TableButton image={<i className="fas fa-trash"></i>} velt={() => { this.setState({ isLoaded: false }); this.updateMethod() }} text="Удалить" group="clients" type="delete" variant="danger" items={item} />
                                                 </Row>
                                             </Container>
                                         </td>
@@ -132,6 +134,8 @@ class ClientsTable extends React.Component {
 //---------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
+
+//#--Projects-table--#//
 
 class ProjetcsTable extends React.Component {
     constructor(props) {
@@ -216,8 +220,8 @@ class ProjetcsTable extends React.Component {
                                     <td style={styles.actionsStyle}>
                                         <Container fluid style={{ minWidth: 350 }}>
                                             <Row className="justify-content-md-center">
-                                                <TableButton text="Просмотр состояния проекта" group="projects" type="info" variant="primary" items={item} />
-                                                <Button variant="warning">Прогресс проекта</Button>
+                                                <TableButton image={<i className="far fa-eye"></i>} text="Просмотр состояния проекта" group="projects" type="info" variant="primary" items={item} />
+                                                <TableButton image={<i className="far fa-abacus"></i>} text="Прогресс проекта" group="projects" type="edit" variant="warning" items={item} />
                                             </Row>
                                         </Container>
                                     </td>
@@ -230,6 +234,8 @@ class ProjetcsTable extends React.Component {
         }
     }
 }
+
+//#--Groups-table--#//
 
 
 class GroupsTable extends React.Component {
@@ -321,6 +327,8 @@ class GroupsTable extends React.Component {
         }
     }
 }
+
+//#--Orgs-table--#//
 
 class OrgsTable extends React.Component {
     constructor(props) {
@@ -618,6 +626,8 @@ class DevelopersTable extends React.Component {
 //---------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------
+
+//#--Styles--#//
 
 const styles = {
     colStyle: {

@@ -1,6 +1,9 @@
 import React from "react"
 import "animate.css"
 import { Row, Form, Button } from "react-bootstrap"
+import { isMobile } from "../Functions/Funcs"
+
+//#--Main-panel-class--#//
 
 class BodyContainer extends React.Component {
     constructor(props) {
@@ -22,6 +25,8 @@ class BodyContainer extends React.Component {
     }
 }
 
+//#--Search-container--#//
+
 class SearchContainer extends React.Component {
     constructor(props) {
         super(props)
@@ -34,7 +39,7 @@ class SearchContainer extends React.Component {
                     <div style={{ marginRight: 20 }}>
                         <Form.Control placeholder="Что ищем?" />
                     </div>
-                    <Button style={{ marginRight: 50 }} variant="outline-primary">Поиск <i class="far fa-search"></i></Button>
+                    <Button style={{ marginRight: 50 }} variant="outline-primary">{(() => { if (isMobile !== true) return 'Поиск' })()}<i class="far fa-search"></i></Button>
                     {React.Children.map(this.props.children, (child, i) => {
                         return (
                             <div className="animated fadeInRight" style={{marginRight : 15}}>
@@ -47,6 +52,8 @@ class SearchContainer extends React.Component {
         )
     }
 }
+
+//#--styles--#//
 
 const styles = {
     bodyStyle: {

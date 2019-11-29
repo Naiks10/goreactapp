@@ -183,6 +183,8 @@ var Manager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	}
 })
 
+//#--All-INSERTS--#//
+
 var CreateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	var role database.Roles
 
@@ -399,6 +401,8 @@ var CreateManager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 
 	fmt.Println(res)
 })
+
+//#--ALL-UPDATES--#//
 
 var UpdateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -634,6 +638,8 @@ var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 	fmt.Println(res)
 
 })
+
+//#--ALL_DELETES--#//
 
 var DeleteRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

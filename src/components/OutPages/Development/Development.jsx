@@ -1,6 +1,8 @@
 import React from "react"
 import { Container, Jumbotron, Nav, Card, Accordion, Row, Col, Tab, Button } from "react-bootstrap"
 
+//#--devpage-class--#//
+
 class DevelopmnetPage extends React.Component {
     constructor(props) {
         super(props)
@@ -9,6 +11,7 @@ class DevelopmnetPage extends React.Component {
     render() {
         return (
             <Container style={styles.containerStyle}>
+                {/* methods? */}
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
@@ -141,6 +144,7 @@ class DevelopmnetPage extends React.Component {
                         </Accordion>
                     </Jumbotron>
                 </div>
+                {/* FAQ */}
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
@@ -151,7 +155,134 @@ class DevelopmnetPage extends React.Component {
                         <ul>
                             <li>GoPkg : go get github.com/naiks10/goreactapp</li>
                             <li>GIT : git clone github.com/naiks10/goreactapp</li>
-                            <li>Скачать <a href="https://github.com/Naiks10/goreactapp">напрямую</a></li>
+                            <li>Ветка релиза : <a href="https://github.com/Naiks10/goreactapp/tree/master">master</a></li>
+                            <li>Ветка с отладкой и подробным тестированием : <a href="https://github.com/Naiks10/goreactapp/tree/debug">debug</a></li>
+                        </ul>
+                        <Accordion>
+                            <Card>
+                                <Card.Header>
+                                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                                        Есть вопросы?
+                                    </Accordion.Toggle>
+                                </Card.Header>
+                                <Accordion.Collapse eventKey="0">
+                                    <Card.Body>
+                                        <Tab.Container id="left-tabs-example" defaultActiveKey="master">
+                                            <Row>
+                                                <Col sm={3}>
+                                                    <Nav variant="pills" className="flex-column">
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="master">Чем отличается master от debug?</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="build">Что требуется, чтобы собрать проект?</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="time">Сколько уходит времени на компиляцию go-кода?</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="gobuild">Делаю go-build страница не меняется :(</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="and">Как одномерменнно запустить сборку golang и react?</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="tests">Тесты... Какие тесты вы испоьзуете для отладки?</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="crypt">В вашем продукте есть шифрование? Как отдельный модуль?</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link eventKey="db">Вижу в проекте всё, кроме базы - Где она?</Nav.Link>
+                                                        </Nav.Item>
+                                                    </Nav>
+                                                </Col>
+                                                <Col sm={9}>
+                                                    <Tab.Content>
+                                                        <Tab.Pane eventKey="master">
+                                                            <p>Всё очень просто :</p>
+                                                            <ul>
+                                                                <li>Ветка <code>master</code> включает в себя уже отработанную версию продукта, которая прошла все тесты по новым функциям и модулям</li>
+                                                                <li>Ветка <code>debug</code> соответственно включает в себя все тесты, возможно баги, которые заметны невооруженным взглядом, возможно отключены какие-нибудь модули</li>
+                                                            </ul>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="build">
+                                                            <p>И так, вам потребуется :</p>
+                                                            <ul>
+                                                                <li><b>GO 1.12+</b>
+                                                                    <ol>
+                                                                        <li>С помощью модуля godep проверьте требуемые зависимости :</li>
+                                                                        <ul>
+                                                                            <li>Команда : <code>godep restore</code></li>
+                                                                        </ul>
+                                                                        <li>После успешного восстановления пакетов можете начинать сборку :</li>
+                                                                        <ul>
+                                                                            <li>Команда : <code>go build</code> и после <code>go run .</code></li>
+                                                                        </ul>
+                                                                    </ol>
+                                                                </li>
+                                                                <li><b>React</b>
+                                                                    <ol>
+                                                                        <li>С помощью пакетного менеджера npm установите все зависимости</li>
+                                                                        <li>После установки можете собрать проект :</li>
+                                                                        <ul>
+                                                                            <li>Команда : <code>npm run build</code></li>
+                                                                        </ul>
+                                                                    </ol>
+                                                                </li>
+                                                            </ul>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="time">
+                                                            <p>Golang достаточно быстр в компиляции, даже на слабом пк с устаревшим процессором go закомпилится не более чем за 5 секунд</p>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="gobuild">
+                                                            <p>Плохо читаете предыдущие пункты :) Для сборки интерфейса требуется <code>npm run build</code></p>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="and">
+                                                            <p>Все очень просто :</p>
+                                                            <ul>
+                                                                <li>Запустите две команды через два амперсанда : <code>go build &amp;&amp; npm run build</code></li>
+                                                                <li>Однако не рекомендуем так делать, можно спутать ошибки</li>
+                                                            </ul>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="tests">
+                                                            <p>Мы используем встроенный пакет по тестированию <code>testing</code></p>
+                                                            <p>Все тесты в нашем продукте делятся на юнит-тесты и интеграционные.</p>
+                                                            <p>Их можно найти в ветке <b>debug</b> - все файлы с постфиксом <code>_test</code></p>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="crypt">
+                                                            <ul>
+                                                                <li>Да, есть - мы используем AES256</li>
+                                                                <li>Нет, пока что нет...</li>
+                                                            </ul>
+                                                        </Tab.Pane>
+                                                        <Tab.Pane eventKey="db">
+                                                            <p>SQL-скрипт мы выложим позже, ожидайте</p>
+                                                        </Tab.Pane>
+                                                    </Tab.Content>
+                                                </Col>
+                                            </Row>
+                                        </Tab.Container>
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
+                    </Jumbotron>
+                </div>
+                {/* RELEASES */}
+                <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
+                    <Jumbotron className="bg-white">
+                        <div className="justify-content-md-center">
+                            <img style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/build.png" width="200" height="200" />
+                        </div>
+                        <h1>Хотите потестировать сами?</h1>
+                        <p>Мы рады предоставить все исполняемые файлы на странице разработки</p>
+                        <p>У нас есть два вида сборок : </p>
+                        <ul>
+                            <li>Версия после первичной отладки, в которой есть недочёты - <b>Sirin</b></li>
+                            <li>Версия "кандидат в релиз" - <b>Ghamamyun</b></li>
+                            <br/>
+                            <li>Скачайте архив с приложением <a href="https://github.com/Naiks10/goreactapp/releases">"просто открой *.exe"</a></li>
                         </ul>
                     </Jumbotron>
                 </div>
@@ -159,6 +290,8 @@ class DevelopmnetPage extends React.Component {
         )
     }
 }
+
+//#--STYLES--#//
 
 const styles = {
     containerStyle: {
