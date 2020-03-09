@@ -16,18 +16,22 @@ class MainNavigation extends React.Component {
 
     render() {
         return (
-            <Container fluid="true" className="bg-white animated slideInDown" style={
+            <Container fluid="true" className="animated slideInDown" style={
                 {
-                    boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                    //boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                    backgroundColor : 'transparent',
                     height: 90
                 }
             }>
                 <div className="d-flex align-items-center" style={{ verticalAlign: "middle", height: "100%" }}>
                     <Row style={{ width: "100%" }}>
                         <Col className="d-flex align-items-center">
-                            <div>
-                                <Link to="../" style={{ textDecoration: "none" }} className="btn btn-outline-primary hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> {(() => { if (isMobile() !== true) return <b>НАЗАД</b> })()} </Link>
-                            </div>
+                            <Row>
+                                <div>
+                                    <Link to="../" style={{ textDecoration: "none", marginLeft: 20, marginRight: 60 }} className="btn btn-outline-primary hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> {(() => { if (isMobile() !== true) return <b>НАЗАД</b> })()} </Link>
+                                </div>
+                                <div style={{backgroundColor : 'whitesmoke', borderRadius : 4, paddingLeft : 15, paddingRight: 15}} className="hvr-icon-fade hvr-underline-from-left d-flex align-items-center"><a>Поиск<i style={{marginLeft : 200}} className="far fa-search hvr-icon"></i></a></div>
+                            </Row>
                         </Col>
                         <Col>
                             <div className="d-flex flex-row-reverse">
@@ -55,7 +59,9 @@ class ProjectsView extends React.Component {
         return (
             <div>
                 <SearchContainer>
-                    <Button variant="success" className="hvr-icon-wobble-vertical">{(() => { if (isMobile() !== true) return 'Создать проект' })()} <i className="fal fa-plus hvr-icon"></i></Button>
+                    <Link to="/workspace/create_project">
+                        <Button variant="success" className="hvr-icon-wobble-vertical">{(() => { if (isMobile() !== true) return 'Создать проект' })()} <i className="fal fa-plus hvr-icon"></i></Button>
+                    </Link>
                     <Button variant="primary" className="hvr-icon-spin">{(() => { if (isMobile() !== true) return 'Обновить' })()} <i className="fal fa-redo hvr-icon"></i></Button>
                 </SearchContainer>
 

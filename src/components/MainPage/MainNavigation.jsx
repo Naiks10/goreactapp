@@ -8,6 +8,10 @@ import { Link } from "react-router-dom"
 class MainNavigation extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            type : false,
+            thePosition : 0
+        }
     }
 
     render() {

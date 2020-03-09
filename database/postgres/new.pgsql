@@ -1,7 +1,8 @@
 CREATE DATABASE PLANB_FINAL;
 
 
---ROLES--
+/* ROLES table */
+
 CREATE TABLE roles (
     role_id     SERIAL PRIMARY KEY,
     role_name   VARCHAR(50) UNIQUE
@@ -91,7 +92,8 @@ CREATE TABLE organisations (
 
 --INSERT-ORGANISATIONS--
 
-INSERT INTO organisations (organisation_name, organisation_data) VALUES ('Тестовая организация', DEFAULT), ('Тестовая организация 2', DEFAULT), ('Тестовая организация 3', DEFAULT);
+INSERT INTO organisations (organisation_name, organisation_data) 
+VALUES ('Тестовая организация', DEFAULT), ('Тестовая организация 2', DEFAULT), ('Тестовая организация 3', DEFAULT);
 
 --CLIENTS--
 
@@ -157,7 +159,7 @@ CREATE TABLE projects (
     project_info TEXT,
     project_workgroup_id INTEGER REFERENCES workgroups (workgroup_id),
     project_status_id INTEGER REFERENCES project_statuses (project_status_id),
-    project_data JSONB DEFAULT '{}',
+    project_data JSONB DEFAULT '{"data" : [{"name" : 5, desc : "Инициализация проекта"}, {"name" : 10, "desc" : "Продвижение проекта"}]}',
     client_user_login VARCHAR(50) REFERENCES clients(client_user_login),
     manager_user_login VARCHAR(50) REFERENCES managers(manager_user_login)
 );

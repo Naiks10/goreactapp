@@ -5,12 +5,18 @@ import { Helmet } from 'react-helmet'
 import { getRole } from "./components/Functions/Funcs"
 import MainPage from './components/MainPage/MainPage'
 import BackMenu from './components/BackMenu/BackMenu'
+import { ProjectCreateWindow } from './components/BodyElements/Projects/ProjetcsCreate'
 import { Auth } from './components/Auth/Auth'
+import {StartPageMenu} from './components/StartPageMenu/StartPageMenu'
 import { MainMenuButton, BackMenuButton } from './components/BackMenu/BackMenuButton'
 import { ProjectsView, ClientsView, WorkersView, SettingsView, MessagesView, MainNavigation } from './components/BodyElements/BodyPanel'
 import { Switch, Route, HashRouter, Redirect } from 'react-router-dom'
 
 //#--consts-with-pages--#//
+
+const Start_View = () => (
+  <StartPageMenu />
+)
 
 const Projects_View = () => (
   <ProjectsView />
@@ -18,6 +24,10 @@ const Projects_View = () => (
 
 const Main_Page = () => (
   <MainPage />
+)
+
+const ProjetcNewPage = () => (
+  <ProjectCreateWindow/>
 )
 
 const Clients_View = () => (
@@ -113,7 +123,8 @@ function MainView() {
               case '1': //manager
                 return (
                   <Switch>
-                    <Route path="/workspace/" exact component={Projects_View} />
+                    <Route path="/workspace/" exact component={StartPageMenu} />
+                    <Route path="/workspace/create_project" component={ProjetcNewPage}/>
                     <Route path="/workspace/project_s" component={Projects_View} />
                     <Route path="/workspace/client_s" component={Clients_View} />
                     <Route path="/workspace/messages" component={Messages_View} />
@@ -172,7 +183,7 @@ function App() {
         } else {
           return (
             <div>
-              <Helmet title="Plan Active" />
+              <Helmet title="Plan Active" bodyAttributes={{ style: 'background-color : #fcfcfc'}} />
               <Main_View />
             </div>
           )

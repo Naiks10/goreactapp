@@ -10,9 +10,12 @@ class News extends React.Component {
     }
 
     render() {
+        window.scrollTo(0, 0)
         return (
             <Container style={styles.containerStyle}>
-                <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
+                <div 
+                 className="bg-white" 
+                 style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <h1>Новостей пока нет</h1>
                     </Jumbotron>

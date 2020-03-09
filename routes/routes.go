@@ -6,14 +6,26 @@ import (
 	"goreactapp/security"
 	"html/template"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/zhexuany/wordGenerator"
 )
 
 var sessionAdminKey string
 
-//#--Subdomain-Handler-for-admin-panel--#//
+//---Subdomain-Handler-for-admin-panel---//
+
+//IndexHandler handles index.html (start page) and return page to client
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("./build/index.html")
+	if err != nil {
+		fmt.Println("IndexHandler status : Error => ", err)
+	} else {
+		fmt.Println("IndexHandler status : OK")
+	}
+
+	t.Execute(w, nil)
+}
 
 func subdomainIndexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("./build/login.html")
@@ -26,7 +38,7 @@ func subdomainIndexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
-//#--Post-Handler-for-admin-panel-(authorization)--#//
+//---Post-Handler-for-admin-panel-(authorization)---//
 
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	if sessionAdminKey == r.FormValue("key") {
@@ -43,13 +55,25 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//#--Register-all-RESTapi-funcs--#//
+//---Register-all-RESTapi-funcs---//
 
+/*Register func
+This function describes all RESTapi Queries
+by all paradigmes :
+	-> GET
+	-> POST
+	-> PUT
+	-> DELETE
+*/
 func Register(r *mux.Router) {
 
 	//#--< GET >queries--#//
 
-	sessionAdminKey = wordGenerator.GetWord(128)
+	fmt.Println("Создайте новый ключ-пароль для входа в панель администратора :")
+	fmt.Fscan(os.Stdin, &sessionAdminKey)
+	fmt.Println("Пароль успещно создан")
+
+	//sessionAdminKey = wordGenerator.GetWord(128)
 
 	fmt.Println("session key for admin =>  | ", sessionAdminKey, " | ")
 
@@ -57,19 +81,23 @@ func Register(r *mux.Router) {
 	r.HandleFunc("/admin/login", postHandler).Methods("POST")
 
 	r.Handle("/roles", security.JwtMiddleware.Handler(functions.Roles)).Methods("GET")
-	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET")
+	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Queries("fields", "{fields}", "filter", "{filter}").Name("Twice")
+	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Queries("fields", "{fields}").Name("S")
+	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Queries("filter", "{filter}").Name("TwBice")
+	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Name("Once")
 	r.Handle("/orgs", security.JwtMiddleware.Handler(functions.Organizations)).Methods("GET")
 	r.Handle("/clients", security.JwtMiddleware.Handler(functions.Clients)).Methods("GET")
 	r.Handle("/groups", security.JwtMiddleware.Handler(functions.WorkGroups)).Methods("GET")
 	r.Handle("/devs", security.JwtMiddleware.Handler(functions.Developers)).Methods("GET")
 	r.Handle("/statuses", security.JwtMiddleware.Handler(functions.ProjectStatuses)).Methods("GET")
 	r.Handle("/projects", security.JwtMiddleware.Handler(functions.Projects)).Methods("GET")
+	r.Handle("/projectsview", security.JwtMiddleware.Handler(functions.ProjectsPreview)).Methods("GET")
 	r.Handle("/managers", security.JwtMiddleware.Handler(functions.Managers)).Methods("GET")
 
 	//#--< GET + /{?} >queries--#//
 
 	r.Handle("/roles/{id}", security.JwtMiddleware.Handler(functions.Role)).Methods("GET")
-	r.Handle("/users/{login}", security.JwtMiddleware.Handler(functions.User)).Methods("GET")
+	r.Handle("/users/{id}", security.JwtMiddleware.Handler(functions.User)).Methods("GET")
 	r.Handle("/orgs/{id}", security.JwtMiddleware.Handler(functions.Organization)).Methods("GET")
 	r.Handle("/clients/{login}", security.JwtMiddleware.Handler(functions.Client)).Methods("GET")
 	r.Handle("/groups/{id}", security.JwtMiddleware.Handler(functions.Group)).Methods("GET")

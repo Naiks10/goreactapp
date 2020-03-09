@@ -6,81 +6,155 @@ import (
 	"goreactapp/database"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
 
+	"github.com/elgris/sqrl"
+
+	"github.com/elgs/gosqljson"
 	"github.com/gorilla/mux"
 )
+
+//---ENTRY-VARIABLES---//
 
 var db = database.DB()
 
 var pg = postgres.RunWith(db.DB)
 
-//#--ALL-SELECTIONS--#//
+//---FUNCTIONS---//
 
-func JsonGetAll(i, s interface{}, isEncode bool, w http.ResponseWriter, r *http.Request, query string, params ...interface{}) {
+//JSONGetAll converts Go data (array(s)) to JSON model
+func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, query string, params ...interface{}) {
+	table.Clear()
 	if params != nil {
-		errs := db.DB.Select(s, query, params)
+		errs := db.DB.Select(table.GetItems(), query, params)
 		fmt.Println(errs)
 	} else {
-		errs := db.DB.Select(s, query)
+		errs := db.DB.Select(table.GetItems(), query)
 		fmt.Println(errs)
 	}
-	if isEncode {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(i)
-	}
+	table.GetPrimaryKey()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(table)
 }
 
+//JSONGetOne converts Go data (one SELECTed element) to JSON model
+func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb *sqrl.SelectBuilder) {
+	table.Clear()
+
+	exSb := *sb
+
+	//vars := mux.Vars(r)
+	fmt.Println("query")
+
+	query, params, _ := exSb.Where(sqrl.Eq{table.GetPrimaryKey(): "client"}).ToSql()
+	fmt.Println(query)
+
+	if params != nil {
+		errs := db.DB.Select(table.GetItems(), query, params[0])
+		fmt.Println(errs)
+	} else {
+		errs := db.DB.Select(table.GetItems(), query)
+		fmt.Println(errs)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(table)
+}
+
+/*GetResult is universal converter to JSON from Go Structs,
+Neaded for dynamic added RESTapi queries.*/
+func GetResult(w http.ResponseWriter, query string) {
+	s, _ := gosqljson.QueryDbToMapJSON(db.DB.DB, "lower", query)
+	s = "{\"items\":" + s + "}"
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, s)
+}
+
+//GetQueries is RESTapi provider for creating agile queries
+func GetQueries(sb *sqrl.SelectBuilder, r *http.Request) string {
+	var selectBuilder sqrl.SelectBuilder = *sb
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	if value, ok := query["limit"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		selectBuilder.Limit(uint64(i))
+	}
+	if value, ok := query["offset"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		selectBuilder.Offset(uint64(i))
+	}
+	if value, ok := query["asc.orderby"]; ok {
+		selectBuilder.OrderBy(value[0] + " ASC")
+	}
+	if value, ok := query["desc.orderby"]; ok {
+		selectBuilder.OrderBy(value[0] + " DESC")
+	}
+
+	str, _, _ := selectBuilder.ToSql()
+
+	fmt.Println(str)
+
+	return str
+
+}
+
+//---VARIABLES---//
+
+//Roles => SELECT * FROM roles
 var Roles = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExRole.Items = nil
-	JsonGetAll(&database.ExRole, &database.ExRole.Items, true, w, r, SelectRoles)
+	JSONGetAll(&database.ExUser, w, r, GetQueries(SelectRoles, r))
 })
 
+//Users => SELECT * FROM users
 var Users = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExUser.Items = nil
-	JsonGetAll(&database.ExUser, &database.ExUser.Items, true, w, r, SelectUsers)
+	JSONGetAll(&database.ExUser, w, r, GetQueries(SelectUsers, r))
 })
 
+//Organizations => SELECT * FROM organisations
 var Organizations = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExOrganisation.Items = nil
-	JsonGetAll(&database.ExOrganisation, &database.ExOrganisation.Items, true, w, r, SelectOrgs)
+	JSONGetAll(&database.ExOrganisation, w, r, GetQueries(SelectOrgs, r))
 })
 
+//Clients => SELECT * FROM clients
 var Clients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExClient.Items = nil
-	JsonGetAll(&database.ExClient, &database.ExClient.Items, true, w, r, SelectClients)
+	JSONGetAll(&database.ExClient, w, r, GetQueries(SelectClients, r))
 })
 
+//WorkGroups => SELECT * FROM workgroups
 var WorkGroups = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExWorkGroup.Items = nil
-	JsonGetAll(&database.ExWorkGroup, &database.ExWorkGroup.Items, true, w, r, SelectWorkGroups)
+	JSONGetAll(&database.ExWorkGroup, w, r, GetQueries(SelectWorkGroups, r))
 })
 
+//Developers => SELECT * FROM developers
 var Developers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExDeveloper.Items = nil
-	JsonGetAll(&database.ExDeveloper, &database.ExDeveloper.Items, true, w, r, SelectDevs)
+	JSONGetAll(&database.ExDeveloper, w, r, GetQueries(SelectDevs, r))
 })
 
+//ProjectStatuses => SELECT * FROM statuses
 var ProjectStatuses = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExProjectStatus.Items = nil
-	JsonGetAll(&database.ExProjectStatus, &database.ExProjectStatus.Items, true, w, r, SelectStatus)
+	JSONGetAll(&database.ExProjectStatus, w, r, GetQueries(SelectStatus, r))
 })
 
+//Projects => SELECT * FROM projects
 var Projects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExProject.Items = nil
-	JsonGetAll(&database.ExProject, &database.ExProject.Items, true, w, r, SelectProjects)
+	JSONGetAll(&database.ExProject, w, r, GetQueries(SelectProjects, r))
 })
 
+//ProjectsPreview => UNIQUE QUERY
+var ProjectsPreview = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	JSONGetAll(&database.ExProjectPreview, w, r, GetQueries(SelectProjectsPreview, r))
+})
+
+//Managers => SELECT * FROM managers
 var Managers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	database.ExManager.Items = nil
-	JsonGetAll(&database.ExManager, &database.ExManager.Items, true, w, r, SelectManagers)
+	JSONGetAll(&database.ExManager, w, r, SelectManagers)
 })
 
 var Role = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExRole, &database.ExRole.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExRole, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExRole.Items {
-		if item.ID == params["id"] {
+		if strconv.Itoa(item.ID) == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
@@ -88,23 +162,24 @@ var Role = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var User = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExUser, &database.ExUser.Items, false, w, r, SelectUsers)
-	w.Header().Set("Content-Type", "application/json")
+	//JSONGetAll(&database.ExUser, w, r, SelectUsers)
+	/*w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExUser.Items {
 		if item.UserLogin == params["login"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
-	}
+	}*/
+	JSONGetOne(&database.ExUser, w, r, SelectUsers)
 })
 
 var Organization = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExOrganisation, &database.ExOrganisation.Items, false, w, r, SelectOrgs)
+	//JSONGetAll(&database.ExOrganisation, w, r, GetQueries(SelectOrgs, r))
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExOrganisation.Items {
-		if item.OrganizationId == params["id"] {
+		if strconv.Itoa(item.OrganizationID) == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
@@ -112,7 +187,7 @@ var Organization = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 })
 
 var Client = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExClient, &database.ExClient.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExClient, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExClient.Items {
@@ -124,11 +199,11 @@ var Client = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Group = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExWorkGroup, &database.ExWorkGroup.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExWorkGroup, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExWorkGroup.Items {
-		if item.ID == params["id"] {
+		if strconv.Itoa(item.ID) == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
@@ -136,7 +211,7 @@ var Group = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Developer = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExDeveloper, &database.ExDeveloper.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExDeveloper, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExDeveloper.Items {
@@ -148,11 +223,11 @@ var Developer = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Status = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExProjectStatus, &database.ExProjectStatus.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExProjectStatus, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExProjectStatus.Items {
-		if item.ID == params["id"] {
+		if strconv.Itoa(item.ID) == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
@@ -160,11 +235,11 @@ var Status = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Project = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExProject, &database.ExProject.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExProject, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExProject.Items {
-		if item.ID == params["id"] {
+		if strconv.Itoa(item.ID) == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
@@ -172,7 +247,7 @@ var Project = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Manager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JsonGetAll(&database.ExManager, &database.ExManager.Items, false, w, r, SelectRoles)
+	//JSONGetAll(&database.ExManager, w, r, SelectRoles)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExManager.Items {
@@ -186,7 +261,7 @@ var Manager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 //#--All-INSERTS--#//
 
 var CreateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var role database.Roles
+	var role database.Role
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -211,7 +286,7 @@ var CreateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var CreateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var user database.Users
+	var user database.User
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -229,7 +304,7 @@ var CreateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	res, er := pg.
 		Insert("users").
 		Columns("user_login", "user_password", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "user_role").
-		Values(user.UserLogin, user.UserPassword, user.UserSurname, user.UserName, user.UserMidname, user.UserBirthdate, user.UserPhone, user.UserMail, user.Roles.ID).
+		Values(user.UserLogin, user.UserPassword, user.UserSurname, user.UserName, user.UserMidname, user.UserBirthdate, user.UserPhone, user.UserMail, user.Role.ID).
 		Exec()
 
 	if er != nil {
@@ -240,7 +315,7 @@ var CreateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var CreateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var org database.Organisations
+	var org database.Organisation
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -258,7 +333,7 @@ var CreateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	res, er := pg.
 		Insert("organisations").
 		Columns("organisation_name", "organisation_data").
-		Values(org.OrganizationName, org.OrganizationData).
+		Values(org.ShortName, org.OrganizationDesc).
 		Exec()
 
 	if er != nil {
@@ -269,7 +344,7 @@ var CreateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var CreateClient = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var cli database.Clients
+	var cli database.Client
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -285,7 +360,7 @@ var CreateClient = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	}
 
 	res, er := pg.
-		Insert("clients").Values(cli.Users.UserLogin, cli.Organisations.OrganizationId).Exec()
+		Insert("clients").Values(cli.User.UserLogin, cli.Organisation.OrganizationID).Exec()
 
 	if er != nil {
 		http.Error(w, er.Error(), 500)
@@ -295,7 +370,7 @@ var CreateClient = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 })
 
 var CreateGroup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var wg database.WorkGroups
+	var wg database.WorkGroup
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -320,7 +395,7 @@ var CreateGroup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 })
 
 var CreateDeveloper = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var dev database.Developers
+	var dev database.Developer
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -338,7 +413,7 @@ var CreateDeveloper = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 	res, er := pg.
 		Insert("developers").
 		Columns("developer_user_login", "workgroup_id", "is_general").
-		Values(dev.Users.UserLogin, dev.WorkGroups.ID, dev.IsGeneral).
+		Values(dev.User.UserLogin, nil, nil).
 		Exec()
 
 	if er != nil {
@@ -364,21 +439,21 @@ var CreateProject = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	res, er := pg.
-		Insert("projects").
-		Columns("cost", "project_info", "project_workgroup_id", "project_status_id", "project_data", "client_user_login", "manager_user_login").
-		Values(pr.Cost, pr.ProjectInfo, pr.WorkGroups.ID, pr.ProjectStatuses.ID, pr.ProjectData, pr.Clients_dop.UserLogin, pr.Managers.UserLogin).
-		Exec()
+	/*res, er := pg.
+	Insert("projects").
+	Columns("cost", "project_info", "project_workgroup_id", "project_status_id", "project_data", "client_user_login", "manager_user_login").
+	Values(pr.Cost, pr.ProjectInfo, pr.WorkGroups.ID, pr.ProjectStatuses.ID, pr.ProjectData, pr.Clients_dop.UserLogin, pr.Managers.UserLogin).
+	Exec()*/
 
-	if er != nil {
+	/*if er != nil {
 		http.Error(w, er.Error(), 500)
 	}
 
-	fmt.Println(res)
+	fmt.Println(res)*/
 })
 
 var CreateManager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	var man database.Managers
+	var man database.Manager
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -408,7 +483,7 @@ var UpdateRole = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	var role database.Roles
+	var role database.Role
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -437,7 +512,7 @@ var UpdateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	var user database.Users
+	var user database.User
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -474,7 +549,7 @@ var UpdateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 var UpdateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
+	//params := mux.Vars(r)
 
 	var org database.Organisations
 
@@ -491,7 +566,7 @@ var UpdateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, er := pg.
+	/*res, er := pg.
 		Update("organisations").
 		Set("organisation_name", org.OrganizationName).
 		Set("organisation_data", org.OrganizationData).
@@ -502,13 +577,13 @@ var UpdateOrg = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, er.Error(), 500)
 	}
 
-	fmt.Println(res)
+	fmt.Println(res)*/
 
 })
 
 var UpdateClients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
+	//params := mux.Vars(r)
 
 	var cli database.Clients
 
@@ -525,7 +600,7 @@ var UpdateClients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	fmt.Println(cli.Organisations.OrganizationId)
+	/*fmt.Println(cli.Organisations.OrganizationId)
 
 	res, er := pg.Update("clients").Set("organisation_id", cli.Organisations.OrganizationId).Where("client_user_login = ?", params["login"]).Exec()
 
@@ -533,7 +608,7 @@ var UpdateClients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 		http.Error(w, er.Error(), 500)
 	}
 
-	fmt.Println(res)
+	fmt.Println(res)*/
 
 })
 
@@ -541,7 +616,7 @@ var UpdateGroups = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	var wg database.WorkGroups
+	var wg database.WorkGroup
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -568,7 +643,7 @@ var UpdateGroups = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 var UpdateDevelopers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
+	//params := mux.Vars(r)
 
 	var dev database.Developers
 
@@ -585,7 +660,7 @@ var UpdateDevelopers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	res, er := pg.
+	/*res, er := pg.
 		Update("developers").
 		Set("workgroup_id", dev.WorkGroups.ID).
 		Set("is_general", dev.IsGeneral).
@@ -596,13 +671,13 @@ var UpdateDevelopers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 		http.Error(w, er.Error(), 500)
 	}
 
-	fmt.Println(res)
+	fmt.Println(res)*/
 
 })
 
 var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r)
+	//params := mux.Vars(r)
 
 	var pr database.Projects
 
@@ -619,7 +694,7 @@ var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	res, er := pg.
+	/*res, er := pg.
 		Update("projects").
 		Set("cost", pr.Cost).
 		Set("project_info", pr.ProjectInfo).
@@ -635,7 +710,7 @@ var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 		http.Error(w, er.Error(), 500)
 	}
 
-	fmt.Println(res)
+	fmt.Println(res)*/
 
 })
 

@@ -9,6 +9,7 @@ class DevelopmnetPage extends React.Component {
     }
 
     render() {
+        window.scrollTo(0, 0)
         return (
             <Container style={styles.containerStyle}>
                 {/* methods? */}

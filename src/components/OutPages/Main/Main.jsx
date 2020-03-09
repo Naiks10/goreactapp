@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 
 import Helmet from "react-helmet"
 
-import { Container, Row, Col, Jumbotron, Button } from "react-bootstrap"
+import { Button, Container, Row, Col, Jumbotron } from "react-bootstrap"
 
 //#--extended-main-class--#//
 
@@ -47,7 +47,7 @@ class Main extends React.Component {
                                     <p>Войдите или зарегистрируйтесь в системе, чтобы организовать свою мечту в мире реекламы и приложений.</p>
                                     <p>
                                         <Link to={link}>
-                                            <Button variant="warning">Начать работы</Button>
+                                           <Button variant="warning">Начать работы</Button>
                                         </Link>
                                     </p>
                                 </div>
@@ -71,7 +71,7 @@ class Main extends React.Component {
                                     <p>Узнайте о последних нововведениях в проекте в отдельном разделе новостей</p>
                                     <p>
                                         <Link to="/p/news">
-                                            <Button variant="purples">Узнать что-то новое</Button>
+                                           <Button variant="purples">Узнать что-то новое</Button>
                                         </Link>
                                     </p>
                                 </div>
@@ -119,11 +119,11 @@ class Main extends React.Component {
                                     </div>
                                     <h2 style={{ marginTop: 45 }}>Мне понравилось! Хочу больше</h2>
                                     <p>Перейдите в раздел разработки и посмотрите как работает проект и какие технологии были использованы в проекте.</p>
-                                    <p>
+                                    <div>
                                         <Link to="/p/development">
                                             <Button variant="primary">Разработка</Button>
                                         </Link>
-                                    </p>
+                                    </div>                                  
                                 </div>
                             </Jumbotron>
                         </div>

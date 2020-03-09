@@ -18,7 +18,7 @@ func Inizialize(connection, driver string) (bool, error) {
 		}
 	} else {
 		mySiteDataBaseConnection = postgres.PostgreSQLConnection{
-			ConnectionString: "user=postgres password=09102000 host=localhost port=5432 database=active_db sslmode=disable",
+			ConnectionString: "user=postgres password=09102000 host=localhost port=5432 database=plan_active_db sslmode=disable",
 			DriverName:       "pgx",
 		}
 	}

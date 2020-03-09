@@ -7,6 +7,7 @@ class About extends React.Component {
     }
 
     render() {
+        window.scrollTo(0, 0)
         return (
             <Container style={styles.containerStyle}>
                 <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
