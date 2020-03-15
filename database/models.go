@@ -180,6 +180,7 @@ func GetTag(e interface{}) string {
 //Table is an universal interface for table structs
 type Table interface {
 	GetItems() interface{}
+	GetItem() interface{}
 	Clear()
 	GetPrimaryKey() string
 }
@@ -204,6 +205,14 @@ func (t *Users) GetItems() interface{} {
 	return &t.Items
 }
 
+func (t *Users) GetItem() interface{} {
+	return &t.Items[0]
+}
+
+func (t *Projects) GetItem() interface{} {
+	return &t.Items[0]
+}
+
 func (t *Users) Clear() {
 	t.Items = nil
 }
@@ -218,7 +227,7 @@ func (t *Projects) GetPrimaryKey() string {
 	return GetTag(t.Items[0])
 }
 func (t *ProjectsPreview) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
+	return GetTag(t.Items)
 }
 func (t *Stages) GetPrimaryKey() string {
 	return GetTag(t.Items[0])
@@ -347,6 +356,10 @@ type ProjectsPreview struct {
 
 func (t *ProjectsPreview) GetItems() interface{} {
 	return &t.Items
+}
+
+func (t *ProjectsPreview) GetItem() interface{} {
+	return &t.Items[0]
 }
 
 func (t *ProjectsPreview) Clear() {
