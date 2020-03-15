@@ -33,7 +33,7 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, qu
 		errs := db.DB.Select(table.GetItems(), query)
 		fmt.Println(errs)
 	}
-	table.GetPrimaryKey()
+	//table.GetPrimaryKey()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(table)
 }
@@ -44,10 +44,25 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 
 	exSb := *sb
 
-	//vars := mux.Vars(r)
+	vars := mux.Vars(r)
 	fmt.Println("query")
 
-	query, params, _ := exSb.Where(sqrl.Eq{table.GetPrimaryKey(): "client"}).ToSql()
+	var val string
+
+	if value, ok := vars["id"]; ok {
+		val = value
+	} else if value, ok := vars["login"]; ok {
+		val = value
+	}
+
+	type Item struct {
+		Data interface{} `json:"data"`
+	}
+
+	fmt.Println(val)
+	//fmt.Println(table.GetPrimaryKey())
+
+	query, params, _ := exSb.Where(sqrl.Eq{table.GetPrimaryKey(): val}).ToSql()
 	fmt.Println(query)
 
 	if params != nil {
@@ -58,7 +73,7 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 		fmt.Println(errs)
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(table)
+	json.NewEncoder(w).Encode(Item{Data: table.GetItem()})
 }
 
 /*GetResult is universal converter to JSON from Go Structs,
@@ -111,27 +126,27 @@ var Users = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 //Organizations => SELECT * FROM organisations
 var Organizations = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExOrganisation, w, r, GetQueries(SelectOrgs, r))
+	//JSONGetAll(&database.ExOrganisation, w, r, GetQueries(SelectOrgs, r))
 })
 
 //Clients => SELECT * FROM clients
 var Clients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExClient, w, r, GetQueries(SelectClients, r))
+	//JSONGetAll(&database.ExClient, w, r, GetQueries(SelectClients, r))
 })
 
 //WorkGroups => SELECT * FROM workgroups
 var WorkGroups = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExWorkGroup, w, r, GetQueries(SelectWorkGroups, r))
+	//JSONGetAll(&database.ExWorkGroup, w, r, GetQueries(SelectWorkGroups, r))
 })
 
 //Developers => SELECT * FROM developers
 var Developers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExDeveloper, w, r, GetQueries(SelectDevs, r))
+	//JSONGetAll(&database.ExDeveloper, w, r, GetQueries(SelectDevs, r))
 })
 
 //ProjectStatuses => SELECT * FROM statuses
 var ProjectStatuses = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExProjectStatus, w, r, GetQueries(SelectStatus, r))
+	//JSONGetAll(&database.ExProjectStatus, w, r, GetQueries(SelectStatus, r))
 })
 
 //Projects => SELECT * FROM projects
@@ -146,7 +161,7 @@ var ProjectsPreview = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 
 //Managers => SELECT * FROM managers
 var Managers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExManager, w, r, SelectManagers)
+	//JSONGetAll(&database.ExManager, w, r, SelectManagers)
 })
 
 var Role = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -235,15 +250,15 @@ var Status = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Project = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	//JSONGetAll(&database.ExProject, w, r, SelectRoles)
-	w.Header().Set("Content-Type", "application/json")
+	JSONGetOne(&database.ExProjectPreview, w, r, SelectProjectsPreview)
+	/*w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range database.ExProject.Items {
 		if strconv.Itoa(item.ID) == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
-	}
+	}*/
 })
 
 var Manager = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
