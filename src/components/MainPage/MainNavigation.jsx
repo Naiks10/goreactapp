@@ -19,10 +19,10 @@ class MainNavigation extends React.Component {
             <div className="bg-white animated slideInDown " style={styles.mainNavigationStyle}>
                 <Container fluid style={{ paddingLeft: "-90px" }}>
                     <Row className="justify-content-md-center" style={styles.mainNavigationStyle._rowStyle}>
-                        <MainNavigationTabButton path="/p/main" text={<a>Главная <i className="fad fa-home"></i></a>} />
-                        <MainNavigationTabButton path="/p/news" text={<a>Новости <i className="fad fa-newspaper"></i></a>} />
-                        <MainNavigationTabButton path="/p/about" text={<a>О проекте <i className="fad fa-question-circle"></i></a>} />
-                        <MainNavigationTabButton path="/p/development" text={<a>Разработка <i className="fad fa-code"></i></a>} />
+                        <MainNavigationTabButton path="/home/start" text={<a>Главная <i className="fad fa-home"></i></a>} />
+                        <MainNavigationTabButton path="/home/news" text={<a>Новости <i className="fad fa-newspaper"></i></a>} />
+                        <MainNavigationTabButton path="/home/about" text={<a>О проекте <i className="fad fa-question-circle"></i></a>} />
+                        <MainNavigationTabButton path="/home/development" text={<a>Разработка <i className="fad fa-code"></i></a>} />
                     </Row>
                 </Container>
             </div>

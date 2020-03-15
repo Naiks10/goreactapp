@@ -2,7 +2,7 @@ import React from "react"
 
 import MainPageElement from "./MainPageElement"
 
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 
 import Helmet from "react-helmet"
 
@@ -23,7 +23,7 @@ class Main extends React.Component {
         var link = '/login'
 
         if (localStorage.getItem('jwt') !== null) {
-            link = '/workspace'
+            link = '/workspace/start'
         }
 
         return (                                                                                                                                                                                     
@@ -46,9 +46,9 @@ class Main extends React.Component {
                                     <h2 style={{ marginTop: 45 }}>Пора осуществлять проекты!</h2>
                                     <p>Войдите или зарегистрируйтесь в системе, чтобы организовать свою мечту в мире реекламы и приложений.</p>
                                     <p>
-                                        <Link to={link}>
-                                           <Button variant="warning">Начать работы</Button>
-                                        </Link>
+                                        
+                                           <Button onClick={() => { window.location.replace("/workspace/start")}} variant="warning">Начать работы</Button>
+                                        
                                     </p>
                                 </div>
                             </Jumbotron>
@@ -70,7 +70,7 @@ class Main extends React.Component {
                                     <h2 style={{ marginTop: 45 }}>Нужно узнать что-то новое?</h2>
                                     <p>Узнайте о последних нововведениях в проекте в отдельном разделе новостей</p>
                                     <p>
-                                        <Link to="/p/news">
+                                        <Link to="/home/news">
                                            <Button variant="purples">Узнать что-то новое</Button>
                                         </Link>
                                     </p>
@@ -96,7 +96,7 @@ class Main extends React.Component {
                                     <h2 style={{ marginTop: 45 }}>А что это вообще и куда я попал?</h2>
                                     <p>Узнайте больше о данном проекте перейдя в одноимённый раздел</p>
                                     <p>
-                                        <Link to="/p/about">
+                                        <Link to="/home/about">
                                             <Button variant="success">О проекте</Button>
                                         </Link>
                                     </p>
@@ -120,7 +120,7 @@ class Main extends React.Component {
                                     <h2 style={{ marginTop: 45 }}>Мне понравилось! Хочу больше</h2>
                                     <p>Перейдите в раздел разработки и посмотрите как работает проект и какие технологии были использованы в проекте.</p>
                                     <div>
-                                        <Link to="/p/development">
+                                        <Link to="/home/development">
                                             <Button variant="primary">Разработка</Button>
                                         </Link>
                                     </div>                                  
