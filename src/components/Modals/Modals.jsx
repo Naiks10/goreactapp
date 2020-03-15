@@ -9,8 +9,8 @@ import "animate.css"
 var jwt = getJWT()
 
 export function ClientsTableModalView(props) {
-    return (
-        <Modal
+    //return (
+        /*<Modal
             {...props}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
@@ -74,13 +74,13 @@ export function ClientsTableModalView(props) {
             <Modal.Footer>
                 <Button onClick={props.onHide}>Закрыть окно</Button>
             </Modal.Footer>
-        </Modal>
-    );
+        </Modal>*/
+    //);
 }
 
 export function DevelopersTableModalView(props) {
-    return (
-        <Modal
+   //return (
+        /*<Modal
             {...props}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
@@ -144,12 +144,12 @@ export function DevelopersTableModalView(props) {
             <Modal.Footer>
                 <Button onClick={props.onHide}>Закрыть окно</Button>
             </Modal.Footer>
-        </Modal>
-    );
+        </Modal>*/
+    //);
 }
 
 export function ProjectsTableModalView(props) {
-    return (
+    /*return (
         <Modal
             {...props}
             size="lg"
@@ -245,11 +245,11 @@ export function ProjectsTableModalView(props) {
                 <Button onClick={props.onHide}>Закрыть окно</Button>
             </Modal.Footer>
         </Modal>
-    );
+    );*/
 }
 
 export class ProjectEdit extends React.Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props)
     }
 
@@ -302,7 +302,7 @@ export class ProjectEdit extends React.Component {
                 </Modal.Footer>
             </Modal>
         )
-    }
+    }*/
 }
 
 const styles = {
@@ -325,7 +325,7 @@ const styles = {
 }
 
 export function ManagersTableModalView(props) {
-    return (
+    /*return (
         <Modal
             {...props}
             size="lg"
@@ -376,11 +376,11 @@ export function ManagersTableModalView(props) {
                 <Button onClick={props.onHide}>Закрыть окно</Button>
             </Modal.Footer>
         </Modal>
-    );
+    );*/
 }
 
 export class ClientsTableModalAdd extends React.Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props)
         this.state = {
             error: null,
@@ -542,11 +542,11 @@ export class ClientsTableModalAdd extends React.Component {
                 </Modal.Footer>
             </Modal>
         );
-    }
+    }*/
 }
 
 export class ClientsTableModalEdit extends React.Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props)
         this.state = {
             error: null,
@@ -709,10 +709,10 @@ export class ClientsTableModalEdit extends React.Component {
                 })()}
             </Modal>
         );
-    }
+    }*/
 }
 
-ClientsTableModalEdit.contextType = OrgContext;
+//ClientsTableModalEdit.contextType = OrgContext;
 
 export class DevelopersTableModalEdit extends React.Component {
     constructor(props) {
