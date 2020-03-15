@@ -51,7 +51,7 @@ export class Auth extends React.Component {
             })
             .then(() => {
                 if (!isError) {
-                    window.location.replace("/#/workspace")
+                    window.location.replace("/workspace/start")
                 }
             })
     }
