@@ -1,12 +1,16 @@
 import React from "react"
 import { Row, Col } from "react-bootstrap";
 import { isMobile } from "../Functions/Funcs";
+import { BackMenuButton } from "./BackMenuButton"
 
 //#--BackMenu--#//
 
 class BackMenu extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            isClicked : false
+        }
     }
 
     componentDidMount() {

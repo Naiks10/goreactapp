@@ -4,6 +4,7 @@ import { ClientsTable, ProjetcsTable, ManagersTable, DevelopersTable, GroupsTabl
 import { Button, Form, Col, Row, Container, Tab, Tabs } from "react-bootstrap"
 import { BodyContainer, SearchContainer } from "./BodyContainer"
 import { isMobile, getLogin } from '../Functions/Funcs'
+import history from '../Functions/history';
 import "hover.css"
 import "../../fa/css/all.css"
 
@@ -28,7 +29,7 @@ class MainNavigation extends React.Component {
                         <Col className="d-flex align-items-center">
                             <Row>
                                 <div>
-                                    <Link to="../" style={{ textDecoration: "none", marginLeft: 20, marginRight: 60 }} className="btn btn-outline-primary hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> {(() => { if (isMobile() !== true) return <b>НАЗАД</b> })()} </Link>
+                                    <Button variant="outline-primary" onClick={() => {history.goBack()}} style={{ marginLeft: 20, marginRight: 60 }} className="hvr-icon-back"><i class="far fa-angle-left hvr-icon"></i> {(() => { if (isMobile() !== true) return <b>НАЗАД</b> })()} </Button>
                                 </div>
                                 <div style={{backgroundColor : 'whitesmoke', borderRadius : 4, paddingLeft : 15, paddingRight: 15}} className="hvr-icon-fade hvr-underline-from-left d-flex align-items-center"><a>Поиск<i style={{marginLeft : 200}} className="far fa-search hvr-icon"></i></a></div>
                             </Row>
