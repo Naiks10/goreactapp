@@ -6,7 +6,8 @@ import (
 	"goreactapp/security"
 	"html/template"
 	"net/http"
-	"os"
+
+	//"os"
 
 	"github.com/gorilla/mux"
 )
@@ -70,7 +71,7 @@ func Register(r *mux.Router) {
 	//#--< GET >queries--#//
 
 	fmt.Println("Создайте новый ключ-пароль для входа в панель администратора :")
-	fmt.Fscan(os.Stdin, &sessionAdminKey)
+	//fmt.Fscan(os.Stdin, &sessionAdminKey)
 	fmt.Println("Пароль успещно создан")
 
 	//sessionAdminKey = wordGenerator.GetWord(128)
@@ -81,10 +82,7 @@ func Register(r *mux.Router) {
 	r.HandleFunc("/admin/login", postHandler).Methods("POST")
 
 	r.Handle("/roles", security.JwtMiddleware.Handler(functions.Roles)).Methods("GET")
-	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Queries("fields", "{fields}", "filter", "{filter}").Name("Twice")
-	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Queries("fields", "{fields}").Name("S")
-	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Queries("filter", "{filter}").Name("TwBice")
-	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET").Name("Once")
+	r.Handle("/users", security.JwtMiddleware.Handler(functions.Users)).Methods("GET")
 	r.Handle("/orgs", security.JwtMiddleware.Handler(functions.Organizations)).Methods("GET")
 	r.Handle("/clients", security.JwtMiddleware.Handler(functions.Clients)).Methods("GET")
 	r.Handle("/groups", security.JwtMiddleware.Handler(functions.WorkGroups)).Methods("GET")
