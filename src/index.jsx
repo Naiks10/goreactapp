@@ -6,15 +6,19 @@ import App from './App';
 import {StartPageMenu} from "./components/StartPageMenu/StartPageMenu"
 import * as serviceWorker from './serviceWorker';
 
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 //import 'mdbreact/dist/css/mdb.css';
 
+import createBrowserHistory from 'history/createBrowserHistory';
+
+const history = createBrowserHistory();
+
 ReactDOM.render(
-    <HashRouter>
+    <Router forceRefresh={true} history={history}>
         <App/>
-    </HashRouter>,
+    </Router>,
     document.getElementById('root')
 );
 serviceWorker.unregister();
