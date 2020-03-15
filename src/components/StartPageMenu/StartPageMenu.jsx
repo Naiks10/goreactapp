@@ -4,7 +4,10 @@ import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
 import { getJWT } from "../Functions/Funcs"
+import { Link, Redirect, withRouter, useHistory, useLocation } from "react-router-dom"
+import { br } from "react-router-dom"
 import "animate.css"
+import history from '../Functions/history'
 
 
 export class StartPageMenu extends React.Component {
@@ -48,96 +51,8 @@ export class StartPageMenu extends React.Component {
         if (isLoaded) {
             return (
                 <Container fluid style={{ marginTop: 20 }} className="d-flex justify-content-center">
-                    <Row className="d-flex justify-content-start" style={{ marginLeft: '5%', width : '90%'}}>
+                    <Row className="d-flex justify-content-start" style={{ marginLeft: '5%', width: '90%' }}>
                         <StartPageMenuElementNew />
-                        {
-                            Items.map(item => (
-                                <StartPageMenuElement data={
-                                    {
-                                        id: item.id,
-                                        name: item.name,
-                                        issues: item.project_issues,
-                                        exist: item.tasks_finished,
-                                        fact: item.tasks_all,
-                                        org_id: item.org_id,
-                                        src: item.src,
-                                        status_id: item.status_id,
-                                        status_name: item.status_name,
-                                        pdatestart: item.start,
-                                        pdatefinish: item.finish,
-                                        fdatestart: item.start_fact,
-                                        fdatefinish: item.finish_fact
-                                    }
-                                }
-                                />
-                            ))
-                        }
-                        {
-                            Items.map(item => (
-                                <StartPageMenuElement data={
-                                    {
-                                        id: item.id,
-                                        name: item.name,
-                                        issues: item.project_issues,
-                                        exist: item.tasks_finished,
-                                        fact: item.tasks_all,
-                                        org_id: item.org_id,
-                                        src: item.src,
-                                        status_id: item.status_id,
-                                        status_name: item.status_name,
-                                        pdatestart: item.start,
-                                        pdatefinish: item.finish,
-                                        fdatestart: item.start_fact,
-                                        fdatefinish: item.finish_fact
-                                    }
-                                }
-                                />
-                            ))
-                        }
-                        {
-                            Items.map(item => (
-                                <StartPageMenuElement data={
-                                    {
-                                        id: item.id,
-                                        name: item.name,
-                                        issues: item.project_issues,
-                                        exist: item.tasks_finished,
-                                        fact: item.tasks_all,
-                                        org_id: item.org_id,
-                                        src: item.src,
-                                        status_id: item.status_id,
-                                        status_name: item.status_name,
-                                        pdatestart: item.start,
-                                        pdatefinish: item.finish,
-                                        fdatestart: item.start_fact,
-                                        fdatefinish: item.finish_fact
-                                    }
-                                }
-                                />
-                            ))
-                        }
-                        {
-                            Items.map(item => (
-                                <StartPageMenuElement data={
-                                    {
-                                        id: item.id,
-                                        name: item.name,
-                                        issues: item.project_issues,
-                                        exist: item.tasks_finished,
-                                        fact: item.tasks_all,
-                                        org_id: item.org_id,
-                                        src: item.src,
-                                        status_id: item.status_id,
-                                        status_name: item.status_name,
-                                        pdatestart: item.start,
-                                        pdatefinish: item.finish,
-                                        fdatestart: item.start_fact,
-                                        fdatefinish: item.finish_fact
-                                    }
-                                }
-                                />
-                            ))
-                        }
                         {
                             Items.map(item => (
                                 <StartPageMenuElement data={
@@ -172,7 +87,7 @@ export class StartPageMenu extends React.Component {
 }
 
 
-export class StartPageMenuElement extends React.Component {
+class StartPageMenuElement extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -183,16 +98,26 @@ export class StartPageMenuElement extends React.Component {
             isTasksOver: false,
             LoadedState: 'start'
         }
+        //this.RedirectToProject = this.RedirectToProject.bind(this)
     }
 
+    /*RedirectToProject() {
+        history.push({ pathname: '/workspace/client_s' })
+        alert('Hello')
+    }*/
+
     render() {
+        //const { match, location, history } = this.props
         return (
             <div
                 className="StartMenuElement hvr-grow"
                 onMouseLeave={() => {
                     this.setState({
-                        LoadedState : 'start'
+                        LoadedState: 'start'
                     })
+                }}
+                onClick={() => {
+                    history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
                 }}
             >
                 <Col>
@@ -220,7 +145,8 @@ export class StartPageMenuElement extends React.Component {
                                             isStatusOver: false
                                         })
                                     }}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation()
                                         if (this.state.LoadedState != 'status') {
                                             this.setState({
                                                 LoadedState: 'status'
@@ -235,7 +161,7 @@ export class StartPageMenuElement extends React.Component {
                                     height="29"
                                     width="29"
                                     src={(() => {
-                                        return `assets/img/status/${this.props.data.status_id}.png`
+                                        return `/assets/img/status/${this.props.data.status_id}.png`
                                     })()}
                                 />
                             </div>
@@ -278,7 +204,7 @@ export class StartPageMenuElement extends React.Component {
                                         return (
                                             <Col className="animated fadeInRight" style={{ alignItems: 'center' }} >
                                                 <Col style={{ borderLeft: '2px solid rgb(32, 153, 209)', borderColor: 'rgb(32, 153, 209)', minHeight: 126 }}>
-                                                    <p style={{ marginBottom: 1 }}> <a style={{ color: 'rgb(32, 153, 209)' }}>&#8226;</a> Начат</p>
+                                                    <Link to="/workspace/client_s"><p style={{ marginBottom: 1 }}> <a style={{ color: 'rgb(32, 153, 209)' }}>&#8226;</a> Начат</p></Link>
                                                     <p style={{ marginBottom: 1 }}>В разработке</p>
                                                     <p style={{ marginBottom: 1 }}>На отладке</p>
                                                     <p style={{ marginBottom: 1 }}>Готов</p>
@@ -304,7 +230,7 @@ export class StartPageMenuElement extends React.Component {
                                                 isImgOver: false
                                             })
                                         }}
-                                        className={'align-middle ' + this.state.isImgOver ? 'hvr-grow_1' : null} width="75" height="75" src={this.props.data.src} />
+                                        className={'align-middle ' + this.state.isImgOver ? 'hvr-grow_1' : null} width="75" height="75" src={`/${this.props.data.src}`} />
                                 </div>
                             </div>
                         </Col>
@@ -332,7 +258,7 @@ export class StartPageMenuElement extends React.Component {
                                         <img
                                             height="29"
                                             width="29"
-                                            src="assets/img/warning.png"
+                                            src="/assets/img/warning.png"
                                         />
                                         <a className="d-flex align-items-center" style={{ marginBottom: 0, fontSize: 17 }}><b>{this.props.data.issues}</b></a>
                                     </Row>
@@ -354,7 +280,7 @@ export class StartPageMenuElement extends React.Component {
                                         <img
                                             height="29"
                                             width="29"
-                                            src="assets/img/ok.png"
+                                            src="/assets/img/ok.png"
                                         />
                                         <a className="d-flex align-items-center" style={{ marginBottom: 0, fontSize: 17 }}><b>{this.props.data.exist}/{this.props.data.fact}</b></a>
                                     </Row>
@@ -382,7 +308,7 @@ export class StartPageMenuElementNew extends React.Component {
             <div
                 className="StartMenuElementNew d-flex justify-content-center hvr-icon-shrink"
             >
-                <div className="d-flex align-items-center"><img className="hvr-icon" /*style={{marginTop: '50%', transform: 'translate(0%, -15%)'}}*/ width="100" height="100" src="assets/img/add.png" /></div>
+                <div className="d-flex align-items-center"><img className="hvr-icon" /*style={{marginTop: '50%', transform: 'translate(0%, -15%)'}}*/ width="100" height="100" src="/assets/img/add.png" /></div>
             </div>
         )
     }
@@ -394,3 +320,5 @@ const styles = {
         paddingRight: 0
     }
 }
+
+export default withRouter(StartPageMenuElement);

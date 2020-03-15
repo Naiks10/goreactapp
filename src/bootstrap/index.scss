@@ -20,6 +20,11 @@ $theme-colors: (
   src: url('../fonts/Roboto-Regular.ttf');
 }
 
+@font-face {
+  font-family: 'RobotoBold';
+  src: url('../fonts/Roboto-Bold.ttf');
+}
+
 html, body {
   height : 100%
 }
@@ -49,7 +54,6 @@ $newcolor : theme-color("danger");
   transition: all 300ms linear 0s;
   cursor: pointer;
 }
-
 
 .StartMenuElement:hover {
   background-color : white;
@@ -93,6 +97,34 @@ $newcolor : theme-color("danger");
   padding-top: 20px;
   border-radius : 8px;
   font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+
+.ProjectElement {
+  background-color : white;
+  padding-left: 27px;
+  padding-right: 27px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius : 8px;
+  border-color: rgba(0, 0, 0, 0.089);
+  border-width: 1px;
+  border-style: solid;
+  height: inherit;
+  //box-shadow: 0 0 5px rgba(49, 49, 49, 0.151);;
+  font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.ProjectElement:hover {
+  background-color : white;
+  //height: 262px;
+  box-shadow: 0 0 15px rgba(49, 49, 49, 0.351);;
   transition: all 300ms linear 0s;
   cursor: pointer;
 }
