@@ -1,6 +1,6 @@
 import React from "react"
 import { TitlePanel } from './Panels'
-import {Row, Col} from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 
 export class OrgInfo extends React.Component {
     constructor(props) {
@@ -35,7 +35,10 @@ export class OrgInfo extends React.Component {
                                         <Row>"НЕИЗВЕТСНО"</Row>
                                     </Col>
                                     <Col sm={4} className="d-flex align-items-center justify-content-center">
-                                        <img width="90" height="90" src={this.props.data.client.organisation.src} />
+                                        <img
+                                            width="90"
+                                            height="90"
+                                            src={this.props.data.client.organisation.src} />
                                     </Col>
                                 </Row>
                             </Col>

@@ -8,9 +8,15 @@ export class AddButton extends React.Component {
     render() {
         return (
 
-            <div onClick={this.props.onClick} className="d-flex align-items-center InButton" style={{ borderRadius: 4, padding: 6, marginLeft: 10 }}>
+            <div
+                onClick={this.props.onClick}
+                className="d-flex align-items-center InButton"
+                style={style.ButtonStyle}>
                 <div className="d-flex justify-content-center align-items-center">
-                    <img src="/assets/img/icon_add.png" width="20" height="20" />
+                    <img
+                        src="/assets/img/icon_add.png"
+                        width="20"
+                        height="20" />
                 </div>
             </div>
         )
@@ -23,9 +29,15 @@ export class EditButton extends React.Component {
     }
     render() {
         return (
-            <div onClick={this.props.onClick} className="d-flex align-items-center InButton" style={{ borderRadius: 4, padding: 6, marginLeft: 10 }}>
+            <div
+                onClick={this.props.onClick}
+                className="d-flex align-items-center InButton"
+                style={style.ButtonStyle}>
                 <div className="d-flex justify-content-center align-items-center">
-                    <img src="/assets/img/icon_edit.png" width="20" height="20" />
+                    <img
+                        src="/assets/img/icon_edit.png"
+                        width="20"
+                        height="20" />
                 </div>
             </div>
         )
@@ -39,9 +51,15 @@ export class DeleteButton extends React.Component {
     render() {
         return (
 
-            <div onClick={this.props.onClick} className="d-flex align-items-center InButton" style={{ borderRadius: 4, padding: 6, marginLeft: 10 }}>
+            <div
+                onClick={this.props.onClick}
+                className="d-flex align-items-center InButton"
+                style={style.ButtonStyle}>
                 <div className="d-flex justify-content-center align-items-center">
-                    <img src="/assets/img/icon_delete.png" width="20" height="20" />
+                    <img
+                        src="/assets/img/icon_delete.png"
+                        width="20"
+                        height="20" />
                 </div>
             </div>
         )
@@ -58,17 +76,12 @@ export class IssueButton extends React.Component {
             <div
                 onClick={this.props.onClick}
                 className="d-flex align-items-center InButton"
-                style={
-                    {
-                        borderRadius: 4,
-                        padding: 6,
-                        marginLeft: 10
-                    }
-                }>
+                style={style.ButtonStyle}>
                 <div className="d-flex justify-content-center align-items-center">
-                    <img src="/assets/img/icon_issue.png"
-                         width="20"
-                         height="20" />
+                    <img
+                        src="/assets/img/icon_issue.png"
+                        width="20"
+                        height="20" />
                 </div>
             </div>
         )
@@ -114,13 +127,7 @@ export class SubButton extends React.Component {
             <div
                 onClick={this.props.onClick}
                 className="d-flex align-items-center InButton"
-                style={
-                    {
-                        borderRadius: 4,
-                        padding: 6,
-                        marginLeft: 10
-                    }
-                }>
+                style={style.ButtonStyle}>
                 <div className="d-flex justify-content-center align-items-center">
                     <img
                         src="/assets/img/icon_sub.png"
@@ -129,5 +136,13 @@ export class SubButton extends React.Component {
                 </div>
             </div>
         )
+    }
+}
+
+const style = {
+    ButtonStyle: {
+        borderRadius: 4,
+        padding: 6,
+        marginLeft: 10
     }
 }
