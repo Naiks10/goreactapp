@@ -7849,3 +7849,5 @@ fa/webfonts/fa-solid-900.woff2
 CREATE DATABASE plan_active_db;.sql
 CREATE DATABASE plan_active_db2.sql
 CREATE DATABASE plan_active_db3.sql
+
+goreactapp.log

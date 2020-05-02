@@ -9,20 +9,12 @@ import { ProjectCreateWindow } from './components/BodyElements/Projects/Projetcs
 import { Auth } from './components/Auth/Auth'
 import { StartPageMenu } from './components/StartPageMenu/StartPageMenu'
 import { MainMenuButton, BackMenuButton } from './components/BackMenu/BackMenuButton'
-import { ProjectsView, ClientsView, WorkersView, SettingsView, MessagesView, MainNavigation } from './components/BodyElements/BodyPanel'
 import { Switch, Route, Router, Redirect } from 'react-router-dom'
-import { ProjectViewPage } from './components/InPages/ProjectViewPage'
+import { ProjectViewPage } from './components/InPages/ProjectViewPage/ProjectViewPage'
 import history from './components/Functions/history'
 
 //#--consts-with-pages--#//
 
-const Start_View = () => (
-  <StartPageMenu />
-)
-
-const Projects_View = () => (
-  <ProjectsView />
-)
 
 const Main_Page = () => (
   <MainPage />
@@ -31,30 +23,12 @@ const Main_Page = () => (
 const ProjetcNewPage = () => (
   <ProjectCreateWindow />
 )
-
-const Clients_View = () => (
-  <ClientsView />
-)
-
-const Messages_View = () => (
-  <MessagesView />
-)
-
-const Workers_View = () => (
-  <WorkersView />
-)
-
-const Settings_View = () => (
-  <SettingsView />
-)
-
 const LoginView = () => (
   <Auth />
 )
 
 //#--return-all-components--#//
 
-const ProjectContext = React.createContext(false)
 
 function MainView() {
 
@@ -130,30 +104,20 @@ function MainView() {
                     <Route path="/workspace/create_project" component={ProjetcNewPage} />
                     <Route exact path="/workspace/projects" component={StartPageMenu} />
                     <Route path="/workspace/projects/:id" component={ProjectViewPage} />
-                    <Route path="/workspace/client_s" component={Clients_View} />
-                    <Route path="/workspace/messages" component={Messages_View} />
-                    <Route path="/workspace/workers" component={Workers_View} />
-                    <Route path="/workspace/settings" component={Settings_View} />
                   </Switch>
                 )
                 break;
               case '2': //developer
                 return (
                   <Switch>
-                    <Route path="/projects" component={Projects_View} />
-                    {/* Git Tree in Future */}
-                    <Route path="/messages" component={Messages_View} />
-                    <Route path="/workers" component={Workers_View} />
-                    <Route path="/settings" component={Settings_View} />
+
                   </Switch>
                 )
                 break;
               case '3': //client
                 return (
                   <Switch>
-                    <Route path="/projects" component={Projects_View} />
-                    <Route path="/messages" component={Messages_View} />
-                    <Route path="/settings" component={Settings_View} />
+
                   </Switch>
                 )
                 break;
