@@ -1,0 +1,8 @@
+
+GET http://localhost:8085/workers?workgroup=1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Im1hbmFnZXIiLCJwYXNzd29yZCI6IjEyMyIsInJvbGUiOiIxIiwidGltZSI6MTU3Mjg5MDQyN30.Rd89iLN05CKeUc-U6RB6sCTBEaDZlickPAN1-uJsCSM
+
+###
+
+GET http://localhost:8085/projects/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Im1hbmFnZXIiLCJwYXNzd29yZCI6IjEyMyIsInJvbGUiOiIxIiwidGltZSI6MTU3Mjg5MDQyN30.Rd89iLN05CKeUc-U6RB6sCTBEaDZlickPAN1-uJsCSM

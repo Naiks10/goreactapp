@@ -20,15 +20,16 @@ class BackMenu extends React.Component {
     render() {
         if (localStorage.getItem("type") === "bottom") {
             return (
-                <Row style={style.mainStyle_bottom} className="animated slideInLeft">
+                <div style={style.mainStyle_bottom} className="animated slideInLeft">
                     {React.Children.map(this.props.children, (child, i) => {
                         return (
-                            <Col>
+                            <div>
                                 {child}
-                            </Col>
+                            </div>
+                            
                         )
                     })}
-                </Row>
+                </div>
             );
         } else {
             return (
@@ -54,6 +55,7 @@ const style = {
         left: "0",
         right: "0",
         bottom: "0",
+        marginBottom : 20,
         backgroundColor: "#34495e",
         height: "5.6em",
         zIndex: "999999",

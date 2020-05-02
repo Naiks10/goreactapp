@@ -1,5 +1,5 @@
 import React from "react"
-import { Col, Row, Container, Button } from "react-bootstrap"
+import { Col, Row, Container, Button, Spinner } from "react-bootstrap"
 import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
@@ -8,6 +8,7 @@ import { Link, Redirect, withRouter, useHistory, useLocation } from "react-route
 import { br } from "react-router-dom"
 import "animate.css"
 import history from '../Functions/history'
+import { MainNavigation } from "../BodyElements/BodyPanel"
 
 
 export class StartPageMenu extends React.Component {
@@ -50,6 +51,8 @@ export class StartPageMenu extends React.Component {
         const { isLoaded, error, Items } = this.state;
         if (isLoaded) {
             return (
+                <div>
+                <MainNavigation/>
                 <Container fluid style={{ marginTop: 20 }} className="d-flex justify-content-center">
                     <Row className="d-flex justify-content-start" style={{ marginLeft: '5%', width: '90%' }}>
                         <StartPageMenuElementNew />
@@ -77,10 +80,15 @@ export class StartPageMenu extends React.Component {
                         }
                     </Row>
                 </Container>
+                </div>
             )
         } else {
             return (
-                <p>Loading...</p>
+                <Row style={{position : 'absolute', left : '50%', top : '50%'}}>
+                    <Spinner animation="grow" variant="primary" />
+                    <Spinner animation="grow" variant="primary" />
+                    <Spinner animation="grow" variant="primary" />
+                </Row>
             )
         }
     }
@@ -230,7 +238,7 @@ class StartPageMenuElement extends React.Component {
                                                 isImgOver: false
                                             })
                                         }}
-                                        className={'align-middle ' + this.state.isImgOver ? 'hvr-grow_1' : null} width="75" height="75" src={`/${this.props.data.src}`} />
+                                        className={'align-middle ' + this.state.isImgOver ? 'hvr-grow_1' : null} width="75" height="75" src={this.props.data.src} />
                                 </div>
                             </div>
                         </Col>

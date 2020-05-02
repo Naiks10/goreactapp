@@ -7,6 +7,25 @@ import (
 
 //Init Structures
 
+type Time struct {
+	time.Time
+}
+
+func (m *Time) UnmarshalJSON(data []byte) error {
+	// Ignore null, like in the main JSON package.
+	if string(data) == "null" || string(data) == `""` {
+		return nil
+	}
+	/*fmt.Println(string(data))
+	v := strings.ReplaceAll(string(data), "\"", "")
+	fmt.Println(v)*/
+	//fmt.Println(time.Time(data))
+	// Fractional seconds are handled implicitly by Parse.
+	tt, err := time.Parse("2006-01-02", "")
+	*m = Time{tt}
+	return err
+}
+
 //Role structure
 type Role struct {
 	ID   int    `json:"id" db:"role_id"`
@@ -102,8 +121,15 @@ type Project struct {
 	WorkGroup            `json:"workgroup"`
 	ProjectInfo          string `json:"info" db:"project_info"`
 	Status               `json:"status"`
+	DevInitials          string    `json:"dev_init" db:"fio_dev"`
+	DevPhone             string    `json:"dev_phone" db:"pn"`
+	DevEmail             string    `json:"dev_email" db:"ad"`
+	DevImage             string    `json:"dev_img" db:"dev_img"`
+	SpecCount            string    `json:"dev_count" db:"workers_count"`
 	StartDate            time.Time `json:"start" db:"start_date"`
 	FinishDate           time.Time `json:"finish" db:"finish_date"`
+	StartDateFact        time.Time `json:"start_fact" db:"start_date_fact"`
+	FinishDateFact       time.Time `json:"finish_fact" db:"finish_date_fact"`
 }
 
 //ProjectPreview structure
@@ -125,47 +151,62 @@ type ProjectPreview struct {
 
 //Module structure
 type Module struct {
-	ID        int    `json:"id" db:"module_id"`
-	Name      string `json:"name" db:"module_name"`
-	ProjectID int    `json:"project" db:"module_project_id"`
-	Status    `json:"status"`
-	Index     string `json:"index" db:"module_index"`
+	ID             int    `json:"id" db:"module_id"`
+	Name           string `json:"name" db:"module_name"`
+	ProjectID      int    `json:"project" db:"module_project_id"`
+	Status         `json:"status"`
+	Index          int       `json:"index" db:"module_index"`
+	StartDate      time.Time `json:"start" db:"start_date"`
+	FinishDate     time.Time `json:"finish" db:"finish_date"`
+	StartDateFact  time.Time `json:"start_fact" db:"start_date_fact"`
+	FinishDateFact time.Time `json:"finish_fact" db:"finish_date_fact"`
 }
 
 //Stage structure
 type Stage struct {
-	ID       int    `json:"id" db:"stage_id"`
-	Name     string `json:"name" db:"stage_name"`
-	ModuleID int    `json:"module" db:"stage_module_id"`
-	Status   `json:"status"`
-	Index    string `json:"index" db:"stage_index"`
+	ID             int    `json:"id" db:"stage_id"`
+	Name           string `json:"name" db:"stage_name"`
+	ModuleID       int    `json:"module" db:"stage_module_id"`
+	Status         `json:"status"`
+	Index          int       `json:"index" db:"stage_index"`
+	StartDate      time.Time `json:"start" db:"start_date"`
+	FinishDate     time.Time `json:"finish" db:"finish_date"`
+	StartDateFact  time.Time `json:"start_fact" db:"start_date_fact"`
+	FinishDateFact time.Time `json:"finish_fact" db:"finish_date_fact"`
 }
 
 //Task structure
 type Task struct {
-	ID          int    `json:"id" db:"task_id"`
-	Name        string `json:"name" db:"task_name"`
-	StageID     int    `json:"stage" db:"task_stage_id"`
-	Status      `json:"status"`
-	SuperTaskID int `json:"supertask" db:"task_supertask_id"`
-	Index       int `json:"index" db:"stage_index"`
+	ID             int    `json:"id" db:"task_id"`
+	Name           string `json:"name" db:"task_name"`
+	StageID        int    `json:"stage" db:"task_stage_id"`
+	User           `json:"developer"`
+	Status         `json:"status"`
+	SuperTaskID    int       `json:"supertask" db:"task_supertask_id"`
+	Index          int       `json:"index" db:"task_index"`
+	StartDate      time.Time `json:"start" db:"start_date"`
+	FinishDate     time.Time `json:"finish" db:"finish_date"`
+	StartDateFact  time.Time `json:"start_fact" db:"start_date_fact"`
+	FinishDateFact time.Time `json:"finish_fact" db:"finish_date_fact"`
 }
 
 //Issue structure
 type Issue struct {
-	IssuesID   int       `json:"id" db:"issue_id"`
-	IssuesName string    `json:"name" db:"issue_name"`
-	IssuesDesc string    `json:"desc" db:"issue_desc"`
-	IssuesDate time.Time `json:"date db:"issue_date"`
+	IssuesID    int       `json:"id" db:"issue_id"`
+	IssuesName  string    `json:"name" db:"issue_name"`
+	IssuesDesc  string    `json:"desc" db:"issue_desc"`
+	IssuesDate  time.Time `json:"date" db:"issue_date"`
+	TaskID      int       `json:"issue_task" db:"issue_task_id"`
+	CloseStatus bool      `json:"status" db:"issue_close_status"`
 }
 
-//IssuesList structure
+/*//IssuesList structure
 type IssuesList struct {
-	ListID      int `json:"id"`
+	ListID      int `json:"id" db:"list_id"`
 	Issue       `json:"issue"`
 	Task        `json:"task"`
 	CloseStatus bool `json:"status" db:"issue_close_status"`
-}
+}*/
 
 //----------------------------------------------------
 
@@ -201,69 +242,8 @@ type Users struct {
 	Items []User `json:"items"`
 }
 
-func (t *Users) GetItems() interface{} {
-	return &t.Items
-}
-
-func (t *Users) GetItem() interface{} {
-	return &t.Items[0]
-}
-
-func (t *Projects) GetItem() interface{} {
-	return &t.Items[0]
-}
-
 func (t *Users) Clear() {
 	t.Items = nil
-}
-
-func (t *Roles) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Managers) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Projects) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *ProjectsPreview) GetPrimaryKey() string {
-	return GetTag(t.Items)
-}
-func (t *Stages) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Statuses) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Tasks) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *WorkGroups) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *WorkGroupLists) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Organisations) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Modules) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Issues) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *IssuesLists) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Users) GetPrimaryKey() string {
-	return GetTag(t.Items)
-}
-func (t *Clients) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
-}
-func (t *Developers) GetPrimaryKey() string {
-	return GetTag(t.Items[0])
 }
 
 type Organisations struct {
@@ -414,7 +394,7 @@ func (t *Issues) Clear() {
 	t.Items = nil
 }
 
-type IssuesLists struct {
+/*type IssuesLists struct {
 	Items []IssuesList `json:"items"`
 }
 
@@ -424,7 +404,7 @@ func (t *IssuesLists) GetItems() interface{} {
 
 func (t *IssuesLists) Clear() {
 	t.Items = nil
-}
+}*/
 
 type Managers struct {
 	Items []Manager `json:"items"`
@@ -455,6 +435,6 @@ var (
 	ExStage          = Stages{}
 	ExTask           = Tasks{}
 	ExIssue          = Issues{}
-	ExIssueList      = IssuesLists{}
-	ExManager        = Managers{}
+	//ExIssueList      = IssuesLists{}
+	ExManager = Managers{}
 )

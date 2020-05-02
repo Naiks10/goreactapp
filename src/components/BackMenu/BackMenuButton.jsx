@@ -4,7 +4,7 @@ import { Link, Redirect } from "react-router-dom"
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import Helmet from "react-helmet"
-import { getRole } from "../Functions/Funcs"
+import { getRole, isMobile } from "../Functions/Funcs"
 
 
 //Класс Главной кнопки
@@ -21,13 +21,13 @@ class MainMenuButton extends React.Component {
         return (
             <div className="MainMenuButton"
                 onClick={this.props.onClick}
-                onMouseEnter={() => { this.setState({ size: "34" }) }}
-                onMouseLeave={() => { this.setState({ size: "38" }) }}>
-                
-                    <div style={{ width: "5.6rem", height: "5.6rem" }}>
-                        <img width={this.state.size} height={this.state.size} src="/assets/img/menu.png" />
-                    </div>
-                
+                onMouseEnter={() => { this.setState({ size: "30" }) }}
+                onMouseLeave={() => { this.setState({ size: "34" }) }}>
+
+                <div style={{ width: "5.6rem", height: "5.6rem" }}>
+                    <img width={this.state.size} height={this.state.size} src="/assets/img/menu.png" />
+                </div>
+
             </div>
         );
     }
@@ -41,11 +41,12 @@ class BackMenuButton extends React.Component {
     }
 
     render() {
+
         return (
-            <Container className="BackMenuButton" onMouseEnter={this.FindObject}>
+            <Container className={`BackMenuButton`} onMouseEnter={this.FindObject}>
                 <Link className="def" style={{ textDecoration: "none" }} to={this.props.path} className="row">
                     <div style={{ width: "5.6rem", height: "5.6rem" }}>
-                        <img width="38" height="38" src={'/' + this.props.src} />
+                        <img width="34" height="34" src={'/' + this.props.src} />
                     </div>
                     <Col>
                         {this.props.text}

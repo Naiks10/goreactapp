@@ -36,6 +36,16 @@ body {
 
 $newcolor : theme-color("danger");
 
+.Expand_true {
+  transition: all 500ms linear 0s;
+  transform: rotate(180deg);
+}
+
+.Expand_false {
+  transition: all 500ms linear 0s;
+  transform: rotate(0deg);
+}
+
 .StartMenuElement {
   background-color : white;
   width : 471px;
@@ -83,6 +93,77 @@ $newcolor : theme-color("danger");
   cursor: pointer;
 }
 
+.Item {
+  padding-top: 15px;
+  padding-left: 25px;
+  margin-top: 5px;
+}
+
+.Item_task1 {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 25px;
+  margin-top: 5px;
+  border-top: 0.1px solid white;
+  border-bottom: 0.1px solid white;
+  transition: all 300ms linear 0s;
+}
+
+.Item_task1:hover {
+  margin-top: 5px;
+  border-top: 0.1px solid #2098D1;
+  border-bottom: 0.1px solid #2098D1;
+}
+
+.Item_task2 {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 25px;
+  margin-top: 5px;
+  border-top: 0.1px solid white;
+  border-bottom: 0.1px solid white;
+  transition: all 300ms linear 0s;
+}
+
+.Item_task2:hover {
+  margin-top: 5px;
+  border-top: 0.1px solid rgb(27, 214, 74);
+  border-bottom: 0.1px solid rgb(27, 214, 74);
+}
+
+.Item_task3 {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 25px;
+  margin-top: 5px;
+  border-top: 0.1px solid white;
+  border-bottom: 0.1px solid white;
+  transition: all 300ms linear 0s;
+}
+
+.Item_task3:hover {
+  margin-top: 5px;
+  border-top: 0.1px solid rgb(255, 196, 0);
+  border-bottom: 0.1px solid rgb(255, 196, 0);
+}
+
+.Item_task4 {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 25px;
+  margin-top: 5px;
+  border-top: 0.1px solid white;
+  border-bottom: 0.1px solid white;
+  transition: all 300ms linear 0s;
+}
+
+.Item_task4:hover {
+  margin-top: 5px;
+  border-top: 0.1px solid red;
+  border-bottom: 0.1px solid red;
+}
+
+
 .StartMenuElementNew:hover {
   background-color : transparent;
   width : 471px;
@@ -101,6 +182,38 @@ $newcolor : theme-color("danger");
   cursor: pointer;
 }
 
+.InfoPanel {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.InButton {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  background-color: whitesmoke;
+  transition: all 300ms linear 0s;
+}
+
+.InButton:hover {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  background-color: rgb(212, 212, 212);
+  transition: all 300ms linear 0s;
+}
 
 .ProjectElement {
   background-color : white;
@@ -108,7 +221,7 @@ $newcolor : theme-color("danger");
   padding-right: 27px;
   padding-bottom: 20px;
   padding-top: 20px;
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 20px;
   border-radius : 8px;
   border-color: rgba(0, 0, 0, 0.089);
@@ -124,7 +237,35 @@ $newcolor : theme-color("danger");
 .ProjectElement:hover {
   background-color : white;
   //height: 262px;
-  box-shadow: 0 0 15px rgba(49, 49, 49, 0.351);;
+  box-shadow: 0 0 7px rgba(49, 49, 49, 0.351);;
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.ProjectElementFMT {
+  background-color : white;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-top: 20px;
+  margin-bottom: 13px;
+  margin-right: 12px;
+  border-radius : 8px;
+  border-color: rgba(0, 0, 0, 0.089);
+  border-width: 1px;
+  border-style: solid;
+  height: inherit;
+  //box-shadow: 0 0 5px rgba(49, 49, 49, 0.151);;
+  font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.ProjectElementFMT:hover {
+  background-color : white;
+  //height: 262px;
+  box-shadow: 0 0 7px rgba(49, 49, 49, 0.351);;
   transition: all 300ms linear 0s;
   cursor: pointer;
 }
@@ -137,6 +278,7 @@ $newcolor : theme-color("danger");
   height: 5.6rem;
   cursor: pointer;
 }
+
 
 .BackMenuButton .col {
   visibility: visible;
@@ -165,6 +307,7 @@ $newcolor : theme-color("danger");
   height: 5.6rem;
   //box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
+
 .BackMenuButton:hover .col {
   visibility: visible;
   color: whitesmoke;

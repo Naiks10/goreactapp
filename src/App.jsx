@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import { getRole } from "./components/Functions/Funcs"
+import { getRole, isMobile } from "./components/Functions/Funcs"
 import MainPage from './components/MainPage/MainPage'
 import BackMenu from './components/BackMenu/BackMenu'
 import { ProjectCreateWindow } from './components/BodyElements/Projects/ProjetcsCreate'
@@ -76,7 +76,7 @@ function MainView() {
             case '1':
               return (
                 <BackMenu>
-                  <MainMenuButton />
+                  <MainMenuButton/>
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/client_s" text="Клиенты" src="assets/img/users.png" />
                   <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
@@ -121,7 +121,6 @@ function MainView() {
           }
         })()}
         <div style={{ marginLeft: ves }}>
-          <MainNavigation />
           {(() => {
             switch (role) {
               case '1': //manager
