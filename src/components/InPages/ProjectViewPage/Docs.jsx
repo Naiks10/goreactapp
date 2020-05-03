@@ -1,6 +1,6 @@
 import React from "react"
 import { TitlePanel } from './Panels'
-import {Row, Col} from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 
 export class ProjectDocs extends React.Component {
     constructor(props) {
@@ -21,7 +21,6 @@ export class ProjectDocs extends React.Component {
                     this.state.isExpanded
                         ? <div className="ProjectElement">
                             <Col>
-                                {/*<Row style={{ fontWeight: 'bold' }}><b>Тут пока что ничего нет</b></Row>*/}
                                 <Row>
                                     <ProjectDocsElement />
                                     <ProjectDocsElement />

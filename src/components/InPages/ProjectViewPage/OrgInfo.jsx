@@ -16,11 +16,7 @@ export class OrgInfo extends React.Component {
                 <TitlePanel
                     title="ОРГАНИЗАЦИЯ"
                     isExpanded={this.state.isExpanded}
-                    onClick={
-                        () => {
-                            this.setState({ isExpanded: !this.state.isExpanded })
-                        }
-                    } />
+                    onClick={() => { this.setState({ isExpanded: !this.state.isExpanded }) }} />
                 {
                     this.state.isExpanded
                         ? <div
@@ -34,7 +30,9 @@ export class OrgInfo extends React.Component {
                                         <Row style={{ fontWeight: 'bold' }}><b>Об организации</b></Row>
                                         <Row>"НЕИЗВЕТСНО"</Row>
                                     </Col>
-                                    <Col sm={4} className="d-flex align-items-center justify-content-center">
+                                    <Col
+                                        sm={4}
+                                        className="d-flex align-items-center justify-content-center">
                                         <img
                                             width="90"
                                             height="90"

@@ -200,6 +200,15 @@ type Issue struct {
 	CloseStatus bool      `json:"status" db:"issue_close_status"`
 }
 
+//GlobalValueModel structure
+type GlobalValueModel struct {
+	CountAll    int   `json:"count_all" db:"count_all"`
+	Count       int   `json:"count" db:"count"`
+	Issues      int   `json:"issues" db:"issues"`
+	CurrentData []int `json:"current" db:"current"`
+	PlanData    []int `json:"plan" db:"plan"`
+}
+
 /*//IssuesList structure
 type IssuesList struct {
 	ListID      int `json:"id" db:"list_id"`
@@ -230,11 +239,23 @@ type Roles struct {
 	Items []Role `json:"items"`
 }
 
+type Values struct {
+	Items []GlobalValueModel `json:"items"`
+}
+
 func (t *Roles) GetItems() interface{} {
 	return &t.Items
 }
 
 func (t *Roles) Clear() {
+	t.Items = nil
+}
+
+func (t *Values) GetItems() interface{} {
+	return &t.Items
+}
+
+func (t *Values) Clear() {
 	t.Items = nil
 }
 
@@ -437,4 +458,5 @@ var (
 	ExIssue          = Issues{}
 	//ExIssueList      = IssuesLists{}
 	ExManager = Managers{}
+	ExValue   = Values{}
 )

@@ -16,6 +16,10 @@ func (t *Issues) GetItem() interface{} {
 	return &t.Items[0]
 }
 
+func (t *Values) GetItem() interface{} {
+	return &t.Items[0]
+}
+
 /*func (t *IssuesLists) GetItem() interface{} {
 	return &t.Items[0]
 }*/
@@ -84,6 +88,9 @@ func (t *WorkGroupLists) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }
 func (t *Organisations) GetPrimaryKey() string {
+	return GetTag(t.Items)
+}
+func (t *Values) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }
 func (t *Modules) GetPrimaryKey() string {

@@ -6,6 +6,15 @@ export const SuperTaskcontext = React.createContext(null)
 export const Taskcontext = React.createContext(null);
 export const Stagecontext = React.createContext(null);
 export const Modulecontext = React.createContext(null);
+export const ProjectValueContext = React.createContext({
+    current: null,
+    plan: null,
+    count_all: 0,
+    count: 0,
+    issues: 0,
+    updateValue: () => { },
+})
+ProjectValueContext.displayName = 'FIND_ME_THERE!!!!'
 
 export function GetDate(value) {
     var data = new Date(value)

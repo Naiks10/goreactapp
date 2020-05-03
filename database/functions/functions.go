@@ -272,4 +272,57 @@ FROM  issues`)
 			 FROM  working_developer_list
 			 LEFT  JOIN users
 			   ON  user_login = developer_login`)
+	SelectValues = postgres.Select(`(
+		SELECT  COUNT(*)
+		  FROM  (
+			  SELECT *FROM tasks
+			   WHERE  task_stage_id IN (
+				   SELECT  stage_id 
+					 FROM  stages 
+					WHERE  stage_module_id IN (
+						SELECT  module_id 
+						  FROM  modules
+						 WHERE  module_project_id = project_id
+					)
+				   )
+		  ) AS tasks_2
+	) AS tasks_all,
+	(
+		SELECT  COUNT(*)
+		  FROM  (
+			  SELECT *FROM tasks
+			   WHERE  task_stage_id IN (
+				   SELECT  stage_id 
+					 FROM  stages 
+					WHERE  stage_module_id IN (
+						SELECT  module_id 
+						  FROM  modules
+						 WHERE  module_project_id = project_id
+					)
+				   ) AND task_status_id = 4
+		  ) AS tasks_2
+	) AS tasks_finished,
+	(
+		SELECT  COUNT(*)
+		  FROM  (
+			  SELECT *FROM issues
+			   WHERE  issue_task_id IN (
+				   SELECT  task_id 
+					 FROM  tasks
+					WHERE  task_stage_id IN (
+						SELECT  stage_id 
+						  FROM  stages 
+						 WHERE  stage_module_id IN (
+							SELECT  module_id 
+							  FROM  modules
+							 WHERE  module_project_id = project_id
+					)
+				   )
+			   )
+		  ) AS issues_2
+	) AS project_issues
+FROM  projects
+JOIN  clients ON project_client_login = client_login
+JOIN  organisations ON organisation_id = client_organisation_id
+JOIN  status ON status_id = project_status_id`)
 )

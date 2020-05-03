@@ -359,7 +359,8 @@ class DeleteModuleModal extends React.Component {
                                             project: this.props.task_data.project,
                                         })
                                     }
-                                ).then(
+                                )
+                                .then(
                                     () => {
                                         this.props.onHide()
                                         method()

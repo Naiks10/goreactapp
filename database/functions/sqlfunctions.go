@@ -150,6 +150,10 @@ var User = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	JSONGetOne(&database.ExUser, w, r, SelectUsers)
 })
 
+var Value = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	JSONGetOne(&database.ExUser, w, r, SelectValues)
+})
+
 var Organization = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	JSONGetOne(&database.ExOrganisation, w, r, SelectOrgs)
 })
@@ -382,6 +386,55 @@ var CreateTask = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		//http.Error(w, er.Error(), 500)
 	}
 	fmt.Println("Hello")
+	fmt.Println(er2)
+})
+
+var EditTask = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var task database.Task
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	err = json.Unmarshal(b, &task)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	/*var role database.Role*/
+	/*InsertNewData(role, w, r)*/
+	var er error
+	//fmt.Println(role)
+	var er2 error
+	_, er2 = pg.Insert("tasks").
+		Columns(
+			"task_name",
+			"task_stage_id",
+			"task_developer_login",
+			"task_status_id",
+			"task_supertask_id",
+			"task_index",
+			"start_date",
+			"finish_date",
+		).
+		Values(
+			task.Name,
+			task.StageID,
+			task.User.UserLogin,
+			task.Status.ID,
+			task.SuperTaskID,
+			task.Index,
+			task.StartDate,
+			task.FinishDate,
+		).Exec()
+
+	if er != nil || er2 != nil {
+		//http.Error(w, er.Error(), 500)
+	}
 	fmt.Println(er2)
 })
 

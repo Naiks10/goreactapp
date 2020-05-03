@@ -12,6 +12,7 @@ type LogWrapper struct {
 	http.Handler
 }
 
+//ServeHTTPP rewriting func for middleware
 func (wr LogWrapper) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	logFile, err := os.OpenFile("goreactapp.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {

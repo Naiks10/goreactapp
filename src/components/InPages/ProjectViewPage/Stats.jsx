@@ -1,5 +1,6 @@
 import React from "react"
 import { TitlePanel } from './Panels'
+import { Row } from "react-bootstrap";
 
 export class ProjectStatsView extends React.Component {
     constructor(props) {
@@ -23,7 +24,11 @@ export class ProjectStatsView extends React.Component {
                 {
                     this.state.isExpanded
                         ? <div className="ProjectElement">
-                            <h1>Ожидается</h1>
+                            <Row>
+                                <a><b>Всего задач</b>{this.props.all_count}</a>
+                                <a><b>Выполнено задач</b>{this.props.count}</a>
+                                <a><b>Проблем</b>{this.props.issues_count}</a>
+                            </Row>
                         </div>
                         : null
                 }

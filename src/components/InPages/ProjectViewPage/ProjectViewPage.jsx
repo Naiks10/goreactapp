@@ -15,7 +15,7 @@ import { OrgInfo } from "./OrgInfo";
 import { ProjectChartView } from './Chart'
 import { ProjectDocs } from "./Docs";
 import { ProjectStatsView } from './Stats'
-import { WorkGroupContext, ProjectContext } from './Consts'
+import { WorkGroupContext, ProjectContext, ProjectValueContext } from './Consts'
 import { TitlePanel } from './Panels'
 import axios from 'axios';
 
@@ -27,8 +27,32 @@ export class ProjectViewPage extends React.Component {
             error: null,
             isLoaded: false,
             data: {},
-            work_data: {}
+            work_data: {},
+            globalProjectData : {
+                projects_chart_data: {
+                    current: null,
+                    plan: null,
+                },
+                count_all: 0,
+                count: 0,
+                issues: 0,
+                updateValue: this.updateValue,
+            },
         }
+    }
+
+    updateValue() {
+        axios.get(`projectvalues/${this.props.match.params.id}`, {
+            headers: {
+                'Authorization': `Bearer ${getJWT()}`
+            }
+        })
+        .then(res => {
+            const data = res.data
+            this.setState({
+                globalProjectData : data
+            })
+        })
     }
 
     componentDidMount() {
@@ -56,12 +80,10 @@ export class ProjectViewPage extends React.Component {
                             })
                         })
                 },
-                (error) => {
-                    this.setState({
-                        error
-                    })
-                }
+                (error) => { this.setState({ error }) }
             )
+
+            this.updateValue()
     }
 
     render() {
@@ -77,7 +99,9 @@ export class ProjectViewPage extends React.Component {
                                     <Col><OrgInfo data={this.state.data} /></Col>
                                 </Row>
                                 <Row>
-                                    <Col><ProjectChartView /></Col>
+                                    <ProjectValueContext.Provider value={this.state.globalProjectData}>
+                                        <Col><ProjectChartView /></Col>
+                                    </ProjectValueContext.Provider>
                                 </Row>
                                 <Row>
                                     <Col><ProjectDocs /></Col>
@@ -86,13 +110,17 @@ export class ProjectViewPage extends React.Component {
                                     <Col>
                                         <ProjectContext.Provider value={this.state.data}>
                                             <WorkGroupContext.Provider value={this.state.work_data}>
-                                                <ProjectControlView />
+                                                <ProjectValueContext.Provider value={this.state.globalProjectData}>
+                                                    <ProjectControlView />
+                                                </ProjectValueContext.Provider>
                                             </WorkGroupContext.Provider>
                                         </ProjectContext.Provider>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col><ProjectStatsView /></Col>
+                                    <ProjectValueContext.Provider value={this.state.globalProjectData}>
+                                        <Col><ProjectStatsView /></Col>
+                                    </ProjectValueContext.Provider>
                                 </Row>
                             </Col>
                         </Container>
