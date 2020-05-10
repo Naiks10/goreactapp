@@ -66,12 +66,32 @@ var ProjectStatuses = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 
 //Projects => SELECT * FROM projects
 var Projects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExProject, w, r, GetQueries(SelectProjects, r))
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	querys := *SelectProjects
+	if value, ok := query["manager"]; ok {
+		i := value[0]
+		querys.Where(sqrl.Eq{"project_manager_login": i})
+	}
+	if value, ok := query["client"]; ok {
+		i := value[0]
+		querys.Where(sqrl.Eq{"project_client_login": i})
+	}
+	JSONGetAll(&database.ExProject, w, r, GetQueries(&querys, r))
 })
 
 //ProjectsPreview => UNIQUE QUERY
 var ProjectsPreview = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExProjectPreview, w, r, GetQueries(SelectProjectsPreview, r))
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	querys := *SelectProjectsPreview
+	if value, ok := query["manager"]; ok {
+		i := value[0]
+		querys.Where(sqrl.Expr("project_manager_login = ? OR project_manager_login = 'null'", i))
+	}
+	if value, ok := query["client"]; ok {
+		i := value[0]
+		querys.Where(sqrl.Eq{"project_client_login": i})
+	}
+	JSONGetAll(&database.ExProjectPreview, w, r, GetQueries(&querys, r))
 })
 
 //Managers => SELECT * FROM managers
@@ -142,6 +162,34 @@ var Workers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	//JSONGetAll(&database.Ex, w, r, GetQueries(&querys, r))
 })
 
+var ClientsView = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	querys := *SelectClientList
+	q, _, _ := querys.ToSql()
+	GetResultWA(w, q)
+	//JSONGetAll(&database.Ex, w, r, GetQueries(&querys, r))
+})
+
+var ManagersView = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	querys := *SelectManagersList
+	q, _, _ := querys.ToSql()
+	GetResultWA(w, q)
+	//JSONGetAll(&database.Ex, w, r, GetQueries(&querys, r))
+})
+
+var DevsView = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	querys := *SelectDeveloperList
+	q, _, _ := querys.ToSql()
+	GetResultWA(w, q)
+	//JSONGetAll(&database.Ex, w, r, GetQueries(&querys, r))
+})
+
+var GroupsView = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	querys := *SelectManagersList
+	q, _, _ := querys.ToSql()
+	GetResultWA(w, q)
+	//JSONGetAll(&database.Ex, w, r, GetQueries(&querys, r))
+})
+
 var Role = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	JSONGetOne(&database.ExRole, w, r, SelectRoles)
 })
@@ -151,7 +199,7 @@ var User = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 })
 
 var Value = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetOne(&database.ExUser, w, r, SelectValues)
+	JSONGetOne(&database.ExValue, w, r, SelectValues)
 })
 
 var Organization = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -764,6 +812,144 @@ var CreateSubTask = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	fmt.Println(er2)
 })
 
+var CreateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var project database.ProjectDB
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	fmt.Println(err)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	err = json.Unmarshal(b, &project)
+	fmt.Println(err)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	var er2 error
+
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	if value, ok := query["mode"]; ok {
+		switch value[0] {
+		case "client":
+			_, er2 = pg.Insert("projects").
+				Columns(
+					"project_name",
+					"project_client_login",
+					"project_manager_login",
+					"project_workgroup_id",
+					"editable",
+					"client_activity",
+					"project_info",
+					"project_status_id",
+					"start_date",
+					"finish_date",
+				).
+				Values(
+					project.Name,
+					project.Client.User.UserLogin,
+					"null",
+					0,
+					project.Editable,
+					project.Activity,
+					project.ProjectInfo,
+					0,
+					project.StartDate,
+					project.FinishDate,
+				).Exec()
+		case "prepare":
+			_, er2 = pg.Update("projects").
+				Set("project_manager_login", project.Manager.User.UserLogin).
+				Set("project_status_id", 1).Exec()
+		}
+
+	}
+
+	//fmt.Println(role)
+
+	//fmt.Println(sqrl.Expr("(SELECT COUNT(*) FROM tasks where task_supertask_id = ?) + 1", task.SuperTaskID))
+
+	if er2 != nil {
+		//http.Error(w, er.Error(), 500)
+	}
+	fmt.Println("Hello")
+	fmt.Println(er2)
+})
+
+var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var project database.ProjectDB
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	fmt.Println(err)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	err = json.Unmarshal(b, &project)
+	fmt.Println(err)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	params := mux.Vars(r)
+
+	var er2 error
+
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	if value, ok := query["mode"]; ok {
+		switch value[0] {
+		case "client":
+			_, er2 = pg.Insert("projects").
+				Columns(
+					"project_name",
+					"project_client_login",
+					"project_manager_login",
+					"project_workgroup_id",
+					"editable",
+					"client_activity",
+					"project_info",
+					"project_status_id",
+					"start_date",
+					"finish_date",
+				).
+				Values(
+					project.Name,
+					project.Client.User.UserLogin,
+					"null",
+					0,
+					project.Editable,
+					project.Activity,
+					project.ProjectInfo,
+					0,
+					project.StartDate,
+					project.FinishDate,
+				).Exec()
+		case "prepare":
+			_, er2 = pg.Update("projects").
+				Set("project_manager_login", project.Manager.User.UserLogin).
+				Set("project_status_id", 1).Where(sqrl.Eq{"project_id": params["id"]}).Exec()
+		}
+
+	}
+
+	//fmt.Println(role)
+
+	//fmt.Println(sqrl.Expr("(SELECT COUNT(*) FROM tasks where task_supertask_id = ?) + 1", task.SuperTaskID))
+
+	if er2 != nil {
+		//http.Error(w, er.Error(), 500)
+	}
+	fmt.Println("Hello")
+	fmt.Println(er2)
+})
+
 var CreateUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	var user database.User
 
@@ -1154,7 +1340,7 @@ var UpdateDevelopers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Requ
 
 })
 
-var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var UpdateProjectsa = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	//params := mux.Vars(r)
 

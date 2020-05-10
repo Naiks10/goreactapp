@@ -1,6 +1,7 @@
 import React from "react";
-import {Row, Col, Modal, Form, Button} from "react-bootstrap";
+import { Row, Col, Modal, Form, Button } from "react-bootstrap";
 import { getJWT } from "../../../Functions/Funcs"
+import { ProjectValueContext } from "../Consts";
 
 export class IssueContainer extends React.Component {
     constructor(props) {
@@ -106,27 +107,32 @@ export class CreateIssueModal extends React.Component {
                             this.setState({ text: 'Выбрать исполнителя' })
                         }}
                         variant="outline-primary">Отмена</Button>
-                    <Button onClick={() => {
-                        fetch('/issues', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${getJWT()}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                name: this.state.formTask,
-                                desc: this.state.formDesc,
-                                issue_task: this.props.task_data.id
-                            })
-                        })
-                            .then(
-                                () => {
-                                    this.props.onHide()
-                                    this.props.update()
-                                }
-                            )
-                    }}
-                        variant="outline-success">Создать</Button>
+                    <ProjectValueContext.Consumer>
+                        {value =>
+                            <Button onClick={() => {
+                                fetch('/issues', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${getJWT()}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        name: this.state.formTask,
+                                        desc: this.state.formDesc,
+                                        issue_task: this.props.task_data.id
+                                    })
+                                })
+                                    .then(
+                                        () => {
+                                            this.props.onHide()
+                                            this.props.update()
+                                            value.updateValue(value.id)
+                                        }
+                                    )
+                            }}
+                                variant="outline-success">Создать</Button>
+                        }
+                    </ProjectValueContext.Consumer>
                 </Modal.Footer>
             </Modal>
         )

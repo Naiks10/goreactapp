@@ -49,7 +49,7 @@ $newcolor : theme-color("danger");
 .StartMenuElement {
   background-color : white;
   width : 471px;
-  //height: 262px;
+  height: 262px;
   padding-left: 27px;
   padding-right: 27px;
   padding-bottom: 20px;
@@ -68,16 +68,80 @@ $newcolor : theme-color("danger");
 .StartMenuElement:hover {
   background-color : white;
   width: 471px;
+  box-shadow: 0 0 15px rgba(49, 49, 49, 0.351);;
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.StartMenuElementNewNow {
+  background-color : rgba(33, 59, 71, 0.808);
+  width : 471px;
+  height: 262px;
+  padding-left: 27px;
+  padding-right: 27px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  margin: 20px;
+  border-radius : 8px;
+  border-color: rgba(0, 0, 0, 0.089);
+  border-width: 1px;
+  border-style: solid;
+  //box-shadow: 0 0 5px rgba(49, 49, 49, 0.151);;
+  font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.ListElement {
+  background-color : white;
+  //width: 100%;
+  //height: 131px;
+  padding-left: 27px;
+  padding-right: 27px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  //margin: 20px 10px;
+  border-radius : 8px;
+  border-color: rgba(0, 0, 0, 0.089);
+  border-width: 1px;
+  border-style: solid;
+  //box-shadow: 0 0 5px rgba(49, 49, 49, 0.151);;
+  font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.ListElement:hover {
+  background-color : white;
   //height: 262px;
   box-shadow: 0 0 15px rgba(49, 49, 49, 0.351);;
   transition: all 300ms linear 0s;
   cursor: pointer;
 }
 
+.box_x {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(280px, 1fr));
+}
+
+.box_xs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(320px, 1fr));
+}
+
+.box_xss {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(471px, 1fr));
+  align-items: center;
+  justify-items: center;
+  justify-content: space-evenly;
+  //align-content: space-between;
+}
+
 .StartMenuElementNew {
   background-color : transparent;
   width : 471px;
-  //height: 100px;
+  height: 262px;
   border-style: dashed;
   border-color: rgba(32, 153, 209, 0.13);
   border-width: 6px;
@@ -167,7 +231,7 @@ $newcolor : theme-color("danger");
 .StartMenuElementNew:hover {
   background-color : transparent;
   width : 471px;
-  //height: 100px;
+
   border-style: dashed;
   border-color: rgb(32, 153, 209);
   border-width: 6px;
@@ -335,6 +399,22 @@ $newcolor : theme-color("danger");
   margin-left: 50%;
   transition: all 200ms linear 0s;
   transform: translate(-50%, -50%)
+}
+
+.hvr-grow_1 {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+}
+.hvr-grow_1:hover, .hvr-grow_1:focus, .hvr-grow_1:active {
+  -webkit-transform: scale(1.25);
+  transform: scale(1.25);
 }
 
 .MainMenuButton:hover {

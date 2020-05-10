@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"goreactapp/security"
 	"html/template"
 	"net/http"
 
@@ -76,6 +77,7 @@ func Register(r *mux.Router) {
 
 	r.HandleFunc("/admin", subdomainIndexHandler)
 	r.HandleFunc("/admin/login", postHandler).Methods("POST")
+	r.HandleFunc("/get-token", security.GetTokenHandler).Methods("POST")
 
 	StartRouting(r, GET, ReadAllData)
 	StartRouting(r, GET, ReadOne)

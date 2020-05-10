@@ -7,6 +7,7 @@ export const Taskcontext = React.createContext(null);
 export const Stagecontext = React.createContext(null);
 export const Modulecontext = React.createContext(null);
 export const ProjectValueContext = React.createContext({
+    id: null,
     current: null,
     plan: null,
     count_all: 0,

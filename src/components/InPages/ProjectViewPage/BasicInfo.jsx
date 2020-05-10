@@ -64,24 +64,24 @@ export class BasicInfo extends React.Component {
                                 <Row style={{ marginTop: 10 }}>
                                     <Col sm={4}>
                                         <Row style={{ fontWeight: 'bold' }}><b>Руководитель группы</b></Row>
-                                        <Row>{this.props.data.dev_init}</Row>
+                                        <Row>{this.props.data.dev_init.String}</Row>
                                     </Col>
                                     <Col sm={1} className="d-flex align-items-center">
-                                        <img width="35" height="35" src={this.props.data.dev_img} />
+                                        <img width="35" height="35" src={this.props.data.dev_img.String} />
                                     </Col>
                                     <Col sm={4}>
                                         <Row style={{ fontWeight: 'bold' }}><b>Контактные данные</b></Row>
-                                        <Row>{this.props.data.dev_phone}</Row>
+                                        <Row>{this.props.data.dev_phone.String}</Row>
                                     </Col>
                                     <Col sm={3}>
                                         <Row><br /></Row>
-                                        <Row>{this.props.data.dev_email}</Row>
+                                        <Row>{this.props.data.dev_email.String}</Row>
                                     </Col>
                                 </Row>
                                 <Row style={{ marginTop: 10 }}>
                                     <Col>
                                         <Row style={{ fontWeight: 'bold' }}><b>Количество человек в группе</b></Row>
-                                        <Row>{this.props.data.dev_count}</Row>
+                                        <Row>{this.props.data.dev_count.String}</Row>
                                     </Col>
                                 </Row>
                             </Col>

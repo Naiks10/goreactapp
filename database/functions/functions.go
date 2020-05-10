@@ -19,10 +19,8 @@ var (
 		"phone_num",
 		"email_addr",
 		"user_image_src",
-		"role_id",
-		"role_name").
+	).
 		From("users").
-		Join("roles ON user_role = role_id").
 		Where("logical_delete_status = false")
 	//#--ORGANISATIONS--#//
 	SelectOrgs = postgres.Select("*").From("organisations") //+
@@ -36,8 +34,6 @@ var (
 		"phone_num",
 		"email_addr",
 		"user_image_src",
-		"role_id",
-		"role_name",
 		"organisation_id",
 		"full_name",
 		"short_name",
@@ -45,7 +41,6 @@ var (
 		"organisation_image_src").
 		From("clients").
 		Join("users ON user_login = client_login").
-		Join("roles on user_role = role_id").
 		Join("organisations on client_organisation_id = organisation_id")
 	//#--GROUPS--#//
 	SelectWorkGroups = postgres.Select("*").From("workgroups") //+
@@ -122,6 +117,7 @@ var (
 		"project_name",
 		"organisation_id",
 		"project_status_id",
+		"project_workgroup_id",
 		"status_name",
 		"organisation_image_src",
 		`(
@@ -286,7 +282,7 @@ FROM  issues`)
 					)
 				   )
 		  ) AS tasks_2
-	) AS tasks_all,
+	) AS count_all,
 	(
 		SELECT  COUNT(*)
 		  FROM  (
@@ -301,7 +297,7 @@ FROM  issues`)
 					)
 				   ) AND task_status_id = 4
 		  ) AS tasks_2
-	) AS tasks_finished,
+	) AS count,
 	(
 		SELECT  COUNT(*)
 		  FROM  (
@@ -320,9 +316,46 @@ FROM  issues`)
 				   )
 			   )
 		  ) AS issues_2
-	) AS project_issues
+	) AS issues
 FROM  projects
 JOIN  clients ON project_client_login = client_login
 JOIN  organisations ON organisation_id = client_organisation_id
 JOIN  status ON status_id = project_status_id`)
+
+	SelectClientList = postgres.Select(`( sur_name || ' ' || first_name ||  ' ' || middle_name) as fio,
+client_login,
+phone_num,
+email_addr,
+user_image_src,
+short_name,
+(
+	SELECT COUNT(*) FROM projects WHERE project_client_login = client_login
+) as COUNT,
+(
+	SELECT COUNT(*) FROM projects WHERE project_client_login = user_login AND project_status_id = 4
+) as COUNT_Fin
+FROM  clients
+JOIN  users ON user_login = client_login
+JOIN  organisations ON organisation_id = client_organisation_id`)
+	SelectManagersList = postgres.Select(`( sur_name || ' ' || first_name ||  ' ' || middle_name) as fio,
+	manager_login,
+	phone_num,
+	email_addr,
+	user_image_src,
+	(
+		SELECT COUNT(*) FROM projects WHERE project_manager_login = manager_login
+	) as COUNT,
+	(
+		SELECT COUNT(*) FROM projects WHERE project_manager_login = user_login AND project_status_id = 4
+	) as COUNT_Fin
+	FROM  managers
+	JOIN  users ON user_login = manager_login
+	WHERE manager_login <> 'null'`)
+	SelectDeveloperList = postgres.Select(`( sur_name || ' ' || first_name ||  ' ' || middle_name) as fio,
+	developer_login,
+	phone_num,
+	email_addr,
+	user_image_src
+	FROM  developers
+	JOIN  users ON user_login = developer_login`)
 )

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"reflect"
 	"time"
 )
@@ -113,6 +114,23 @@ type Status struct {
 }
 
 //Project structure
+type ProjectDB struct {
+	ID             int    `json:"id" db:"project_id"`
+	Name           string `json:"name" db:"project_name"`
+	Manager        `json:"manager"`
+	Client         `json:"client"`
+	WorkGroup      `json:"workgroup"`
+	ProjectInfo    string `json:"info" db:"project_info"`
+	Status         `json:"status"`
+	Editable       bool      `json:"editable" db:"editable"`
+	Activity       bool      `json:"activity" db:"client_activity"`
+	StartDate      time.Time `json:"start" db:"start_date"`
+	FinishDate     time.Time `json:"finish" db:"finish_date"`
+	StartDateFact  time.Time `json:"start_fact" db:"start_date_fact"`
+	FinishDateFact time.Time `json:"finish_fact" db:"finish_date_fact"`
+}
+
+//Project structure
 type Project struct {
 	ID                   int    `json:"id" db:"project_id"`
 	Name                 string `json:"name" db:"project_name"`
@@ -121,15 +139,15 @@ type Project struct {
 	WorkGroup            `json:"workgroup"`
 	ProjectInfo          string `json:"info" db:"project_info"`
 	Status               `json:"status"`
-	DevInitials          string    `json:"dev_init" db:"fio_dev"`
-	DevPhone             string    `json:"dev_phone" db:"pn"`
-	DevEmail             string    `json:"dev_email" db:"ad"`
-	DevImage             string    `json:"dev_img" db:"dev_img"`
-	SpecCount            string    `json:"dev_count" db:"workers_count"`
-	StartDate            time.Time `json:"start" db:"start_date"`
-	FinishDate           time.Time `json:"finish" db:"finish_date"`
-	StartDateFact        time.Time `json:"start_fact" db:"start_date_fact"`
-	FinishDateFact       time.Time `json:"finish_fact" db:"finish_date_fact"`
+	DevInitials          sql.NullString `json:"dev_init" db:"fio_dev"`
+	DevPhone             sql.NullString `json:"dev_phone" db:"pn"`
+	DevEmail             sql.NullString `json:"dev_email" db:"ad"`
+	DevImage             sql.NullString `json:"dev_img" db:"dev_img"`
+	SpecCount            sql.NullString `json:"dev_count" db:"workers_count"`
+	StartDate            time.Time      `json:"start" db:"start_date"`
+	FinishDate           time.Time      `json:"finish" db:"finish_date"`
+	StartDateFact        time.Time      `json:"start_fact" db:"start_date_fact"`
+	FinishDateFact       time.Time      `json:"finish_fact" db:"finish_date_fact"`
 }
 
 //ProjectPreview structure
@@ -138,6 +156,7 @@ type ProjectPreview struct {
 	Name           string    `json:"name" db:"project_name"`
 	OrganisationID int       `json:"org_id" db:"organisation_id"`
 	Src            string    `json:"src" db:"organisation_image_src"`
+	WorkGrp        int       `json:"group_id" db:"project_workgroup_id"`
 	StatusID       int       `json:"status_id" db:"project_status_id"`
 	StatusName     string    `json:"status_name" db:"status_name"`
 	TasksAll       int       `json:"tasks_all" db:"tasks_all"`
@@ -202,6 +221,7 @@ type Issue struct {
 
 //GlobalValueModel structure
 type GlobalValueModel struct {
+	PK          int   `json:"id" db:"project_id"`
 	CountAll    int   `json:"count_all" db:"count_all"`
 	Count       int   `json:"count" db:"count"`
 	Issues      int   `json:"issues" db:"issues"`

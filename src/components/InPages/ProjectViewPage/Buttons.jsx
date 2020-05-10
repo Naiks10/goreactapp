@@ -44,6 +44,27 @@ export class EditButton extends React.Component {
     }
 }
 
+export class StatusButton extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    render() {
+        return (
+            <div
+                onClick={this.props.onClick}
+                className="d-flex align-items-center InButton"
+                style={style.ButtonStyle}>
+                <div className="d-flex justify-content-center align-items-center">
+                    <img
+                        src="/assets/img/icon_status.png"
+                        width="20"
+                        height="20" />
+                </div>
+            </div>
+        )
+    }
+}
+
 export class DeleteButton extends React.Component {
     constructor(props) {
         super(props)

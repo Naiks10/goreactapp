@@ -45,7 +45,7 @@ var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter,
 
 	var role string
 	err = db.ExecuteQueryRow(
-		"SELECT user_role FROM users WHERE user_login=$1 AND user_password=$2",
+		"SELECT get_role($1, $2)",
 		tempAcc.UserLogin, tempAcc.UserPassword).
 		Scan(&role)
 	fmt.Println("error on select -> ", err)

@@ -11,7 +11,7 @@ var (
 		{path: "/clients", function: functions.CreateClient},
 		{path: "/groups", function: functions.CreateGroup},
 		{path: "/devs", function: functions.CreateDeveloper},
-		{path: "/projects", function: functions.CreateProject},
+		{path: "/projects", function: functions.CreateProjects},
 		{path: "/managers", function: functions.CreateManager},
 		{path: "/tasks", function: functions.CreateTask},
 		{path: "/subtasks", function: functions.CreateSubTask},
@@ -40,6 +40,9 @@ var (
 		{path: "/subtasks", function: functions.SubTasks},
 		{path: "/issueslst", function: functions.Issues},
 		{path: "/workers", function: functions.Workers},
+		{path: "/clientslst", function: functions.ClientsView},
+		{path: "/managerslst", function: functions.ManagersView},
+		{path: "/developerslst", function: functions.DevsView},
 	}
 
 	//ReadOne slice to get current data from model
@@ -51,6 +54,7 @@ var (
 		{path: "/devs/{id}", function: functions.Developer},
 		{path: "/projects/{id}", function: functions.Project},
 		{path: "/managers/{id}", function: functions.Manager},
+		{path: "/projectvalues/{id}", function: functions.Value},
 	}
 
 	//UpdateOne slice to update current data from model

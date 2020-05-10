@@ -6,17 +6,18 @@ import App from './App';
 import {StartPageMenu} from "./components/StartPageMenu/StartPageMenu"
 import * as serviceWorker from './serviceWorker';
 
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-css-only/css/bootstrap.min.css';
+import history from './components/Functions/history'
 //import 'mdbreact/dist/css/mdb.css';
 
-import createBrowserHistory from 'history/createBrowserHistory';
+/*import createBrowserHistory from 'history/createBrowserHistory';
 
-const history = createBrowserHistory();
+const history = createBrowserHistory();*/
 
 ReactDOM.render(
-    <Router forceRefresh={true} history={history}>
+    <Router history={history}>
         <App/>
     </Router>,
     document.getElementById('root')

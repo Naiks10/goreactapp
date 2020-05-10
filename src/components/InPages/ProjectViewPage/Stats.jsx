@@ -1,6 +1,7 @@
 import React from "react"
 import { TitlePanel } from './Panels'
 import { Row } from "react-bootstrap";
+import { ProjectValueContext } from "./Consts";
 
 export class ProjectStatsView extends React.Component {
     constructor(props) {
@@ -24,15 +25,30 @@ export class ProjectStatsView extends React.Component {
                 {
                     this.state.isExpanded
                         ? <div className="ProjectElement">
-                            <Row>
-                                <a><b>Всего задач</b>{this.props.all_count}</a>
-                                <a><b>Выполнено задач</b>{this.props.count}</a>
-                                <a><b>Проблем</b>{this.props.issues_count}</a>
+                            <Row style={{margin : 15}}>
+                                <ProjectValueContext.Consumer>
+                                    {value =>
+                                        <React.Fragment>
+                                            <a style={styles.forA}><b style={styles.forB}>Всего задач</b>{value.count_all}</a>
+                                            <a style={styles.forA}><b style={styles.forB}>Выполнено задач</b>{value.count}</a>
+                                            <a style={styles.forA}><b style={styles.forB}>Проблем</b>{value.issues}</a>
+                                        </React.Fragment>
+                                    }
+                                </ProjectValueContext.Consumer>
                             </Row>
                         </div>
                         : null
                 }
             </div>
         )
+    }
+}
+
+const styles = {
+    forA : {
+        marginRight : 30
+    },
+    forB : {
+        marginRight : 7
     }
 }

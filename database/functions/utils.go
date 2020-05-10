@@ -30,10 +30,10 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, sb
 
 	if params != nil {
 		errs := db.DB.Select(table.GetItems(), query, params[0])
-		fmt.Println(errs)
+		fmt.Println("hello", errs)
 	} else {
 		errs := db.DB.Select(table.GetItems(), query)
-		fmt.Println(errs)
+		fmt.Println("bey", errs)
 	}
 	//table.GetPrimaryKey()
 	w.Header().Set("Content-Type", "application/json")
@@ -45,14 +45,15 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, sb
 func JSONGetAll1(table database.Table, w http.ResponseWriter, r *http.Request, sb *sqrl.SelectBuilder) []byte {
 	table.Clear()
 
-	query, params, _ := sb.ToSql()
+	query, params, err := sb.ToSql()
+	fmt.Println(err)
 
 	if params != nil {
 		errs := db.DB.Select(table.GetItems(), query, params[0])
-		fmt.Println(errs)
+		fmt.Println("hello", errs)
 	} else {
 		errs := db.DB.Select(table.GetItems(), query)
-		fmt.Println(errs)
+		fmt.Println("bey", errs)
 	}
 	//table.GetPrimaryKey()
 	w.Header().Set("Content-Type", "application/json")
@@ -89,7 +90,9 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 	fmt.Println(val)
 	//fmt.Println(table.GetPrimaryKey())
 
-	query, params, _ := exSb.Where(sqrl.Eq{table.GetPrimaryKey(): val}).ToSql()
+	query, params, rr := exSb.Where(sqrl.Eq{table.GetPrimaryKey(): val}).ToSql()
+	fmt.Println(rr)
+	fmt.Println(query)
 	fmt.Println(params, "SQL")
 
 	if params != nil {
@@ -107,6 +110,15 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 Neaded for dynamic added RESTapi queries.*/
 func GetResult(w http.ResponseWriter, query string, args []interface{}) {
 	s, _ := gosqljson.QueryDbToMapJSON(db.DB.DB, "lower", query, args[0])
+	s = "{\"items\":" + s + "}"
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, s)
+}
+
+/*GetResult is universal converter to JSON from Go Structs,
+Neaded for dynamic added RESTapi queries.*/
+func GetResultWA(w http.ResponseWriter, query string) {
+	s, _ := gosqljson.QueryDbToMapJSON(db.DB.DB, "lower", query)
 	s = "{\"items\":" + s + "}"
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, s)

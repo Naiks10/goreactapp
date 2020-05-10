@@ -1,11 +1,11 @@
 import React from "react";
 import axios from 'axios';
 import { IssueContainer, CreateIssueModal } from "./Issue"
-import {Row, Col, Modal, Form, Button, Dropdown} from "react-bootstrap";
+import { Row, Col, Modal, Form, Button, Dropdown, ButtonGroup } from "react-bootstrap";
 import { Loading } from './LoadingContainer'
-import { AddButton, EditButton, DeleteButton, SubButton, IssueButton, CalendButton  } from "../Buttons"
+import { AddButton, EditButton, DeleteButton, SubButton, IssueButton, CalendButton, StatusButton } from "../Buttons"
 import { InfoPanel } from '../Panels'
-import { WorkGroupContext, Taskcontext, SuperTaskcontext, GetDate, GetStatus } from '../Consts'
+import { WorkGroupContext, Taskcontext, SuperTaskcontext, GetDate, GetStatus, ProjectValueContext } from '../Consts'
 import { getJWT } from "../../../Functions/Funcs"
 import { CustomMenu, CustomToggle } from "./CustomControl";
 
@@ -22,7 +22,8 @@ export class SuperTaskContainer extends React.Component {
             isShowedEdit: false,
             isShowedDelete: false,
             isShowedSub: false,
-            isShowedIssue: false
+            isShowedIssue: false,
+            isShowedStatus : false
         }
     }
 
@@ -59,7 +60,7 @@ export class SuperTaskContainer extends React.Component {
     }
 
     render() {
-        const { isLoaded, data, error, data_iss, isOvered, isShowedCreate, isShowedEdit, isShowedDelete, isShowedSub, isShowedIssue } = this.state;
+        const { isLoaded, data, error, data_iss, isOvered, isShowedCreate, isShowedEdit, isShowedDelete, isShowedSub, isShowedIssue, isShowedStatus } = this.state;
         return (
             <div
                 className={`Item_task${this.props.data.status.id}`}
@@ -88,6 +89,7 @@ export class SuperTaskContainer extends React.Component {
                                     <AddButton onClick={() => this.setState({ isShowedCreate: true })} />
                                     <EditButton onClick={() => this.setState({ isShowedEdit: true })} />
                                     <DeleteButton onClick={() => this.setState({ isShowedDelete: true })} />
+                                    <StatusButton onClick={() => this.setState({ isShowedStatus: true })} />
                                     <SubButton onClick={() => this.setState({ isShowedSub: true })} />
                                     <IssueButton onClick={() => this.setState({ isShowedIssue: true })} />
                                 </Row>
@@ -187,6 +189,15 @@ export class SuperTaskContainer extends React.Component {
                                         onHide={() => this.setState({ isShowedIssue: false })} />
                                     : null
                             }
+                            {
+                                isShowedStatus
+                                    ? <StatusTaskModal
+                                        task_data={this.props.data}
+                                        update={() => this.GetAll()}
+                                        show={this.state.isShowedStatus}
+                                        onHide={() => this.setState({ isShowedStatus: false })} />
+                                    : null
+                            }
                         </React.Fragment>
                     )}
                 </WorkGroupContext.Consumer>
@@ -257,6 +268,7 @@ class TaskContainer extends React.Component {
                                 <AddButton onClick={() => this.setState({ isShowedCreate: true })} />
                                 <EditButton onClick={() => this.setState({ isShowedEdit: true })} />
                                 <DeleteButton onClick={() => this.setState({ isShowedDelete: true })} />
+                                <StatusButton onClick={() => this.setState({ isShowedDelete: true })} />
                                 <SubButton onClick={() => this.setState({ isShowedSub: true })} />
                                 <IssueButton onClick={() => this.setState({ isShowedIssue: true })} />
                             </Row>
@@ -447,32 +459,37 @@ class CreateSuperTaskModal extends React.Component {
                         variant="outline-primary">Отмена</Button>
                     <SuperTaskcontext.Consumer>
                         {user =>
-                            <Button onClick={() => {
-                                fetch('/tasks', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Authorization': `Bearer ${getJWT()}`,
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        name: this.state.formTask,
-                                        stage: this.props.task_data.stage,
-                                        developer: { login: this.state.index },
-                                        status: { id: 1 },
-                                        supertask: null,
-                                        index: this.props.task_data.index + 1,
-                                        start: new Date(this.state.formTaskStart),
-                                        finish: new Date(this.state.formTaskFin)
-                                    })
-                                })
-                                    .then(
-                                        () => {
-                                            this.props.onHide()
-                                            user()
-                                        }
-                                    )
-                            }}
-                                variant="outline-success">Создать</Button>
+                            <ProjectValueContext.Consumer>
+                                {value =>
+                                    <Button onClick={() => {
+                                        fetch('/tasks', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Authorization': `Bearer ${getJWT()}`,
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                name: this.state.formTask,
+                                                stage: this.props.task_data.stage,
+                                                developer: { login: this.state.index },
+                                                status: { id: 1 },
+                                                supertask: null,
+                                                index: this.props.task_data.index + 1,
+                                                start: new Date(this.state.formTaskStart),
+                                                finish: new Date(this.state.formTaskFin)
+                                            })
+                                        })
+                                            .then(
+                                                () => {
+                                                    this.props.onHide()
+                                                    user()
+                                                    value.updateValue(value.id)
+                                                }
+                                            )
+                                    }}
+                                        variant="outline-success">Создать</Button>
+                                }
+                            </ProjectValueContext.Consumer>
                         }
                     </SuperTaskcontext.Consumer>
                 </Modal.Footer>
@@ -581,32 +598,37 @@ class CreateTaskModal extends React.Component {
                         variant="outline-primary">Отмена</Button>
                     <Taskcontext.Consumer>
                         {user =>
-                            <Button onClick={() => {
-                                fetch('/tasks', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Authorization': `Bearer ${getJWT()}`,
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        name: this.state.formTask,
-                                        stage: this.props.task_data.stage,
-                                        developer: { login: this.state.index },
-                                        status: { id: 1 },
-                                        supertask: this.props.task_data.supertask,
-                                        index: this.props.task_data.index + 1,
-                                        start: new Date(this.state.formTaskStart),
-                                        finish: new Date(this.state.formTaskFin)
-                                    })
-                                })
-                                    .then(
-                                        () => {
-                                            this.props.onHide()
-                                            user()
-                                        }
-                                    )
-                            }}
-                                variant="outline-success">Создать</Button>
+                            <ProjectValueContext.Consumer>
+                                {value =>
+                                    <Button onClick={() => {
+                                        fetch('/tasks', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Authorization': `Bearer ${getJWT()}`,
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                name: this.state.formTask,
+                                                stage: this.props.task_data.stage,
+                                                developer: { login: this.state.index },
+                                                status: { id: 1 },
+                                                supertask: this.props.task_data.supertask,
+                                                index: this.props.task_data.index + 1,
+                                                start: new Date(this.state.formTaskStart),
+                                                finish: new Date(this.state.formTaskFin)
+                                            })
+                                        })
+                                            .then(
+                                                () => {
+                                                    this.props.onHide()
+                                                    user()
+                                                    value.updateValue(value.id)
+                                                }
+                                            )
+                                    }}
+                                        variant="outline-success">Создать</Button>
+                                }
+                            </ProjectValueContext.Consumer>
                         }
                     </Taskcontext.Consumer>
                 </Modal.Footer>
@@ -712,31 +734,36 @@ export class CreateStageSubTaskModal extends React.Component {
                             this.setState({ text: 'Выбрать исполнителя' })
                         }}
                         variant="outline-primary">Отмена</Button>
-                    <Button onClick={() => {
-                        fetch('/subtasks', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${getJWT()}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                name: this.state.formTask,
-                                stage: this.props.task_data.id,
-                                developer: { login: this.state.index },
-                                status: { id: 1 },
-                                supertask: null,
-                                start: new Date(this.state.formTaskStart),
-                                finish: new Date(this.state.formTaskFin)
-                            })
-                        })
-                            .then(
-                                () => {
-                                    this.props.onHide()
-                                    this.props.update()
-                                }
-                            )
-                    }}
-                        variant="outline-success">Создать</Button>
+                    <ProjectValueContext.Consumer>
+                        {value =>
+                            <Button onClick={() => {
+                                fetch('/subtasks', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${getJWT()}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        name: this.state.formTask,
+                                        stage: this.props.task_data.id,
+                                        developer: { login: this.state.index },
+                                        status: { id: 1 },
+                                        supertask: null,
+                                        start: new Date(this.state.formTaskStart),
+                                        finish: new Date(this.state.formTaskFin)
+                                    })
+                                })
+                                    .then(
+                                        () => {
+                                            this.props.onHide()
+                                            this.props.update()
+                                            value.updateValue(value.id)
+                                        }
+                                    )
+                            }}
+                                variant="outline-success">Создать</Button>
+                        }
+                    </ProjectValueContext.Consumer>
                 </Modal.Footer>
             </Modal>
         )
@@ -835,31 +862,36 @@ class CreateSuperSubTaskModal extends React.Component {
                             this.setState({ text: 'Выбрать исполнителя' })
                         }}
                         variant="outline-primary">Отмена</Button>
-                    <Button onClick={() => {
-                        fetch('/subtasks', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${getJWT()}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                name: this.state.formTask,
-                                stage: this.props.task_data.stage,
-                                developer: { login: this.state.index },
-                                status: { id: 1 },
-                                supertask: this.props.task_data.id,
-                                start: new Date(this.state.formTaskStart),
-                                finish: new Date(this.state.formTaskFin)
-                            })
-                        })
-                            .then(
-                                () => {
-                                    this.props.onHide()
-                                    this.props.update()
-                                }
-                            )
-                    }}
-                        variant="outline-success">Создать</Button>
+                    <ProjectValueContext.Consumer>
+                        {value =>
+                            <Button onClick={() => {
+                                fetch('/subtasks', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${getJWT()}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        name: this.state.formTask,
+                                        stage: this.props.task_data.stage,
+                                        developer: { login: this.state.index },
+                                        status: { id: 1 },
+                                        supertask: this.props.task_data.id,
+                                        start: new Date(this.state.formTaskStart),
+                                        finish: new Date(this.state.formTaskFin)
+                                    })
+                                })
+                                    .then(
+                                        () => {
+                                            this.props.onHide()
+                                            this.props.update()
+                                            value.updateValue(value.id)
+                                        }
+                                    )
+                            }}
+                                variant="outline-success">Создать</Button>
+                        }
+                    </ProjectValueContext.Consumer>
                 </Modal.Footer>
             </Modal>
         )
@@ -962,31 +994,36 @@ class CreateSubTaskModal extends React.Component {
                             this.setState({ text: 'Выбрать исполнителя' })
                         }}
                         variant="outline-primary">Отмена</Button>
-                    <Button onClick={() => {
-                        fetch('/subtasks', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${getJWT()}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                name: this.state.formTask,
-                                stage: this.props.task_data.stage,
-                                developer: { login: this.state.index },
-                                status: { id: 1 },
-                                supertask: this.props.task_data.id,
-                                start: new Date(this.state.formTaskStart),
-                                finish: new Date(this.state.formTaskFin)
-                            })
-                        })
-                            .then(
-                                () => {
-                                    this.props.onHide()
-                                    this.props.update()
-                                }
-                            )
-                    }}
-                        variant="outline-success">Создать</Button>
+                    <ProjectValueContext.Consumer>
+                        {value =>
+                            <Button onClick={() => {
+                                fetch('/subtasks', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${getJWT()}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        name: this.state.formTask,
+                                        stage: this.props.task_data.stage,
+                                        developer: { login: this.state.index },
+                                        status: { id: 1 },
+                                        supertask: this.props.task_data.id,
+                                        start: new Date(this.state.formTaskStart),
+                                        finish: new Date(this.state.formTaskFin)
+                                    })
+                                })
+                                    .then(
+                                        () => {
+                                            this.props.onHide()
+                                            this.props.update()
+                                            value.updateValue(value.id)
+                                        }
+                                    )
+                            }}
+                                variant="outline-success">Создать</Button>
+                        }
+                    </ProjectValueContext.Consumer>
                 </Modal.Footer>
             </Modal>
         )
@@ -1143,31 +1180,75 @@ class DeleteSuperTaskModal extends React.Component {
                     <Button onClick={() => { this.props.onHide() }} variant="outline-primary">Отмена</Button>
                     <SuperTaskcontext.Consumer>
                         {method =>
-                            <Button onClick={() => {
-                                fetch(`/tasks/${this.props.task_data.id}`,
-                                    {
-                                        method: 'DELETE',
-                                        headers: {
-                                            'Authorization': `Bearer ${getJWT()}`,
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify({
-                                            index: this.props.task_data.index,
-                                            stage: this.props.task_data.stage,
-                                            supertask: this.props.task_data.supertask,
-                                        })
-                                    }
-                                ).then(
-                                    () => {
-                                        this.props.onHide()
-                                        method()
-                                    }
-                                )
-                            }}
-                                variant="outline-danger">Удалить</Button>
+                            <ProjectValueContext.Consumer>
+                                {value =>
+                                    <Button onClick={() => {
+                                        fetch(`/tasks/${this.props.task_data.id}`,
+                                            {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'Authorization': `Bearer ${getJWT()}`,
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({
+                                                    index: this.props.task_data.index,
+                                                    stage: this.props.task_data.stage,
+                                                    supertask: this.props.task_data.supertask,
+                                                })
+                                            }
+                                        ).then(
+                                            () => {
+                                                this.props.onHide()
+                                                method()
+                                                value.updateValue(value.id)
+                                            }
+                                        )
+                                    }}
+                                        variant="outline-danger">Удалить</Button>
+                                }
+                            </ProjectValueContext.Consumer>
                         }
                     </SuperTaskcontext.Consumer>
                 </Modal.Footer>
+            </Modal>
+        )
+    }
+}
+
+class StatusTaskModal extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            data: [],
+            isLoaded: false,
+            error: null,
+            text: 'Выбрать исполнителя',
+            formTask: '',
+            formTaskStart: '',
+            formTaskFin: '',
+            index: ''
+        }
+    }
+
+    render() {
+        return (
+            <Modal
+                {...this.props}
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Статус задачи "{this.props.task_data.name}"</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ButtonGroup vertical style={{width : '100%'}}>
+                        <Button variant="light">Не начат</Button>
+                        <Button variant="primary">В разработке</Button>
+                        <Button variant="warning">На отладке</Button>
+                        <Button variant="danger">В тестирование</Button>
+                        <Button variant="dark">Готов</Button>
+                        <Button variant="success">Отменён</Button>
+                    </ButtonGroup>
+                </Modal.Body>
             </Modal>
         )
     }
@@ -1204,28 +1285,33 @@ class DeleteTaskModal extends React.Component {
                         variant="outline-primary">Отмена</Button>
                     <Taskcontext.Consumer>
                         {method =>
-                            <Button onClick={() => {
-                                fetch(`/tasks/${this.props.task_data.id}`,
-                                    {
-                                        method: 'DELETE',
-                                        headers: {
-                                            'Authorization': `Bearer ${getJWT()}`,
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify({
-                                            index: this.props.task_data.index,
-                                            stage: this.props.task_data.stage,
-                                            supertask: this.props.task_data.supertask
-                                        })
-                                    }
-                                ).then(
-                                    () => {
-                                        this.props.onHide()
-                                        method()
-                                    }
-                                )
-                            }}
-                                variant="outline-danger">Удалить</Button>
+                            <ProjectValueContext.Consumer>
+                                {value =>
+                                    <Button onClick={() => {
+                                        fetch(`/tasks/${this.props.task_data.id}`,
+                                            {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'Authorization': `Bearer ${getJWT()}`,
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({
+                                                    index: this.props.task_data.index,
+                                                    stage: this.props.task_data.stage,
+                                                    supertask: this.props.task_data.supertask
+                                                })
+                                            }
+                                        ).then(
+                                            () => {
+                                                this.props.onHide()
+                                                method()
+                                                value.updateValue(value.id)
+                                            }
+                                        )
+                                    }}
+                                        variant="outline-danger">Удалить</Button>
+                                }
+                            </ProjectValueContext.Consumer>
                         }
                     </Taskcontext.Consumer>
                 </Modal.Footer>

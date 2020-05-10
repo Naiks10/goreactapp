@@ -28,31 +28,32 @@ export class ProjectViewPage extends React.Component {
             isLoaded: false,
             data: {},
             work_data: {},
-            globalProjectData : {
-                projects_chart_data: {
-                    current: null,
-                    plan: null,
-                },
-                count_all: 0,
-                count: 0,
-                issues: 0,
-                updateValue: this.updateValue,
-            },
+            current: null,
+            plan: null,
+            count_all: 0,
+            count: 0,
+            issues: 0,
+            id : this.props.match.params.id,
+            updateValue: this.updateValue,
         }
     }
 
-    updateValue() {
-        axios.get(`projectvalues/${this.props.match.params.id}`, {
+    updateValue = (value) => {
+        axios.get(`/projectvalues/${value}`, {
             headers: {
                 'Authorization': `Bearer ${getJWT()}`
             }
         })
-        .then(res => {
-            const data = res.data
-            this.setState({
-                globalProjectData : data
+            .then(res => {
+                const data = res.data
+                this.setState({
+                    current: data.data.current,
+                    plan: data.data.plan,
+                    count_all: data.data.count_all,
+                    count: data.data.count,
+                    issues: data.data.issues,
+                })
             })
-        })
     }
 
     componentDidMount() {
@@ -83,7 +84,7 @@ export class ProjectViewPage extends React.Component {
                 (error) => { this.setState({ error }) }
             )
 
-            this.updateValue()
+        this.updateValue(this.props.match.params.id)
     }
 
     render() {
@@ -99,7 +100,14 @@ export class ProjectViewPage extends React.Component {
                                     <Col><OrgInfo data={this.state.data} /></Col>
                                 </Row>
                                 <Row>
-                                    <ProjectValueContext.Provider value={this.state.globalProjectData}>
+                                    <ProjectValueContext.Provider value={{
+                                        current: this.state.current,
+                                        plan: this.state.plan,
+                                        count_all: this.state.count_all,
+                                        count: this.state.count,
+                                        issues: this.state.issues,
+                                        updateValue: this.state.updateValue
+                                    }}>
                                         <Col><ProjectChartView /></Col>
                                     </ProjectValueContext.Provider>
                                 </Row>
@@ -110,7 +118,15 @@ export class ProjectViewPage extends React.Component {
                                     <Col>
                                         <ProjectContext.Provider value={this.state.data}>
                                             <WorkGroupContext.Provider value={this.state.work_data}>
-                                                <ProjectValueContext.Provider value={this.state.globalProjectData}>
+                                                <ProjectValueContext.Provider value={{
+                                                    id: this.state.id,
+                                                    current: this.state.current,
+                                                    plan: this.state.plan,
+                                                    count_all: this.state.count_all,
+                                                    count: this.state.count,
+                                                    issues: this.state.issues,
+                                                    updateValue: this.state.updateValue
+                                                }}>
                                                     <ProjectControlView />
                                                 </ProjectValueContext.Provider>
                                             </WorkGroupContext.Provider>
@@ -118,7 +134,14 @@ export class ProjectViewPage extends React.Component {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <ProjectValueContext.Provider value={this.state.globalProjectData}>
+                                    <ProjectValueContext.Provider value={{
+                                        current: this.state.current,
+                                        plan: this.state.plan,
+                                        count_all: this.state.count_all,
+                                        count: this.state.count,
+                                        issues: this.state.issues,
+                                        updateValue: this.state.updateValue
+                                    }}>
                                         <Col><ProjectStatsView /></Col>
                                     </ProjectValueContext.Provider>
                                 </Row>
