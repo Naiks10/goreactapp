@@ -17,11 +17,6 @@ func (m *Time) UnmarshalJSON(data []byte) error {
 	if string(data) == "null" || string(data) == `""` {
 		return nil
 	}
-	/*fmt.Println(string(data))
-	v := strings.ReplaceAll(string(data), "\"", "")
-	fmt.Println(v)*/
-	//fmt.Println(time.Time(data))
-	// Fractional seconds are handled implicitly by Parse.
 	tt, err := time.Parse("2006-01-02", "")
 	*m = Time{tt}
 	return err
@@ -434,18 +429,6 @@ func (t *Issues) GetItems() interface{} {
 func (t *Issues) Clear() {
 	t.Items = nil
 }
-
-/*type IssuesLists struct {
-	Items []IssuesList `json:"items"`
-}
-
-func (t *IssuesLists) GetItems() interface{} {
-	return &t.Items
-}
-
-func (t *IssuesLists) Clear() {
-	t.Items = nil
-}*/
 
 type Managers struct {
 	Items []Manager `json:"items"`

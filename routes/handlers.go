@@ -19,6 +19,7 @@ const (
 	DELETE = "DELETE"
 )
 
+//route Struct
 type route struct {
 	path     string
 	function interface {
@@ -26,6 +27,7 @@ type route struct {
 	}
 }
 
+//Init Method
 func (_route *route) Init() {
 	_route.function = utils.LogWrapper{security.JwtMiddleware.Handler(_route.function)}
 }

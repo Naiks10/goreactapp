@@ -87,7 +87,8 @@ export class ClientViewPage extends React.Component {
                 {
                     this.state.isLoaded
                         ? <Container fluid>
-                            <ContactNavigation title={`${this.state.data.surname} ${this.state.data.name} ${this.state.data.midname}`} />
+                            <ContactNavigation 
+                                title={`${this.state.data.surname} ${this.state.data.name} ${this.state.data.midname}`} />
                             <Col>
                                 <Row>
                                     <Col><BasicInfo data={this.state.data} /></Col>

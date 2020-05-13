@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	_ "github.com/jackc/pgx/stdlib"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -34,6 +35,35 @@ func TestPostgreSQLConnection_GetConnectionString(t *testing.T) {
 			if got, _ := tt.con.GetConnectionString(); got != tt.want {
 				t.Errorf("PostgreSQLConnection.GetConnectionString() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestPostgreSQLConnection_ScanStruct(t *testing.T) {
+	type fields struct {
+		ConnectionString string
+		DriverName       string
+		DB               *sqlx.DB
+	}
+	type args struct {
+		i     interface{}
+		query string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := &PostgreSQLConnection{
+				ConnectionString: tt.fields.ConnectionString,
+				DriverName:       tt.fields.DriverName,
+				DB:               tt.fields.DB,
+			}
+			con.ScanStruct(tt.args.i, tt.args.query)
 		})
 	}
 }

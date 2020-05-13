@@ -9,6 +9,8 @@ import { WorkGroupContext, Taskcontext, SuperTaskcontext, GetDate, GetStatus, Pr
 import { getJWT } from "../../../Functions/Funcs"
 import { CustomMenu, CustomToggle } from "./CustomControl";
 
+//SuperTaskContainer 
+//... => Stage => SuperTaskContainer => TaskContainer => ... => IssueContainer
 export class SuperTaskContainer extends React.Component {
     constructor(props) {
         super(props)
@@ -206,6 +208,8 @@ export class SuperTaskContainer extends React.Component {
     }
 }
 
+//TaskContainer 
+//... => Stage => SuperTaskContainer => TaskContainer => ... => IssueContainer
 class TaskContainer extends React.Component {
     constructor(props) {
         super(props)

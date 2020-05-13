@@ -22,9 +22,19 @@ func main() {
 	router := mux.NewRouter()
 	routes.Register(router)
 
-	router.PathPrefix("/data/").Handler(http.StripPrefix("/data/", http.FileServer(http.Dir("./data/"))))
+	router.PathPrefix("/data/").
+		Handler(
+			http.StripPrefix(
+				"/data/",
+				http.FileServer(http.Dir("./data/")),
+			),
+		)
 
-	spa := utils.SpaHandler{StaticPath: "build", IndexPath: "index.html"}
+	spa := utils.SpaHandler{
+		StaticPath: "build",
+		IndexPath:  "index.html",
+	}
+
 	router.PathPrefix("/").Handler(spa)
 
 	server := &http.Server{

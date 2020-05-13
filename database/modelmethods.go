@@ -1,5 +1,7 @@
 package database
 
+// ! IT'S GENERATED FILE, DON'T DO ANYTHING! //
+
 func (t *Users) GetItems() interface{} {
 	return &t.Items
 }
@@ -19,10 +21,6 @@ func (t *Issues) GetItem() interface{} {
 func (t *Values) GetItem() interface{} {
 	return &t.Items[0]
 }
-
-/*func (t *IssuesLists) GetItem() interface{} {
-	return &t.Items[0]
-}*/
 
 func (t *Clients) GetItem() interface{} {
 	return &t.Items[0]
@@ -99,10 +97,6 @@ func (t *Modules) GetPrimaryKey() string {
 func (t *Issues) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }
-
-/*func (t *IssuesLists) GetPrimaryKey() string {
-	return GetTag(t.Items)
-}*/
 func (t *Users) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }

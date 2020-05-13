@@ -6,6 +6,8 @@ import { AddButton, EditButton, DeleteButton, SubButton } from "../Buttons"
 import { Modulecontext, Stagecontext, Taskcontext, GetDate, GetStatus } from '../Consts'
 import { getJWT } from "../../../Functions/Funcs"
 
+//ModuleContainer 
+//Project => Module => Stage => SuperTaskContainer => ...
 export class ModuleContainer extends React.Component {
     constructor(props) {
         super(props)
@@ -20,10 +22,12 @@ export class ModuleContainer extends React.Component {
         }
     }
 
+    //prepare
     componentDidMount() {
         this.GetAll()
     }
 
+    //GetAll function
     GetAll() {
         this.setState({ isLoaded: false })
         axios.get(`/stages?module=${this.props.data.id}&asc.orderby=stage_index`, {
@@ -40,6 +44,7 @@ export class ModuleContainer extends React.Component {
             })
     }
 
+    //rendering
     render() {
         const { isLoaded, data, error, isOvered, isShowedCreate, isShowedSub, isShowedDelete } = this.state;
         return (

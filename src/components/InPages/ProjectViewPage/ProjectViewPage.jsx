@@ -20,6 +20,7 @@ import { TitlePanel } from './Panels'
 import axios from 'axios';
 
 
+//ProjectViewPage
 export class ProjectViewPage extends React.Component {
     constructor(props) {
         super(props)
@@ -38,6 +39,7 @@ export class ProjectViewPage extends React.Component {
         }
     }
 
+    //UniversalUpdatingFunc
     updateValue = (value) => {
         axios.get(`/projectvalues/${value}`, {
             headers: {
@@ -56,6 +58,7 @@ export class ProjectViewPage extends React.Component {
             })
     }
 
+    //prepare
     componentDidMount() {
         fetch(`/projects/${this.props.match.params.id}`, {
             headers: {
@@ -87,11 +90,12 @@ export class ProjectViewPage extends React.Component {
         this.updateValue(this.props.match.params.id)
     }
 
+    //rendering
     render() {
         return (
             <div>
                 {
-                    this.state.isLoaded
+                    this.state.isLoaded //if
                         ? <Container fluid>
                             <ProjectNavigation title={this.state.data.name} />
                             <Col>
@@ -147,13 +151,14 @@ export class ProjectViewPage extends React.Component {
                                 </Row>
                             </Col>
                         </Container>
-                        : null
+                        : null //else
                 }
             </div>
         )
     }
 }
 
+//ProjectControlView component
 class ProjectControlView extends React.Component {
     constructor(props) {
         super(props)
@@ -162,6 +167,7 @@ class ProjectControlView extends React.Component {
         }
     }
 
+    //rendeing
     render() {
         return (
             <div>

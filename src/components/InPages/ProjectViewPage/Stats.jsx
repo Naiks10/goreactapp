@@ -3,6 +3,7 @@ import { TitlePanel } from './Panels'
 import { Row } from "react-bootstrap";
 import { ProjectValueContext } from "./Consts";
 
+//ProjectStatsView component
 export class ProjectStatsView extends React.Component {
     constructor(props) {
         super(props)
@@ -25,13 +26,28 @@ export class ProjectStatsView extends React.Component {
                 {
                     this.state.isExpanded
                         ? <div className="ProjectElement">
-                            <Row style={{margin : 15}}>
+                            <Row style={{ margin: 15 }}>
                                 <ProjectValueContext.Consumer>
                                     {value =>
                                         <React.Fragment>
-                                            <a style={styles.forA}><b style={styles.forB}>Всего задач</b>{value.count_all}</a>
-                                            <a style={styles.forA}><b style={styles.forB}>Выполнено задач</b>{value.count}</a>
-                                            <a style={styles.forA}><b style={styles.forB}>Проблем</b>{value.issues}</a>
+                                            <a style={styles.forA}>
+                                                <b style={styles.forB}>
+                                                    Всего задач
+                                                </b>
+                                                {value.count_all}
+                                            </a>
+                                            <a style={styles.forA}>
+                                                <b style={styles.forB}>
+                                                    Выполнено задач
+                                                </b>
+                                                {value.count}
+                                            </a>
+                                            <a style={styles.forA}>
+                                                <b style={styles.forB}>
+                                                    Проблем
+                                                </b>
+                                                {value.issues}
+                                            </a>
                                         </React.Fragment>
                                     }
                                 </ProjectValueContext.Consumer>
@@ -44,11 +60,9 @@ export class ProjectStatsView extends React.Component {
     }
 }
 
+
+//Styles
 const styles = {
-    forA : {
-        marginRight : 30
-    },
-    forB : {
-        marginRight : 7
-    }
+    forA: { marginRight: 30 },
+    forB: { marginRight: 7 }
 }

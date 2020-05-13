@@ -7,9 +7,9 @@ import (
 var postgres = sqrl.StatementBuilder.PlaceholderFormat(sqrl.Dollar)
 
 var (
-	//#--ROLES--#//
+	//SelectRoles as SELECT func
 	SelectRoles = postgres.Select("*").From("roles") //+
-	//#--USERS--#//
+	//SelectUsers as SELECT func
 	SelectUsers = postgres.Select( //+
 		"user_login",
 		"first_name",
@@ -22,9 +22,9 @@ var (
 	).
 		From("users").
 		Where("logical_delete_status = false")
-	//#--ORGANISATIONS--#//
+	//SelectOrgs as SELECT func
 	SelectOrgs = postgres.Select("*").From("organisations") //+
-	//#--CLIENTS--#//
+	//SelectClients as SELECT func
 	SelectClients = postgres.Select(
 		"user_login",
 		"sur_name",
@@ -42,9 +42,9 @@ var (
 		From("clients").
 		Join("users ON user_login = client_login").
 		Join("organisations on client_organisation_id = organisation_id")
-	//#--GROUPS--#//
+	//SelectWorkGroups as SELECT func
 	SelectWorkGroups = postgres.Select("*").From("workgroups") //+
-	//#--DEVELOPERS--#//
+	//SelectDevs as SELECT func
 	SelectDevs = postgres.Select(
 		"user_login",
 		"sur_name",
@@ -60,13 +60,11 @@ var (
 		From("developers").
 		Join("users ON user_login = developer_login").
 		Join("roles ON user_role = role_id")
-	/*SelectDevGroups, _, _ = postgres.Select(
-		"list_id",
-		"developer_login"
-	)*/
-	//#--STATUS--#//
+
+	//SelectStatus as SELECT func
 	SelectStatus = postgres.Select("*").From("status") //+
-	//#--PROJECTS--#//
+
+	//SelectProjects as SELECT func
 	SelectProjects = postgres.Select(
 		`project_id, 				project_name,				project_info,
         workgroups.workgroup_id,	workgroups.workgroup_name,
@@ -112,6 +110,7 @@ var (
     ON  clients.client_organisation_id = organisations.organisation_id`,
 	)
 
+	//SelectProjectsPreview as SELECT func
 	SelectProjectsPreview = postgres.Select(
 		"project_id",
 		"project_name",
@@ -177,13 +176,14 @@ var (
 		Join("clients ON project_client_login = client_login").
 		Join("organisations ON organisation_id = client_organisation_id").
 		Join("status ON status_id = project_status_id")
-	//#--MANAGERS--#//
+	//SelectManagers as SELECT func
 	SelectManagers = postgres.
 			Select("user_login", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "role_id", "role_name").
 			From("managers").
 			Join("users ON users.user_login = managers.manager_user_login").
 			Join("roles ON users.user_role = role_id")
 
+	//SelectModules as SELECT func
 	SelectModules = postgres.
 			Select(`
 				   module_id,
@@ -200,6 +200,7 @@ var (
 			 LEFT  JOIN status
 			   ON  module_status = status_id  
 				   `)
+	//SelectStages as SELECT func
 	SelectStages = postgres.
 			Select(`
 			stage_id,
@@ -216,6 +217,8 @@ var (
 	  LEFT  JOIN status
 		ON  stage_status_id = status_id 
 						  `)
+
+	//SelectTasks as SELECT func
 	SelectTasks = postgres.
 			Select(`
 			task_id,
@@ -236,6 +239,8 @@ var (
 				LEFT  JOIN status
 				  ON  task_status_id = status_id
 				  `)
+
+	//SelectSubTasks as SELECT func
 	SelectSubTasks = postgres.
 			Select(`
 			task_id,
@@ -257,10 +262,14 @@ var (
   LEFT  JOIN status
     ON  task_status_id = status_id
 	`)
+
+	//SelectIssues as SELECT func
 	SelectIssues = postgres.
 			Select(`issue_id,
 			issue_name, issue_desc, issue_date, issue_task_id, issue_close_status
 FROM  issues`)
+
+	//SelectWorkers as SELECT func
 	SelectWorkers = postgres.
 			Select(`developer_login,
 				   user_image_src,
@@ -268,6 +277,8 @@ FROM  issues`)
 			 FROM  working_developer_list
 			 LEFT  JOIN users
 			   ON  user_login = developer_login`)
+
+	//SelectValues as SELECT func
 	SelectValues = postgres.Select(`(
 		SELECT  COUNT(*)
 		  FROM  (
@@ -322,6 +333,7 @@ JOIN  clients ON project_client_login = client_login
 JOIN  organisations ON organisation_id = client_organisation_id
 JOIN  status ON status_id = project_status_id`)
 
+	//SelectClientList as SELECT func
 	SelectClientList = postgres.Select(`( sur_name || ' ' || first_name ||  ' ' || middle_name) as fio,
 client_login,
 phone_num,
@@ -337,6 +349,8 @@ short_name,
 FROM  clients
 JOIN  users ON user_login = client_login
 JOIN  organisations ON organisation_id = client_organisation_id`)
+
+	//SelectManagersList as SELECT func
 	SelectManagersList = postgres.Select(`( sur_name || ' ' || first_name ||  ' ' || middle_name) as fio,
 	manager_login,
 	phone_num,
@@ -351,6 +365,8 @@ JOIN  organisations ON organisation_id = client_organisation_id`)
 	FROM  managers
 	JOIN  users ON user_login = manager_login
 	WHERE manager_login <> 'null'`)
+
+	//SelectDeveloperList as SELECT func
 	SelectDeveloperList = postgres.Select(`( sur_name || ' ' || first_name ||  ' ' || middle_name) as fio,
 	developer_login,
 	phone_num,

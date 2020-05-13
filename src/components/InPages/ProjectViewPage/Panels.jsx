@@ -1,10 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap"
 
+
+//InfoPanel for issues
 export class InfoPanel extends React.Component {
     constructor(props) {
         super(props)
     }
+    //rendering
     render() {
         return (
 
@@ -52,10 +55,12 @@ export class InfoPanel extends React.Component {
 }
 
 
+//TitlePanle for Info statement
 export class TitlePanel extends React.Component {
     constructor(props) {
         super(props)
     }
+    //rendering
     render() {
         return (
             <Col>

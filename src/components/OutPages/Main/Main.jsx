@@ -26,7 +26,7 @@ class Main extends React.Component {
             link = '/workspace/start'
         }
 
-        return (                                                                                                                                                                                     
+        return (
             <Container style={styles.containerStyle}>
                 <Helmet bodyAttributes={{ style: this.state.back }} />
                 <Row>
@@ -41,21 +41,36 @@ class Main extends React.Component {
                             <Jumbotron className="bg-white">
                                 <div className="hvr-icon-wobble-vertical">
                                     <div className="justify-content-md-center">
-                                        <img className="hvr-icon" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/idea.png" width="150" height="150" />
+                                        <img
+                                            className="hvr-icon"
+                                            style={
+                                                {
+                                                    display: "block",
+                                                    marginLeft: "auto",
+                                                    marginRight: "auto"
+                                                }
+                                            }
+                                            src="/assets/img/idea.png"
+                                            width="150"
+                                            height="150" />
                                     </div>
                                     <h2 style={{ marginTop: 45 }}>Пора осуществлять проекты!</h2>
                                     <p>Войдите или зарегистрируйтесь в системе, чтобы организовать свою мечту в мире реекламы и приложений.</p>
                                     <p>
-                                        
-                                           <Button onClick={() => { window.location.replace("/workspace/start")}} variant="warning">Начать работы</Button>
-                                        
+                                        <Button
+                                            onClick={() => { window.location.replace("/workspace/start") }}
+                                            variant="warning">
+                                            Начать работы
+                                        </Button>
                                     </p>
                                 </div>
                             </Jumbotron>
                         </div>
                     </Col>
                     <Col>
-                        <div className="bg-white" style={styles.containerStyle._mainPageStyle}
+                        <div
+                            className="bg-white"
+                            style={styles.containerStyle._mainPageStyle}
                             onMouseEnter={() => {
                                 this.setState({ back: 'background-color: #7c20d1' })
                             }}
@@ -65,13 +80,24 @@ class Main extends React.Component {
                             <Jumbotron className="bg-white">
                                 <div className="hvr-icon-pulse">
                                     <div className="justify-content-md-center">
-                                        <img className="hvr-icon" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/new.png" width="150" height="150" />
+                                        <img
+                                            className="hvr-icon"
+                                            style={
+                                                {
+                                                    display: "block",
+                                                    marginLeft: "auto",
+                                                    marginRight: "auto"
+                                                }
+                                            }
+                                            src="/assets/img/new.png"
+                                            width="150"
+                                            height="150" />
                                     </div>
                                     <h2 style={{ marginTop: 45 }}>Нужно узнать что-то новое?</h2>
                                     <p>Узнайте о последних нововведениях в проекте в отдельном разделе новостей</p>
                                     <p>
                                         <Link to="/home/news">
-                                           <Button variant="purples">Узнать что-то новое</Button>
+                                            <Button variant="purples">Узнать что-то новое</Button>
                                         </Link>
                                     </p>
                                 </div>
@@ -81,7 +107,9 @@ class Main extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <div className="bg-white" style={styles.containerStyle._mainPageStyle}
+                        <div
+                            className="bg-white"
+                            style={styles.containerStyle._mainPageStyle}
                             onMouseEnter={() => {
                                 this.setState({ back: 'background-color: #28a745' })
                             }}
@@ -91,7 +119,18 @@ class Main extends React.Component {
                             <Jumbotron className="bg-white">
                                 <div className="hvr-icon-bounce">
                                     <div className="justify-content-md-center">
-                                        <img className="hvr-icon" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/faq.png" width="150" height="150" />
+                                        <img
+                                            className="hvr-icon"
+                                            style={
+                                                {
+                                                    display: "block",
+                                                    marginLeft: "auto",
+                                                    marginRight: "auto"
+                                                }
+                                            }
+                                            src="/assets/img/faq.png"
+                                            width="150"
+                                            height="150" />
                                     </div>
                                     <h2 style={{ marginTop: 45 }}>А что это вообще и куда я попал?</h2>
                                     <p>Узнайте больше о данном проекте перейдя в одноимённый раздел</p>
@@ -105,7 +144,9 @@ class Main extends React.Component {
                         </div>
                     </Col>
                     <Col>
-                        <div className="bg-white" style={styles.containerStyle._mainPageStyle}
+                        <div
+                            className="bg-white"
+                            style={styles.containerStyle._mainPageStyle}
                             onMouseEnter={() => {
                                 this.setState({ back: 'background-color: #2c6da1' })
                             }}
@@ -115,7 +156,18 @@ class Main extends React.Component {
                             <Jumbotron className="bg-white">
                                 <div className="hvr-icon-shrink">
                                     <div className="justify-content-md-center">
-                                        <img className="hvr-icon" style={{ display: "block", marginLeft: "auto", marginRight: "auto" }} src="/assets/img/code.png" width="150" height="150" />
+                                        <img
+                                            className="hvr-icon"
+                                            style={
+                                                {
+                                                    display: "block",
+                                                    marginLeft: "auto",
+                                                    marginRight: "auto"
+                                                }
+                                            }
+                                            src="/assets/img/code.png"
+                                            width="150"
+                                            height="150" />
                                     </div>
                                     <h2 style={{ marginTop: 45 }}>Мне понравилось! Хочу больше</h2>
                                     <p>Перейдите в раздел разработки и посмотрите как работает проект и какие технологии были использованы в проекте.</p>
@@ -123,7 +175,7 @@ class Main extends React.Component {
                                         <Link to="/home/development">
                                             <Button variant="primary">Разработка</Button>
                                         </Link>
-                                    </div>                                  
+                                    </div>
                                 </div>
                             </Jumbotron>
                         </div>

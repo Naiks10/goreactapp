@@ -31,11 +31,11 @@ func TestDBexist(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			Inizialize(tt.want.ConnectionString, tt.want.DriverName)
-			if got_cs := DBexist().ConnectionString; !reflect.DeepEqual(got_cs, tt.want.ConnectionString) {
-				t.Errorf("DBexist() = %v, want %v", got_cs, tt.want.ConnectionString)
+			if gotCs := DBexist().ConnectionString; !reflect.DeepEqual(gotCs, tt.want.ConnectionString) {
+				t.Errorf("DBexist() = %v, want %v", gotCs, tt.want.ConnectionString)
 			}
-			if got_dn := DBexist().DriverName; !reflect.DeepEqual(got_dn, tt.want.DriverName) {
-				t.Errorf("DBexist() = %v, want %v", got_dn, tt.want.DriverName)
+			if gotDn := DBexist().DriverName; !reflect.DeepEqual(gotDn, tt.want.DriverName) {
+				t.Errorf("DBexist() = %v, want %v", gotDn, tt.want.DriverName)
 			}
 		})
 	}

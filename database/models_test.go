@@ -1,14 +1,7 @@
 package database
 
-import (
-	"database/sql/driver"
-	"encoding/json"
-	"reflect"
-	"testing"
-)
-
 //#--TESTS--#//
-
+/*
 func TestOrganisationData_Value(t *testing.T) {
 
 	a1 := OrganisationData{ //first struct
@@ -73,4 +66,4 @@ func TestOrganisationData_Value(t *testing.T) {
 			}
 		})
 	}
-}
+}*/

@@ -3,8 +3,10 @@ import React from "react";
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { TitlePanel } from './Panels'
-import {Row, Col} from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 
+
+//ProjectChartView
 export class ProjectChartView extends React.Component {
     constructor(props) {
         super(props)
@@ -13,6 +15,7 @@ export class ProjectChartView extends React.Component {
         }
     }
 
+    //rendering
     render() {
         const options = {
             title: {
@@ -38,10 +41,13 @@ export class ProjectChartView extends React.Component {
                     onClick={() => { this.setState({ isExpanded: !this.state.isExpanded }) }
                     } />
                 {
-                    this.state.isExpanded
+                    this.state.isExpanded //if expanded
                         ? <div className="ProjectElement">
                             <Col>
-                                <Row style={{ fontWeight: 'bold' }}><b>Период проекта</b></Row>
+                                <Row
+                                    style={{ fontWeight: 'bold' }}>
+                                    <b>Период проекта</b>
+                                </Row>
                                 <div>
                                     <HighchartsReact
                                         highcharts={Highcharts}
@@ -50,7 +56,7 @@ export class ProjectChartView extends React.Component {
                                 </div>
                             </Col>
                         </div>
-                        : null
+                        : null //else
                 }
             </div>
         )

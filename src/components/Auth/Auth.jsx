@@ -115,29 +115,73 @@ export class Auth extends React.Component {
         return (
             <div style={{ height: '100%' }}>
                 <div style={{ height: '30%' }}></div>
-                <Container className="bg-white animated fadeIn mx-auto" style={styles.bodyStyle}>
-                    <Helmet title="Авторизация" bodyAttributes={{ style: 'background-color : #2098D1' }} />
-                    <Row style={{ verticalAlign: 'middle', height: "100%" }}>
+                <Container
+                    className="bg-white animated fadeIn mx-auto"
+                    style={styles.bodyStyle}>
+                    <Helmet
+                        title="Авторизация"
+                        bodyAttributes={{ style: 'background-color : #2098D1' }} />
+                    <Row
+                        style={
+                            {
+                                verticalAlign: 'middle',
+                                height: "100%"
+                            }
+                        }>
                         <Col style={{ verticalAlign: "middle" }}>
                             <h1 style={{ textAlign: "center" }}>ВХОД</h1>
-                            <Form style={{ verticalAlign: "middle", height: "100%" }}>
+                            <Form
+                                style={
+                                    {
+                                        verticalAlign: "middle",
+                                        height: "100%"
+                                    }
+                                }>
                                 <div>
-                                    <Form.Group as={Col} style={{ width: "50%" }}>
-                                        <Form.Label column sm={2}>Логин</Form.Label>
+                                    <Form.Group
+                                        as={Col}
+                                        style={{ width: "50%" }}>
+                                        <Form.Label
+                                            column
+                                            sm={2}>Логин</Form.Label>
                                         <Col>
-                                            <Form.Control type="text" name="login" onChange={e => this.change(e)} value={this.state.login} placeholder="Введите логин" />
+                                            <Form.Control
+                                                type="text"
+                                                name="login"
+                                                onChange={e => this.change(e)}
+                                                value={this.state.login}
+                                                placeholder="Введите логин" />
                                         </Col>
                                     </Form.Group>
-                                    <Form.Group as={Col} style={{ width: "50%" }} controlId="formHorizontalPassword">
-                                        <Form.Label column sm={2}>Пароль</Form.Label>
+                                    <Form.Group
+                                        as={Col}
+                                        style={{ width: "50%" }}
+                                        controlId="formHorizontalPassword">
+                                        <Form.Label
+                                            column
+                                            sm={2}>Пароль</Form.Label>
                                         <Col>
-                                            <Form.Control type="password" name="password" onChange={e => this.change(e)} value={this.state.password} placeholder="Введите пароль" />
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                onChange={e => this.change(e)}
+                                                value={this.state.password}
+                                                placeholder="Введите пароль" />
                                         </Col>
                                     </Form.Group>
                                 </div>
-                                <div className="d-flex align-items-center" style={{ position: "absolute", bottom: 0 }}>
-                                    <Link onClick={e => this.submit(e)} className="btn btn-outline-primary">Войти в систему</Link>
-                                    <Button variant="primary" style={{ marginLeft: 10 }} onClick={() => { this.setState({ isOpened: true }) }}>Зарегистрироваться</Button>
+                                <div
+                                    className="d-flex align-items-center"
+                                    style={{ position: "absolute", bottom: 0 }}>
+                                    <Link
+                                        onClick={e => this.submit(e)}
+                                        className="btn btn-outline-primary"
+                                    >Войти в систему</Link>
+                                    <Button
+                                        variant="primary"
+                                        style={{ marginLeft: 10 }}
+                                        onClick={() => { this.setState({ isOpened: true }) }}
+                                    >Зарегистрироваться</Button>
                                 </div>
                             </Form>
                         </Col>
@@ -158,36 +202,65 @@ export class Auth extends React.Component {
                     <Modal.Body>
                         <h5>Персональные данные</h5>
                         <Form.Group as={Col}>
-                            <Form.Label column sm="2">Фамилия</Form.Label>
+                            <Form.Label
+                                column
+                                sm="2">Фамилия</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={lstname} placeholder="Ваша фамилия" />
+                                <Form.Control
+                                    ref={lstname}
+                                    placeholder="Ваша фамилия" />
                             </Col>
-                            <Form.Label column sm="2">Имя</Form.Label>
+                            <Form.Label
+                                column
+                                sm="2">Имя</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={fstname} placeholder="Ваше имя" />
+                                <Form.Control
+                                    ref={fstname}
+                                    placeholder="Ваше имя" />
                             </Col>
-                            <Form.Label column sm="2">Отчество</Form.Label>
+                            <Form.Label
+                                column
+                                sm="2">Отчество</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={midname} placeholder="Ваше отчество" />
+                                <Form.Control
+                                    ref={midname}
+                                    placeholder="Ваше отчество" />
                             </Col>
-                            <Form.Label column sm="2">Дата рождения</Form.Label>
+                            <Form.Label
+                                column
+                                sm="2">Дата рождения</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={birthdate} placeholder="Ваша дата рождения" />
+                                <Form.Control
+                                    ref={birthdate}
+                                    placeholder="Ваша дата рождения" />
                             </Col>
-                            <Form.Label column sm="2">Телефон</Form.Label>
+                            <Form.Label
+                                column
+                                sm="2">Телефон</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={phone} placeholder="Ваш телефон" />
+                                <Form.Control
+                                    ref={phone}
+                                    placeholder="Ваш телефон" />
                             </Col>
-                            <Form.Label column sm="2">E-mail</Form.Label>
+                            <Form.Label
+                                column
+                                sm="2">E-mail</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={email} type="email" placeholder="Email" />
+                                <Form.Control
+                                    ref={email}
+                                    type="email"
+                                    placeholder="Email" />
                             </Col>
                         </Form.Group>
                         <h5>Информация об организации</h5>
                         <Form.Group as={Col}>
-                            <Form.Label column sm="3">Организация</Form.Label>
+                            <Form.Label
+                                column
+                                sm="3">Организация</Form.Label>
                             <Col sm="7">
-                                <Form.Control as="select" onChange={e => this.changeList(e)}>
+                                <Form.Control
+                                    as="select"
+                                    onChange={e => this.changeList(e)}>
                                     {Orgs.map(item => (
                                         <option value={item.id}>{item.name}</option>
                                     ))}
@@ -196,46 +269,62 @@ export class Auth extends React.Component {
                         </Form.Group>
                         <h5>Данные аккаунта</h5>
                         <Form.Group>
-                            <Form.Label column sm="3">Логин</Form.Label>
+                            <Form.Label
+                                column
+                                sm="3">Логин</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={login} placeholder="Логин" />
+                                <Form.Control
+                                    ref={login}
+                                    placeholder="Логин" />
                             </Col>
-                            <Form.Label column sm="3">Пароль</Form.Label>
+                            <Form.Label
+                                column
+                                sm="3">Пароль</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={password} type="password" placeholder="Придумайте пароль" />
+                                <Form.Control
+                                    ref={password}
+                                    type="password"
+                                    placeholder="Придумайте пароль" />
                             </Col>
-                            <Form.Label column sm="3">Пароль</Form.Label>
+                            <Form.Label
+                                column
+                                sm="3">Пароль</Form.Label>
                             <Col sm="7">
-                                <Form.Control ref={password_check} type="password" placeholder="Повторите пароль" />
+                                <Form.Control
+                                    ref={password_check}
+                                    type="password"
+                                    placeholder="Повторите пароль" />
                             </Col>
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="warning" onClick={() => {
-                            var jwt = getJWT()
-                            fetch("/users",
-                                {
-                                    method: "post",
-                                    headers: {
-                                        'Authorization': `Bearer ${jwt}`,
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        login: login.current.value,
-                                        password: password.current.value,
-                                        name: fstname.current.value,
-                                        midname: midname.current.value,
-                                        surname: lstname.current.value,
-                                        phone: phone.current.value,
-                                        mail: email.current.value,
-                                        birthdate: birthdate.current.value,
-                                        role: {
-                                            id: "4"
-                                        }
+                        <Button
+                            variant="warning"
+                            onClick={() => {
+                                var jwt = getJWT()
+                                fetch("/users",
+                                    {
+                                        method: "post",
+                                        headers: {
+                                            'Authorization': `Bearer ${jwt}`,
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            login: login.current.value,
+                                            password: password.current.value,
+                                            name: fstname.current.value,
+                                            midname: midname.current.value,
+                                            surname: lstname.current.value,
+                                            phone: phone.current.value,
+                                            mail: email.current.value,
+                                            birthdate: birthdate.current.value,
+                                            role: {
+                                                id: "4"
+                                            }
+                                        })
                                     })
-                                })
-                                .then((resp) => resp.text()).then((text) => { console.log(text) })
-                                .then(fetch("/clients", {
+                                    .then((resp) => resp.text()).then((text) => { console.log(text) })
+                                    .then(fetch("/clients", {
                                         method: "post",
                                         headers: {
                                             'Authorization': `Bearer ${jwt}`,
@@ -250,11 +339,11 @@ export class Auth extends React.Component {
                                             }
                                         })
                                     })
-                                    .then((resp) => resp.text()).then((text) => { console.log(text) })
-                                )
-                                .then(this.setState({ isOpened: false }))
+                                        .then((resp) => resp.text()).then((text) => { console.log(text) })
+                                    )
+                                    .then(this.setState({ isOpened: false }))
 
-                        }}>Сохранить изменения</Button>
+                            }}>Сохранить изменения</Button>
                     </Modal.Footer>
                 </Modal>
                 <div style={{ height: '30%' }}></div>

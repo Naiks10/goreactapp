@@ -9,20 +9,50 @@ class MainNavigation extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            type : false,
-            thePosition : 0
+            type: false,
+            thePosition: 0
         }
     }
 
     render() {
         return (
-            <div className="bg-white animated slideInDown " style={styles.mainNavigationStyle}>
-                <Container fluid style={{ paddingLeft: "-90px" }}>
-                    <Row className="justify-content-md-center" style={styles.mainNavigationStyle._rowStyle}>
-                        <MainNavigationTabButton path="/home/start" text={<a>Главная <i className="fad fa-home"></i></a>} />
-                        <MainNavigationTabButton path="/home/news" text={<a>Новости <i className="fad fa-newspaper"></i></a>} />
-                        <MainNavigationTabButton path="/home/about" text={<a>О проекте <i className="fad fa-question-circle"></i></a>} />
-                        <MainNavigationTabButton path="/home/development" text={<a>Разработка <i className="fad fa-code"></i></a>} />
+            <div
+                className="bg-white animated slideInDown "
+                style={styles.mainNavigationStyle}>
+                <Container
+                    fluid
+                    style={{ paddingLeft: "-90px" }}>
+                    <Row
+                        className="justify-content-md-center"
+                        style={styles.mainNavigationStyle._rowStyle}>
+                        <MainNavigationTabButton
+                            path="/home/start"
+                            text={
+                                <a>Главная
+                                    <i className="fad fa-home"></i>
+                                </a>
+                            } />
+                        <MainNavigationTabButton
+                            path="/home/news"
+                            text={
+                                <a>Новости
+                                    <i className="fad fa-newspaper"></i>
+                                </a>
+                            } />
+                        <MainNavigationTabButton
+                            path="/home/about"
+                            text={
+                                <a>О проекте
+                                    <i className="fad fa-question-circle"></i>
+                                </a>
+                            } />
+                        <MainNavigationTabButton
+                            path="/home/development"
+                            text={
+                                <a>Разработка
+                                    <i className="fad fa-code"></i>
+                                </a>
+                            } />
                     </Row>
                 </Container>
             </div>
@@ -40,8 +70,12 @@ class MainNavigationTabButton extends React.Component {
 
     render() {
         return (
-            <div className="hvr-underline-from-center" style={styles.mainNavigationTabButtonStyle}>
-                <Link to={this.props.path} style={{ textDecoration: "none", color : "inherit" }}>
+            <div
+                className="hvr-underline-from-center"
+                style={styles.mainNavigationTabButtonStyle}>
+                <Link
+                    to={this.props.path}
+                    style={{ textDecoration: "none", color: "inherit" }}>
                     <p style={styles.mainNavigationTabButtonStyle._pStyle}>
                         {this.props.text}
                     </p>
@@ -58,9 +92,9 @@ const styles = {
         height: 90,
         paddingTop: 45,
         boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-        position : "sticky", 
+        position: "sticky",
         zIndex: "999999",
-        top : 0,
+        top: 0,
         _rowStyle: {
             height: 45,
         }

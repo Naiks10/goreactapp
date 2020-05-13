@@ -1,43 +1,82 @@
 import React from "react"
 import { Jumbotron, Container, Carousel, Row } from "react-bootstrap"
 
+//AboutClassicPage
 class About extends React.Component {
     constructor(props) {
         super(props)
     }
 
+    //rendering
     render() {
         window.scrollTo(0, 0)
         return (
             <Container style={styles.containerStyle}>
-                <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
+                <div
+                    className="bg-white"
+                    style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <div className="justify-content-md-center">
                             <Row>
-                                <img style={{ display: "block", marginLeft: "auto", marginBottom: 90, marginRight: "auto" }} src="/assets/img/reu.png" width="250" height="250" />
-                                <img style={{ display: "block", marginLeft: "auto", marginTop: 90, marginRight: "auto" }} src="/assets/img/logob.png" width="287" height="155" />
+                                <img
+                                    style={
+                                        {
+                                            display: "block",
+                                            marginLeft: "auto",
+                                            marginBottom: 90,
+                                            marginRight: "auto"
+                                        }
+                                    }
+                                    src="/assets/img/reu.png"
+                                    width="250"
+                                    height="250" />
+                                <img
+                                    style={
+                                        {
+                                            display: "block",
+                                            marginLeft: "auto",
+                                            marginTop: 90,
+                                            marginRight: "auto"
+                                        }
+                                    }
+                                    src="/assets/img/logob.png"
+                                    width="287"
+                                    height="155" />
                             </Row>
                         </div>
                         <h2>О проекте</h2>
                         <p>
-                            Это проект производстенной практики студента 4-го курса <b>РЭУ им. Г.В.Плеханова Московского Приборостроительного Техникума</b>, Рябова Владислав Олеговича.<br />
+                            Это проект производстенной практики студента 4-го курса
+                            <b>РЭУ им. Г.В.Плеханова Московского Приборостроительного Техникума</b>,
+                            Рябова Владислав Олеговича.
                             <br />
-                            - <b>Тема данного проекта</b> : <i>"Разработка продвижение и сопровождение информационной системы <u>Учёт заказчиков и разработчиков при процессе разработки программного обеспечения.</u>"</i><br />
-                            - <b>Руководитель практики от техникума</b> : Соколов Александр Леонидович<br />
-                            - <b>Руководитель практики от организации</b> : Петров Иван Сергеевич<br />
                             <br />
-                            Данный проект разрабатывается под контролем организации <b>ООО "Профинтерес"</b> (организация в которой проходит практика).
+                            - <b>Тема данного проекта</b> :
+                            <i>"Разработка продвижение и сопровождение информационной системы
+                                <u>Учёт заказчиков и разработчиков при процессе разработки программного обеспечения.</u>"
+                            </i>
+                            <br />
+                            - <b>Руководитель практики от техникума</b>
+                            : Соколов Александр Леонидович<br />
+                            - <b>Руководитель практики от организации</b>
+                            : Петров Иван Сергеевич<br />
+                            <br />
+                            Данный проект разрабатывается под контролем организации
+                            <b>ООО "Профинтерес"</b>
+                            (организация в которой проходит практика).
                         </p>
-                        <div className="justify-content-md-center">
-
-                        </div>
+                        <div className="justify-content-md-center"></div>
                     </Jumbotron>
                 </div>
-                <div className="bg-white" style={styles.containerStyle._mainPageStyle}>
+                <div
+                    className="bg-white"
+                    style={styles.containerStyle._mainPageStyle}>
                     <Jumbotron className="bg-white">
                         <h2>Галерея</h2>
                         <br />
-                        <Carousel indicators={false} interval={5000}>
+                        <Carousel
+                            indicators={false}
+                            interval={5000}>
                             <Carousel.Item>
                                 <img
                                     style={{ borderRadius: 8 }}
@@ -46,7 +85,8 @@ class About extends React.Component {
                                     alt="First slide"
                                 />
                                 <Carousel.Caption>
-                                    <div style={{ borderRadius: 6, backgroundColor: '#34495e' }}>
+                                    <div
+                                        style={{ borderRadius: 6, backgroundColor: '#34495e' }}>
                                         <h3>Выбирайте нужные элементы</h3>
                                         <p>Приложение имеет удобный интерфейс, позволяющий переключаться между разделами взаимодействия</p>
                                     </div>
@@ -90,6 +130,7 @@ class About extends React.Component {
     }
 }
 
+//styles
 const styles = {
     containerStyle: {
         marginTop: 20,

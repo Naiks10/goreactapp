@@ -77,10 +77,19 @@ export class ClientsPage extends React.Component {
             return (
                 <div>
                     <MainNavigation />
-                    <Container fluid style={{ marginTop: 20 }} className="d-flex justify-content-center">
-                        <Col style={{ marginLeft: '2%', margin: '2%', width: '90%' }}>
-                            <Tabs variant="pills" defaultActiveKey="home" id="uncontrolled-tab-example">
-                                <Tab eventKey="home" title="Клиенты">
+                    <Container
+                        fluid
+                        style={{ marginTop: 20 }}
+                        className="d-flex justify-content-center">
+                        <Col
+                            style={{ marginLeft: '2%', margin: '2%', width: '90%' }}>
+                            <Tabs
+                                variant="pills"
+                                defaultActiveKey="home"
+                                id="uncontrolled-tab-example">
+                                <Tab
+                                    eventKey="home"
+                                    title="Клиенты">
                                     {
                                         Items.map(item => (
                                             <ClientsElement data={item}
@@ -88,14 +97,16 @@ export class ClientsPage extends React.Component {
                                         ))
                                     }
                                 </Tab>
-                                <Tab eventKey="profile" title="Организации">
-                                        <div className="box_x">
-                                            {
-                                                Orgs.map(item => (
-                                                        <OrgsElement data={item} />
-                                                ))
-                                            }
-                                        </div>
+                                <Tab
+                                    eventKey="profile"
+                                    title="Организации">
+                                    <div className="box_x">
+                                        {
+                                            Orgs.map(item => (
+                                                <OrgsElement data={item} />
+                                            ))
+                                        }
+                                    </div>
                                 </Tab>
                             </Tabs>
                         </Col>
@@ -137,35 +148,58 @@ class ClientsElement extends React.Component {
     render() {
         //const { match, location, history } = this.props
         return (
-            <div style={{margin : '20px 0px'}}>
-            <div
-                className="ListElement"
-                onMouseLeave={() => {
-                    this.setState({
-                        LoadedState: 'start'
-                    })
-                }}
-                onClick={() => {
-                    history.push({ pathname: `/workspace/clients/${this.props.data.client_login}` })
-                }}
-            >
-                <Col>
-                    <Row>
-                        <Col>{this.props.data.fio}   (<b>@{this.props.data.client_login}</b>)</Col>
-                        <Col><div className="d-flex justify-content-end">{this.props.data.phone_num}    {this.props.data.email_addr}</div></Col>
-                    </Row>
-                    <Row style={{ marginTop: 7, marginBottom: 7 }}>
-                        <Col><img width="75" height="75" src={this.props.data.user_image_src} /></Col>
-                        <Col className="d-flex align-items-center justify-content-end">
-                            <div>
-                                <p style={{ marginBottom: 0 }} className="d-flex justify-content-end">Всего проектов : {this.props.data.count}</p>
-                                <p style={{ marginBottom: 0 }} className="d-flex justify-content-end">Выполненнных : {this.props.data.count_fin}</p>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row><Col className="d-flex justify-content-end">Организация : {this.props.data.short_name}</Col></Row>
-                </Col>
-            </div>
+            <div style={{ margin: '20px 0px' }}>
+                <div
+                    className="ListElement"
+                    onMouseLeave={() => {
+                        this.setState({
+                            LoadedState: 'start'
+                        })
+                    }}
+                    onClick={() => {
+                        history.push({ pathname: `/workspace/clients/${this.props.data.client_login}` })
+                    }}
+                >
+                    <Col>
+                        <Row>
+                            <Col>{this.props.data.fio}   (<b>@{this.props.data.client_login}</b>)</Col>
+                            <Col>
+                                <div
+                                    className="d-flex justify-content-end">
+                                    {this.props.data.phone_num}    {this.props.data.email_addr}
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row style={{ marginTop: 7, marginBottom: 7 }}>
+                            <Col>
+                                <img
+                                    width="75"
+                                    height="75"
+                                    src={this.props.data.user_image_src} />
+                            </Col>
+                            <Col className="d-flex align-items-center justify-content-end">
+                                <div>
+                                    <p
+                                        style={{ marginBottom: 0 }}
+                                        className="d-flex justify-content-end">
+                                        Всего проектов : {this.props.data.count}
+                                    </p>
+                                    <p
+                                        style={{ marginBottom: 0 }}
+                                        className="d-flex justify-content-end">
+                                        Выполненнных : {this.props.data.count_fin}
+                                    </p>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col
+                                className="d-flex justify-content-end">
+                                Организация : {this.props.data.short_name}
+                            </Col>
+                        </Row>
+                    </Col>
+                </div>
             </div>
         )
     }
@@ -195,29 +229,39 @@ class OrgsElement extends React.Component {
     render() {
         //const { match, location, history } = this.props
         return (
-            <div style={{padding : '20px 10px 20px 10px'}}>
-            <div
-                className="ListElement col-xs-auto col-lg-auto"
-                onMouseLeave={() => {
-                    this.setState({
-                        LoadedState: 'start'
-                    })
-                }}
-                onClick={() => {
-                    history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
-                }}
-            >
-                <Col>
-                    <Row style={{ marginTop: 7, marginBottom: 7 }}>
-                        <Col><img width="75" height="75" src={this.props.data.src} /></Col>
-                        <Col className="d-flex align-items-center justify-content-end">
-                            <div>
-                                <p style={{ marginBottom: 0 }} className="d-flex justify-content-end">{this.props.data.full_name}</p>
-                            </div>
-                        </Col>
-                    </Row>
-                </Col>
-            </div>
+            <div style={{ padding: '20px 10px 20px 10px' }}>
+                <div
+                    className="ListElement col-xs-auto col-lg-auto"
+                    onMouseLeave={() => {
+                        this.setState({
+                            LoadedState: 'start'
+                        })
+                    }}
+                    onClick={() => {
+                        history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
+                    }}
+                >
+                    <Col>
+                        <Row style={{ marginTop: 7, marginBottom: 7 }}>
+                            <Col>
+                                <img
+                                    width="75"
+                                    height="75"
+                                    src={this.props.data.src}
+                                />
+                            </Col>
+                            <Col className="d-flex align-items-center justify-content-end">
+                                <div>
+                                    <p
+                                        style={{ marginBottom: 0 }}
+                                        className="d-flex justify-content-end">
+                                        {this.props.data.full_name}
+                                    </p>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
+                </div>
             </div>
         )
     }
@@ -239,7 +283,14 @@ export class StartPageMenuElementNew extends React.Component {
                     history.push({ pathname: `/workspace/create_project` })
                 }}
             >
-                <div className="d-flex align-items-center"><img className="hvr-icon" /*style={{marginTop: '50%', transform: 'translate(0%, -15%)'}}*/ width="100" height="100" src="/assets/img/add.png" /></div>
+                <div
+                    className="d-flex align-items-center">
+                    <img
+                        className="hvr-icon"
+                        width="100"
+                        height="100"
+                        src="/assets/img/add.png" />
+                </div>
             </div>
         )
     }

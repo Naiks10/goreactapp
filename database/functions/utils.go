@@ -35,13 +35,13 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, sb
 		errs := db.DB.Select(table.GetItems(), query)
 		fmt.Println("bey", errs)
 	}
-	//table.GetPrimaryKey()
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println(table, "|||", query, params)
+	fmt.Println(table, "|||", params)
 	json.NewEncoder(w).Encode(table)
 	table.Clear()
 }
 
+//JSONGetAll1 converts Go data (array(s)) to JSON model (variant 2)
 func JSONGetAll1(table database.Table, w http.ResponseWriter, r *http.Request, sb *sqrl.SelectBuilder) []byte {
 	table.Clear()
 
@@ -55,9 +55,8 @@ func JSONGetAll1(table database.Table, w http.ResponseWriter, r *http.Request, s
 		errs := db.DB.Select(table.GetItems(), query)
 		fmt.Println("bey", errs)
 	}
-	//table.GetPrimaryKey()
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println(table, "|||", query, params)
+	fmt.Println(table, "|||", params)
 	e, _ := json.Marshal(table)
 	json.NewEncoder(w).Encode(table)
 	table.Clear()
@@ -71,7 +70,6 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 	exSb := *sb
 
 	vars := mux.Vars(r)
-	fmt.Println("query")
 
 	var val string
 
@@ -81,19 +79,17 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 		val = value
 	}
 
-	//fmt.Println(val)
-
 	type Item struct {
 		Data interface{} `json:"data"`
 	}
 
 	fmt.Println(val)
-	//fmt.Println(table.GetPrimaryKey())
 
-	query, params, rr := exSb.Where(sqrl.Eq{table.GetPrimaryKey(): val}).ToSql()
-	fmt.Println(rr)
-	fmt.Println(query)
-	fmt.Println(params, "SQL")
+	query, params, queryErr := exSb.
+		Where(sqrl.Eq{table.GetPrimaryKey(): val}).
+		ToSql()
+
+	fmt.Println(queryErr)
 
 	if params != nil {
 		errs := db.DB.Select(table.GetItems(), query, params[0])
@@ -115,7 +111,7 @@ func GetResult(w http.ResponseWriter, query string, args []interface{}) {
 	fmt.Fprintf(w, s)
 }
 
-/*GetResult is universal converter to JSON from Go Structs,
+/*GetResultWA is universal converter to JSON from Go Structs,
 Neaded for dynamic added RESTapi queries.*/
 func GetResultWA(w http.ResponseWriter, query string) {
 	s, _ := gosqljson.QueryDbToMapJSON(db.DB.DB, "lower", query)
@@ -146,6 +142,7 @@ func GetQueries(sb *sqrl.SelectBuilder, r *http.Request) *sqrl.SelectBuilder {
 
 }
 
+//InsertNewData as func INSERT new data func for new values from JSON-body
 func InsertNewData(table interface{}, w http.ResponseWriter, r *http.Request) {
 
 	b, err := ioutil.ReadAll(r.Body)

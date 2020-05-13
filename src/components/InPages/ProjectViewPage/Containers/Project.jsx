@@ -6,7 +6,8 @@ import { SubButton } from "../Buttons"
 import { Modulecontext, GetDate, GetStatus } from '../Consts'
 import { getJWT } from "../../../Functions/Funcs"
 
-
+//ProjectContainer 
+//Project => Module => Stage => SuperTaskContainer => ...
 export class ProjectContainer extends React.Component {
     constructor(props) {
         super(props)
@@ -21,6 +22,7 @@ export class ProjectContainer extends React.Component {
         }
     }
 
+    //prepare
     componentDidMount() {
         this.GetData()
     }
@@ -41,6 +43,7 @@ export class ProjectContainer extends React.Component {
             })
     }
 
+    //rendering
     render() {
         const { isLoaded, data, error, isOvered, isShowedSub } = this.state;
         return (
@@ -52,16 +55,8 @@ export class ProjectContainer extends React.Component {
                     }
                 }>
                 <Col
-                    onMouseEnter={
-                        () => {
-                            this.setState({ isOvered: true })
-                        }
-                    }
-                    onMouseLeave={
-                        () => {
-                            this.setState({ isOvered: false })
-                        }
-                    }>
+                    onMouseEnter={() => {this.setState({ isOvered: true })}}
+                    onMouseLeave={() => {this.setState({ isOvered: false })}}>
                     <Row style={{ position: "relative" }}>
                         <div
                             className="d-flex align-items-center"
@@ -102,22 +97,22 @@ export class ProjectContainer extends React.Component {
                     </Row>
                 </Col>
                 {
-                    isLoaded && data != null
+                    isLoaded && data != null //if loaded
                         ? data.map(item => (
                             <Modulecontext.Provider value={() => this.GetData()}>
                                 <ModuleContainer data={item} />
                             </Modulecontext.Provider>
                         ))
-                        : null
+                        : null //else
                 }
                 {
-                    isShowedSub
+                    isShowedSub //if sub
                         ? <CreateSubModuleModal
                             task_data={this.props.data}
                             update={() => this.GetData()}
                             show={this.state.isShowedSub}
                             onHide={() => this.setState({ isShowedSub: false })} />
-                        : null
+                        : null //else
                 }
             </div>
         )

@@ -13,7 +13,7 @@ import { MainNavigation } from "../BodyElements/BodyPanel"
 
 const jwt = getJWT()
 
-
+//StatrPageMenu basic component
 export class StartPageMenu extends React.Component {
     constructor(props) {
         super(props)
@@ -24,14 +24,16 @@ export class StartPageMenu extends React.Component {
             CurrentElement: 'start'
         }
     }
-
+    //prepare function
     componentDidMount() {
         this.UpdateFunc()
     }
 
+    //UpdateFunc for prepare and callback
     UpdateFunc() {
+        //GetRole?
         switch (true) {
-            case getRole() === '1':
+            case getRole() === '1': //admin
                 fetch(`/projectsview`, {
                     headers: {
                         'Authorization': `Bearer ${jwt}`
@@ -53,7 +55,7 @@ export class StartPageMenu extends React.Component {
                         }
                     )
                 break;
-            case getRole() === '2':
+            case getRole() === '2': //manager
                 fetch(`/projectsview?manager=${getLogin()}`, {
                     headers: {
                         'Authorization': `Bearer ${jwt}`
@@ -75,7 +77,7 @@ export class StartPageMenu extends React.Component {
                         }
                     )
                 break;
-            case getRole() === '6':
+            case getRole() === '6': //Client
                 fetch(`/projectsview?client=${getLogin()}`, {
                     headers: {
                         'Authorization': `Bearer ${jwt}`
@@ -99,64 +101,93 @@ export class StartPageMenu extends React.Component {
         }
     }
 
+    //rendering
     render() {
+        //state values
         const { isLoaded, error, Items } = this.state;
+        //if async Prepare finished
         if (isLoaded) {
             return (
                 <div>
                     <MainNavigation />
-                    <Container fluid style={{ marginTop: 20 }} className="d-flex justify-content-center">
+                    <Container
+                        fluid
+                        style={{ marginTop: 20 }}
+                        className="d-flex justify-content-center">
                         <Col style={{ marginLeft: '4%', marginRight: '4%' }}>
                             <div className="box_xss">
-                                {
-                                    this.state.Items ? Items.map(item => (
-                                        item.status_id === 0 || (item.status_id === 1 && item.group_id === 0) ? <StartPageMenuElement Upd={() => { this.UpdateFunc() }} data={
-                                            {
-                                                id: item.id,
-                                                name: item.name,
-                                                issues: item.project_issues,
-                                                exist: item.tasks_finished,
-                                                fact: item.tasks_all,
-                                                org_id: item.org_id,
-                                                group_id : item.group_id,
-                                                src: item.src,
-                                                status_id: item.status_id,
-                                                status_name: item.status_name,
-                                                pdatestart: item.start,
-                                                pdatefinish: item.finish,
-                                                fdatestart: item.start_fact,
-                                                fdatefinish: item.finish_fact
-                                            }
-                                        }
-                                        /> : null
-                                    )) : null
+                                { //rendering by mapping non-started projects
+                                    this.state.Items //if items isn't null
+                                        ? Items.map(item => (
+                                            item.status_id === 0
+                                                || (item.status_id === 1 && item.group_id === 0)
+                                                ? <StartPageMenuElement
+                                                    Upd={() => { this.UpdateFunc() }}
+                                                    data={
+                                                        {
+                                                            id: item.id,
+                                                            name: item.name,
+                                                            issues: item.project_issues,
+                                                            exist: item.tasks_finished,
+                                                            fact: item.tasks_all,
+                                                            org_id: item.org_id,
+                                                            group_id: item.group_id,
+                                                            src: item.src,
+                                                            status_id: item.status_id,
+                                                            status_name: item.status_name,
+                                                            pdatestart: item.start,
+                                                            pdatefinish: item.finish,
+                                                            fdatestart: item.start_fact,
+                                                            fdatefinish: item.finish_fact
+                                                        }
+                                                    }
+                                                />
+                                                : null //else
+                                        ))
+                                        : null //else
                                 }
                             </div>
-                            <div style={{ width: '100%', marginTop: 5, marginBottom: 5, height: 2, borderRadius: 10, opacity: '20%', backgroundColor: '#2098D1' }}></div>
+                            <div
+                                style={
+                                    {
+                                        width: '100%',
+                                        marginTop: 5,
+                                        marginBottom: 5,
+                                        height: 2,
+                                        borderRadius: 10,
+                                        opacity: '20%',
+                                        backgroundColor: '#2098D1'
+                                    }
+                                }>
+                            </div>
                             <div className="box_xss">
                                 <StartPageMenuElementNew />
-                                {
-                                    this.state.Items ? Items.map(item => (
-                                        item.status_id !== 0 && item.group_id !== 0 ? <StartPageMenuElement data={
-                                            {
-                                                id: item.id,
-                                                name: item.name,
-                                                issues: item.project_issues,
-                                                exist: item.tasks_finished,
-                                                fact: item.tasks_all,
-                                                org_id: item.org_id,
-                                                group_id : item.group_id,
-                                                src: item.src,
-                                                status_id: item.status_id,
-                                                status_name: item.status_name,
-                                                pdatestart: item.start,
-                                                pdatefinish: item.finish,
-                                                fdatestart: item.start_fact,
-                                                fdatefinish: item.finish_fact
-                                            }
-                                        }
-                                        /> : null
-                                    )) : null
+                                {//rendering by mapping
+                                    this.state.Items //if items isn't null
+                                        ? Items.map(item => (
+                                            item.status_id !== 0 && item.group_id !== 0
+                                                ? <StartPageMenuElement data={
+                                                    {
+                                                        id: item.id,
+                                                        name: item.name,
+                                                        issues: item.project_issues,
+                                                        exist: item.tasks_finished,
+                                                        fact: item.tasks_all,
+                                                        org_id: item.org_id,
+                                                        group_id: item.group_id,
+                                                        src: item.src,
+                                                        status_id: item.status_id,
+                                                        status_name: item.status_name,
+                                                        pdatestart: item.start,
+                                                        pdatefinish: item.finish,
+                                                        fdatestart: item.start_fact,
+                                                        fdatefinish: item.finish_fact
+                                                    }
+                                                }
+                                                />
+                                                : null //else
+                                        ))
+                                        : null //else
                                 }
                             </div>
                         </Col>
@@ -175,7 +206,7 @@ export class StartPageMenu extends React.Component {
     }
 }
 
-
+//StartPageMenuElement basic component
 class StartPageMenuElement extends React.Component {
     constructor(props) {
         super(props)
@@ -188,18 +219,15 @@ class StartPageMenuElement extends React.Component {
             LoadedState: 'start',
             isModal: false,
         }
-        //this.RedirectToProject = this.RedirectToProject.bind(this)
     }
 
-    /*RedirectToProject() {
-        history.push({ pathname: '/workspace/client_s' })
-        alert('Hello')
-    }*/
-
+    //rendering
     render() {
+        //state values
         const { isModal } = this.state
-        //const { match, location, history } = this.props
-        if (getRole() === '6' && (this.props.data.status_id === 0 || (this.props.data.status_id === 1 && this.props.data.group_id === 0))) {
+        if (getRole() === '6' //view for client
+            && (this.props.data.status_id === 0 //if status "НАЧАТ" or project wo group
+                || (this.props.data.status_id === 1 && this.props.data.group_id === 0))) {
             return (
                 <div
                     className="StartMenuElementNewNow hvr-grow"
@@ -221,6 +249,7 @@ class StartPageMenuElement extends React.Component {
                             <Col style={styles.colStyle}>
                                 <div className="d-flex justify-content-end">
                                     {(() => {
+                                        //switch statuses
                                         switch (true) {
                                             case (this.props.data.status_id === 0):
                                                 return <h3><Badge variant="primary">{'new'}</Badge></h3>
@@ -234,16 +263,36 @@ class StartPageMenuElement extends React.Component {
                         <div className="d-flex justify-content-center align-items-center">
                             <div>
                                 {(() => {
+                                    //switch statuses
                                     switch (true) {
-                                        case (this.props.data.status_id === 0):
+                                        case (this.props.data.status_id === 0): //НОВЫЙ
                                             return <React.Fragment>
-                                                <div className="d-flex justify-content-center"><img src="/assets/img/sad.png" width="96" height="96" /></div>
-                                                <p style={{ color: 'white', marginTop: 25 }}>Ваш проект еще не рассмотрен, наверно.</p>
+                                                <div
+                                                    className="d-flex justify-content-center">
+                                                    <img
+                                                        src="/assets/img/sad.png"
+                                                        width="96"
+                                                        height="96" />
+                                                </div>
+                                                <p style={{ color: 'white', marginTop: 25 }}>
+                                                    Ваш проект еще не рассмотрен, наверно.
+                                                </p>
                                             </React.Fragment>
-                                        case (this.props.data.status_id === 1):
+                                        case (this.props.data.status_id === 1): //НАЧАТ
                                             return <React.Fragment>
-                                                <div className="d-flex justify-content-center"><img src="/assets/img/happy.png" width="96" height="96" /></div>
-                                                <p className="d-flex justify-content-center" style={{ color: 'white', marginTop: 25 }}>Прекрансый проект. Мы пытаемся успокоить менеджера и собираем группу экспертов</p>
+                                                <div
+                                                    className="d-flex justify-content-center">
+                                                    <img
+                                                        src="/assets/img/happy.png"
+                                                        width="96"
+                                                        height="96" />
+                                                </div>
+                                                <p
+                                                    className="d-flex justify-content-center"
+                                                    style={{ color: 'white', marginTop: 25 }}>
+                                                    Прекрансый проект.
+                                                    Мы пытаемся успокоить менеджера и собираем группу экспертов
+                                                </p>
                                             </React.Fragment>
                                     }
                                 })()}
@@ -255,7 +304,7 @@ class StartPageMenuElement extends React.Component {
         } else
             return (
                 <React.Fragment>
-                    <div
+                    <div 
                         className="StartMenuElement hvr-grow"
                         onMouseLeave={() => {
                             this.setState({
@@ -289,7 +338,7 @@ class StartPageMenuElement extends React.Component {
                                 <Col style={styles.colStyle}>
                                     <div className="d-flex justify-content-end">
                                         {(() => {
-                                            switch (true) {
+                                            switch (true) { //switch statuses
                                                 case (this.props.data.status_id === 0):
                                                     return <h3><Badge variant="primary">{'new'}</Badge></h3>
                                                 case (this.props.data.status_id !== 0):
@@ -316,7 +365,12 @@ class StartPageMenuElement extends React.Component {
                                                                 })
                                                             }
                                                         }}
-                                                        className={'align-middle ' + this.state.isStatusOver ? 'hvr-grow_1' : null}
+                                                        className={
+                                                            'align-middle '
+                                                                + this.state.isStatusOver
+                                                                ? 'hvr-grow_1'
+                                                                : null
+                                                        }
                                                         height="29"
                                                         width="29"
                                                         src={`/assets/img/status/${this.props.data.status_id}.png`}
@@ -332,8 +386,12 @@ class StartPageMenuElement extends React.Component {
                                         switch (this.state.LoadedState) {
                                             case 'start':
                                                 return (
-                                                    <Col style={{ minHeight: 126 }} className="animated fadeIn">
-                                                        <p style={{ fontSize: '17px', marginBottom: 0 }}>Плановый период</p>
+                                                    <Col
+                                                        style={{ minHeight: 126 }}
+                                                        className="animated fadeIn">
+                                                        <p style={{ fontSize: '17px', marginBottom: 0 }}>
+                                                            Плановый период
+                                                        </p>
                                                         <p style={{ fontSize: '15px' }}>{
                                                             (() => {
                                                                 var data = new Date(this.props.data.pdatestart)
@@ -361,9 +419,26 @@ class StartPageMenuElement extends React.Component {
                                                 )
                                             case 'status':
                                                 return (
-                                                    <Col className="animated fadeInRight" style={{ alignItems: 'center' }} >
-                                                        <Col style={{ borderLeft: '2px solid rgb(32, 153, 209)', borderColor: 'rgb(32, 153, 209)', minHeight: 126 }}>
-                                                            <Link to="/workspace/client_s"><p style={{ marginBottom: 1 }}> <a style={{ color: 'rgb(32, 153, 209)' }}>&#8226;</a> Начат</p></Link>
+                                                    <Col
+                                                        className="animated fadeInRight"
+                                                        style={{ alignItems: 'center' }} >
+                                                        <Col
+                                                            style={
+                                                                {
+                                                                    borderLeft: '2px solid rgb(32, 153, 209)',
+                                                                    borderColor: 'rgb(32, 153, 209)',
+                                                                    minHeight: 126
+                                                                }
+                                                            }>
+                                                            <Link
+                                                                to="/workspace/client_s">
+                                                                <p style={{ marginBottom: 1 }}>
+                                                                    <a style={{ color: 'rgb(32, 153, 209)' }}>
+                                                                        &#8226;
+                                                                        </a>
+                                                                        Начат
+                                                                    </p>
+                                                            </Link>
                                                             <p style={{ marginBottom: 1 }}>В разработке</p>
                                                             <p style={{ marginBottom: 1 }}>На отладке</p>
                                                             <p style={{ marginBottom: 1 }}>Готов</p>
@@ -376,7 +451,9 @@ class StartPageMenuElement extends React.Component {
 
                                 </div>
                                 <Col>
-                                    <div className="d-flex justify-content-end" style={{ height: '100%' }}>
+                                    <div
+                                        className="d-flex justify-content-end"
+                                        style={{ height: '100%' }}>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                             <img
                                                 onMouseEnter={() => {
@@ -389,7 +466,15 @@ class StartPageMenuElement extends React.Component {
                                                         isImgOver: false
                                                     })
                                                 }}
-                                                className={'align-middle ' + this.state.isImgOver ? 'hvr-grow_1' : null} width="75" height="75" src={this.props.data.src} />
+                                                className={
+                                                    'align-middle '
+                                                        + this.state.isImgOver
+                                                        ? 'hvr-grow_1'
+                                                        : null
+                                                }
+                                                width="75"
+                                                height="75"
+                                                src={this.props.data.src} />
                                         </div>
                                     </div>
                                 </Col>
@@ -412,14 +497,23 @@ class StartPageMenuElement extends React.Component {
                                                 onClick={() => {
 
                                                 }}
-                                                className={'d-flex align-items-center ' + this.state.isErrorOver ? 'hvr-grow_1' : null}
+                                                className={
+                                                    'd-flex align-items-center '
+                                                        + this.state.isErrorOver
+                                                        ? 'hvr-grow_1'
+                                                        : null
+                                                }
                                             >
                                                 <img
                                                     height="29"
                                                     width="29"
                                                     src="/assets/img/warning.png"
                                                 />
-                                                <a className="d-flex align-items-center" style={{ marginBottom: 0, fontSize: 17 }}><b>{this.props.data.issues}</b></a>
+                                                <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ marginBottom: 0, fontSize: 17 }}>
+                                                    <b>{this.props.data.issues}</b>
+                                                </a>
                                             </Row>
                                         </Col>
                                         <Col md="auto" style={{ marginLeft: 5 }}>
@@ -434,14 +528,23 @@ class StartPageMenuElement extends React.Component {
                                                         isTasksOver: false
                                                     })
                                                 }}
-                                                className={'d-flex align-items-center ' + this.state.isTasksOver ? 'hvr-grow_1' : null}
+                                                className={
+                                                    'd-flex align-items-center '
+                                                        + this.state.isTasksOver
+                                                        ? 'hvr-grow_1'
+                                                        : null
+                                                }
                                             >
                                                 <img
                                                     height="29"
                                                     width="29"
                                                     src="/assets/img/ok.png"
                                                 />
-                                                <a className="d-flex align-items-center" style={{ marginBottom: 0, fontSize: 17 }}><b>{this.props.data.exist}/{this.props.data.fact}</b></a>
+                                                <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ marginBottom: 0, fontSize: 17 }}>
+                                                    <b>{this.props.data.exist}/{this.props.data.fact}</b>
+                                                </a>
                                             </Row>
                                         </Col>
                                     </Row>
@@ -452,7 +555,9 @@ class StartPageMenuElement extends React.Component {
                     </div>
                     {
                         isModal
-                            ? <Modal show={isModal} onHide={() => { this.setState({ isModal: false }) }}>
+                            ? <Modal
+                                show={isModal}
+                                onHide={() => { this.setState({ isModal: false }) }}>
                                 <Modal.Header>
                                     <Modal.Title>Принять проект {isModal}</Modal.Title>
                                 </Modal.Header>
@@ -483,7 +588,10 @@ class StartPageMenuElement extends React.Component {
                                             }
                                             )
                                         this.setState({ isModal: false })
-                                    }} variant="primary">Принять</Button>
+                                    }}
+                                        variant="primary">
+                                        Принять
+                                    </Button>
                                 </Modal.Footer>
                             </Modal>
                             : null
@@ -495,12 +603,13 @@ class StartPageMenuElement extends React.Component {
 
 }
 
-
+//StartPageMenuNewElement component
 export class StartPageMenuElementNew extends React.Component {
     constructor(props) {
         super(props)
     }
 
+    //rendering
     render() {
         return (
             <div
@@ -509,12 +618,20 @@ export class StartPageMenuElementNew extends React.Component {
                     history.push({ pathname: `/workspace/create_project` })
                 }}
             >
-                <div className="d-flex align-items-center"><img className="hvr-icon" /*style={{marginTop: '50%', transform: 'translate(0%, -15%)'}}*/ width="100" height="100" src="/assets/img/add.png" /></div>
+                <div
+                    className="d-flex align-items-center">
+                    <img
+                        className="hvr-icon"
+                        width="100"
+                        height="100"
+                        src="/assets/img/add.png" />
+                </div>
             </div>
         )
     }
 }
 
+//styles
 const styles = {
     colStyle: {
         paddingLeft: 0,

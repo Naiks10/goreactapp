@@ -40,9 +40,9 @@ const LoginView = () => (
 
 function MainView() {
 
-  var role = getRole()
+  var role = getRole() //role from JWT-token
 
-  var ves = 90
+  var ves = 90 //vertical extended settings
 
   if (localStorage.getItem("type") === "bottom") {
     ves = 0
@@ -52,8 +52,10 @@ function MainView() {
 
   return (
     <div className="animated fadeIn">
+      {/*Child router in main-Router presents workspace-pages*/}
       <Router history={history}>
         {(() => {
+          //swith for BackMenu content.
           switch (role) {
             case '1': //admin
               return (
@@ -137,6 +139,7 @@ function MainView() {
         })()}
         <div style={{ marginLeft: ves }}>
           {(() => {
+            //swith for working pages
             switch (role) {
               case '1': //admin
                 return (
@@ -218,7 +221,7 @@ function MainView() {
 }
 
 
-
+//Main-View-Component
 const Main_View = () => (
   <MainView />
 )
@@ -228,6 +231,7 @@ const Main_View = () => (
 
 function App() {
   return (
+    //Main Swith for main-router
     <Switch>
       <Route path="/" exact component={() => { return <Redirect to="/home/start" /> }} />
       <Route path="/home" component={Main_Page} />

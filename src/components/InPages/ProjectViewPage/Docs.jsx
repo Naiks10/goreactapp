@@ -2,6 +2,7 @@ import React from "react"
 import { TitlePanel } from './Panels'
 import { Row, Col } from "react-bootstrap"
 
+//ProjectDocs component
 export class ProjectDocs extends React.Component {
     constructor(props) {
         super(props)
@@ -10,6 +11,7 @@ export class ProjectDocs extends React.Component {
         }
     }
 
+    //rendering
     render() {
         return (
             <div>
@@ -18,7 +20,7 @@ export class ProjectDocs extends React.Component {
                     isExpanded={this.state.isExpanded}
                     onClick={() => { this.setState({ isExpanded: !this.state.isExpanded }) }} />
                 {
-                    this.state.isExpanded
+                    this.state.isExpanded //if expanded
                         ? <div className="ProjectElement">
                             <Col>
                                 <Row>
@@ -29,7 +31,7 @@ export class ProjectDocs extends React.Component {
                                 </Row>
                             </Col>
                         </div>
-                        : null
+                        : null //else
                 }
             </div>
         )

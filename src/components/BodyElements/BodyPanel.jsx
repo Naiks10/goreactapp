@@ -15,19 +15,40 @@ class MainNavigation extends React.Component {
 
     render() {
         return (
-            <Container fluid="true" className="animated slideInDown" style={
-                {
-                    //boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                    backgroundColor: 'transparent',
-                    height: 90
-                }
-            }>
-                <div className="d-flex align-items-center" style={{ verticalAlign: "middle", height: "100%" }}>
+            <Container
+                fluid="true"
+                className="animated slideInDown"
+                style={
+                    {
+                        backgroundColor: 'transparent',
+                        height: 90
+                    }
+                }>
+                <div
+                    className="d-flex align-items-center"
+                    style={{ verticalAlign: "middle", height: "100%" }}>
                     <Row style={{ width: "100%" }}>
                         <Col className="d-flex align-items-center">
                             <Row>
                                 <div>
-                                <Button variant="outline-primary" onClick={() => { history.goBack() }} style={{ marginLeft: 20, marginRight: 60 }} className="hvr-icon-back d-flex align-items-center"><i style={{marginRight : 5}} class="far fa-angle-left hvr-icon d-flex align-items-center"></i> {(() => { if (isMobile() !== true) return <a className="d-flex align-items-center" style={{fontSize : 15 ,fontWeight : 'normal'}}>НАЗАД</a> })()} </Button>
+                                    <Button
+                                        variant="outline-primary"
+                                        onClick={() => { history.goBack() }}
+                                        style={{ marginLeft: 20, marginRight: 60 }}
+                                        className="hvr-icon-back d-flex align-items-center">
+                                        <i
+                                            style={{ marginRight: 5 }}
+                                            class="far fa-angle-left hvr-icon d-flex align-items-center">
+                                        </i>
+                                        {(() => {
+                                            if (isMobile() !== true)
+                                                return <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ fontSize: 15, fontWeight: 'normal' }}>
+                                                    НАЗАД
+                                                </a>
+                                        })()}
+                                    </Button>
                                 </div>
                                 <SearchPanel />
                                 <ButtonPanel src="/assets/img/filter.png" />
@@ -37,9 +58,28 @@ class MainNavigation extends React.Component {
                         <Col>
                             <div className="d-flex flex-row-reverse">
                                 <div className="d-flex align-items-center">
-                                <Button variant="outline-primary" onClick={() => { history.push('/login') }} style={{ marginLeft: 20, marginRight: 20 }} className="d-flex align-items-center"> {(() => { if (isMobile() !== true) return <a className="d-flex align-items-center" style={{fontSize : 15 ,fontWeight : 'normal'}}>ВЫЙТИ</a> })()} </Button>
+                                    <Button
+                                        variant="outline-primary"
+                                        onClick={() => { history.push('/login') }}
+                                        style={{ marginLeft: 20, marginRight: 20 }}
+                                        className="d-flex align-items-center">
+                                        {(() => {
+                                            if (isMobile() !== true)
+                                                return <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ fontSize: 15, fontWeight: 'normal' }}>
+                                                    ВЫЙТИ
+                                                </a>
+                                        })()}
+                                    </Button>
                                 </div>
-                                <div className="hvr-icon-fade d-flex align-items-center"><a><b>@{getLogin()}</b> <i className="far fa-user hvr-icon"></i></a></div>
+                                <div
+                                    className="hvr-icon-fade d-flex align-items-center">
+                                    <a>
+                                        <b>@{getLogin()}</b>
+                                        <i className="far fa-user hvr-icon"></i>
+                                    </a>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -57,29 +97,76 @@ export class ProjectNavigation extends React.Component {
 
     render() {
         return (
-            <Container fluid="true" className="animated slideInDown" style={
-                {
-                    //boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                    backgroundColor: 'transparent',
-                    height: 90
-                }
-            }>
-                <div className="d-flex align-items-center" style={{ verticalAlign: "middle", height: "100%" }}>
-                    <Row style={{ width: "100%" }}>
+            <Container
+                fluid="true"
+                className="animated slideInDown"
+                style={
+                    {
+                        backgroundColor: 'transparent',
+                        height: 90
+                    }
+                }>
+                <div
+                    className="d-flex align-items-center"
+                    style={{ verticalAlign: "middle", height: "100%" }}>
+                    <Row
+                        style={{ width: "100%" }}>
                         <Col className="d-flex align-items-center">
                             <Row>
                                 <div>
-                                <Button variant="outline-primary" onClick={() => { history.goBack() }} style={{ marginLeft: 20, marginRight: 60 }} className="hvr-icon-back d-flex align-items-center"><i style={{marginRight : 5}} class="far fa-angle-left hvr-icon d-flex align-items-center"></i> {(() => { if (isMobile() !== true) return <a className="d-flex align-items-center" style={{fontSize : 15 ,fontWeight : 'normal'}}>НАЗАД</a> })()} </Button>
+                                    <Button
+                                        variant="outline-primary"
+                                        onClick={() => { history.goBack() }}
+                                        style={{ marginLeft: 20, marginRight: 60 }}
+                                        className="hvr-icon-back d-flex align-items-center">
+                                        <i
+                                            style={{ marginRight: 5 }}
+                                            class="far fa-angle-left hvr-icon d-flex align-items-center">
+                                        </i>
+                                        {(() => {
+                                            if (isMobile() !== true)
+                                                return <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ fontSize: 15, fontWeight: 'normal' }}>
+                                                    НАЗАД
+                                                </a>
+                                        })()}
+                                    </Button>
                                 </div>
-                                <div className="d-flex align-items-center"><h5 style={{padding : 0, margin: 0}}>Проект "{this.props.title}"</h5></div>
+                                <div
+                                    className="d-flex align-items-center">
+                                    <h5
+                                        style={{ padding: 0, margin: 0 }}>
+                                        Проект "{this.props.title}"
+                                    </h5>
+                                </div>
                             </Row>
                         </Col>
                         <Col>
                             <div className="d-flex flex-row-reverse">
                                 <div className="d-flex align-items-center">
-                                <Button variant="outline-primary" onClick={() => { history.goBack() }} style={{ marginLeft: 20, marginRight: 0 }} className="d-flex align-items-center">{(() => { if (isMobile() !== true) return <a className="d-flex align-items-center" style={{fontSize : 15 ,fontWeight : 'normal'}}>ВЫЙТИ</a> })()} </Button>
+                                    <Button
+                                        variant="outline-primary"
+                                        onClick={() => { history.goBack() }}
+                                        style={{ marginLeft: 20, marginRight: 0 }}
+                                        className="d-flex align-items-center">
+                                        {(() => {
+                                            if (isMobile() !== true)
+                                                return <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ fontSize: 15, fontWeight: 'normal' }}>
+                                                    ВЫЙТИ
+                                                </a>
+                                        })()}
+                                    </Button>
                                 </div>
-                                <div className="hvr-icon-fade d-flex align-items-center"><a><b>@{getLogin()}</b> <i className="far fa-user hvr-icon"></i></a></div>
+                                <div
+                                    className="hvr-icon-fade d-flex align-items-center">
+                                    <a>
+                                        <b>@{getLogin()}</b>
+                                        <i className="far fa-user hvr-icon"></i>
+                                    </a>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -96,29 +183,71 @@ export class ContactNavigation extends React.Component {
 
     render() {
         return (
-            <Container fluid="true" className="animated slideInDown" style={
-                {
-                    //boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                    backgroundColor: 'transparent',
-                    height: 90
-                }
-            }>
-                <div className="d-flex align-items-center" style={{ verticalAlign: "middle", height: "100%" }}>
-                    <Row style={{ width: "100%" }}>
+            <Container
+                fluid="true"
+                className="animated slideInDown"
+                style={
+                    {
+                        backgroundColor: 'transparent',
+                        height: 90
+                    }
+                }>
+                <div
+                    className="d-flex align-items-center"
+                    style={{ verticalAlign: "middle", height: "100%" }}>
+                    <Row
+                        style={{ width: "100%" }}>
                         <Col className="d-flex align-items-center">
                             <Row>
                                 <div>
-                                <Button variant="outline-primary" onClick={() => { history.goBack() }} style={{ marginLeft: 20, marginRight: 60 }} className="hvr-icon-back d-flex align-items-center"><i style={{marginRight : 5}} class="far fa-angle-left hvr-icon d-flex align-items-center"></i> {(() => { if (isMobile() !== true) return <a className="d-flex align-items-center" style={{fontSize : 15 ,fontWeight : 'normal'}}>НАЗАД</a> })()} </Button>
+                                    <Button
+                                        variant="outline-primary"
+                                        onClick={() => { history.goBack() }}
+                                        style={{ marginLeft: 20, marginRight: 60 }}
+                                        className="hvr-icon-back d-flex align-items-center">
+                                        <i
+                                            style={{ marginRight: 5 }}
+                                            class="far fa-angle-left hvr-icon d-flex align-items-center">
+                                        </i> {
+                                            (() => {
+                                                if (isMobile() !== true)
+                                                    return <a
+                                                        className="d-flex align-items-center"
+                                                        style={{ fontSize: 15, fontWeight: 'normal' }}>
+                                                        НАЗАД
+                                                    </a>
+                                            })()}
+                                    </Button>
                                 </div>
-                                <div className="d-flex align-items-center"><h5 style={{padding : 0, margin: 0}}>{this.props.title}</h5></div>
+                                <div className="d-flex align-items-center">
+                                    <h5 style={{ padding: 0, margin: 0 }}>{this.props.title}</h5></div>
                             </Row>
                         </Col>
                         <Col>
                             <div className="d-flex flex-row-reverse">
                                 <div className="d-flex align-items-center">
-                                <Button variant="outline-primary" onClick={() => { history.goBack() }} style={{ marginLeft: 20, marginRight: 0 }} className="d-flex align-items-center">{(() => { if (isMobile() !== true) return <a className="d-flex align-items-center" style={{fontSize : 15 ,fontWeight : 'normal'}}>ВЫЙТИ</a> })()} </Button>
+                                    <Button
+                                        variant="outline-primary"
+                                        onClick={() => { history.goBack() }}
+                                        style={{ marginLeft: 20, marginRight: 0 }}
+                                        className="d-flex align-items-center">
+                                        {(() => {
+                                            if (isMobile() !== true)
+                                                return <a
+                                                    className="d-flex align-items-center"
+                                                    style={{ fontSize: 15, fontWeight: 'normal' }}>
+                                                    ВЫЙТИ
+                                                </a>
+                                        })()}
+                                    </Button>
                                 </div>
-                                <div className="hvr-icon-fade d-flex align-items-center"><a><b>@{getLogin()}</b> <i className="far fa-user hvr-icon"></i></a></div>
+                                <div
+                                    className="hvr-icon-fade d-flex align-items-center">
+                                    <a>
+                                        <b>@{getLogin()}</b>
+                                        <i className="far fa-user hvr-icon"></i>
+                                    </a>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -145,7 +274,10 @@ export class SearchPanel extends React.Component {
                         }
                         className="hvr-icon-fade hvr-underline-from-left d-flex align-items-center">
                         <a>Поиск
-                        <i style={{ marginLeft: 200 }} className="far fa-search hvr-icon"></i>
+                            <i
+                                style={{ marginLeft: 200 }}
+                                className="far fa-search hvr-icon">
+                            </i>
                         </a>
                     </div>
                 </Row>
@@ -171,7 +303,10 @@ export class ButtonPanel extends React.Component {
                     }
                 }
                 className="d-flex align-items-center justify-content-center">
-                <img width="20" height="20" src={this.props.src} />
+                <img
+                    width="20"
+                    height="20"
+                    src={this.props.src} />
             </div>
         )
     }
