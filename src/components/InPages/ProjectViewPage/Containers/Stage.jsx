@@ -31,8 +31,8 @@ export class StageContainer extends React.Component {
     }
 
     FORCE_UPDATE() {
-        this.setState({task_array: []}, () => this.func())
-        //this.props.forceUPD()
+        this.setState({task_array: []})
+        this.props.forceUPD()
     }
 
     func() {
@@ -45,7 +45,7 @@ export class StageContainer extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.data != this.state.data) {
-            this.func()
+            this.props.forceUPD() //func
             this.setState({ mode_new: true })
         }
     }
