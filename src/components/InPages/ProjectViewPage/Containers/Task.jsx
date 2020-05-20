@@ -59,10 +59,17 @@ export class SuperTaskContainer extends React.Component {
         }
         if (prevState.data_iss != this.state.data_iss
             || prevState.data != this.state.data) {
-            this.func()
+            this.props.upd()//func()
+            this.FORCE_UPDATE()
+            //this.func()
             this.setState({ mode_new: true })
 
         }
+    }
+    
+    FORCE_UPDATE() {
+        this.setState({task_array: []})
+        this.props.forceUPD()
     }
 
     func() {
@@ -210,7 +217,7 @@ export class SuperTaskContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Taskcontext.Provider value={() => { this.GetAll() }}>
-                                <TaskContainer upd={() => this.func()} up={this.state.up} SetStatus={this.SetStatus} data={item} />
+                                <TaskContainer forceUPD={() => this.FORCE_UPDATE()} upd={() => this.func()} up={this.state.up} SetStatus={this.SetStatus} data={item} />
                             </Taskcontext.Provider>
                         ))
                         : !isLoaded ? <Loading /> : null
@@ -334,9 +341,15 @@ class TaskContainer extends React.Component {
             this.updating()
         }
         if (prevState.data_iss != this.state.data_iss || prevState.data != this.state.data) {
+            this.FORCE_UPDATE()
             this.props.upd()
         }
         //this.props.upd()
+    }
+
+    FORCE_UPDATE() {
+        this.setState({task_array: []})
+        this.props.forceUPD()
     }
 
     Hello() {
@@ -425,7 +438,7 @@ class TaskContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Taskcontext.Provider value={() => { this.GetAll() }}>
-                                <TaskContainer upd={() => this.props.upd()} up={this.props.up} SetStatus={this.SetStatus} data={item} />
+                                <TaskContainer forceUPD={() => this.FORCE_UPDATE()} upd={() => this.props.upd()} up={this.props.up} SetStatus={this.SetStatus} data={item} />
                             </Taskcontext.Provider>
                         ))
                         : !isLoaded ? <Loading /> : null

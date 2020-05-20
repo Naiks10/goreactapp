@@ -22,7 +22,7 @@ export class StageContainer extends React.Component {
             task_status : 2,
             task_array : [],
             mode_new : true,
-            up : false
+            up : false,
         }
     }
 
@@ -30,18 +30,24 @@ export class StageContainer extends React.Component {
         this.updateAndGetMethod()
     }
 
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.data != this.state.data) {
-            //this.func()
-            this.setState({ mode_new: true })
-        }
+    FORCE_UPDATE() {
+        this.setState({task_array: []}, () => this.func())
+        //this.props.forceUPD()
     }
 
     func() {
         this.setState({ up: true }, () => {
             this.setState({ up: false })
         })
+        this.setState({ mode_new: true })
+    }
+
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.data != this.state.data) {
+            this.func()
+            this.setState({ mode_new: true })
+        }
     }
 
     SetStatus = (value) => {
@@ -136,7 +142,7 @@ export class StageContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <SuperTaskcontext.Provider value={() => { this.updateAndGetMethod() }}>
-                                <SuperTaskContainer up={this.state.up} upd={() => this.func()} SetStatus={this.SetStatus} data={item} />
+                                <SuperTaskContainer forceUPD={() => this.FORCE_UPDATE()} up={this.props.up} upd={() => this.func()} SetStatus={this.SetStatus} data={item} />
                             </SuperTaskcontext.Provider>
                         ))
                         : null

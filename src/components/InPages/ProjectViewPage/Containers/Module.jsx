@@ -21,7 +21,8 @@ export class ModuleContainer extends React.Component {
             isShowedDelete: false,
             task_status : 2,
             task_array : [],
-            mode_new : true
+            mode_new : true,
+            up : false
         }
     }
 
@@ -30,9 +31,21 @@ export class ModuleContainer extends React.Component {
         this.GetAll()
     }
 
+    FORCE_UPDATE() {
+        this.setState({task_array: []}, () => this.func())
+    }
+
+    func() {
+        this.setState({ up: true }, () => {
+            this.setState({ up: false })
+        })
+        this.setState({ mode_new: true })
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.data != this.state.data) {
             this.setState({ mode_new: true })
+            this.func()
         }
     }
 
@@ -52,7 +65,7 @@ export class ModuleContainer extends React.Component {
             this.setState({ task_status: max, task_array: tasks })
             //this.props.SetStatus(max) 
         }
-        //this.setState({mode_new : false})
+        this.setState({mode_new : false})
     }
 
     //GetAll function
@@ -129,7 +142,7 @@ export class ModuleContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Stagecontext.Provider value={() => { this.GetAll() }}>
-                                <StageContainer SetStatus={this.SetStatus} data={item} />
+                                <StageContainer forceUPD={() => this.FORCE_UPDATE()} SetStatus={this.SetStatus} data={item} />
                             </Stagecontext.Provider>
                         ))
                         : null
