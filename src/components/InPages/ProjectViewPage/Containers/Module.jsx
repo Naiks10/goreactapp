@@ -142,7 +142,7 @@ export class ModuleContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Stagecontext.Provider value={() => { this.GetAll() }}>
-                                <StageContainer forceUPD={() => this.FORCE_UPDATE()} SetStatus={this.SetStatus} data={item} />
+                                <StageContainer up={this.state.up} upd={() => this.func()} forceUPD={() => this.FORCE_UPDATE()} SetStatus={this.SetStatus} data={item} />
                             </Stagecontext.Provider>
                         ))
                         : null

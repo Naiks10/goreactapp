@@ -53,7 +53,7 @@ export class SuperTaskContainer extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         //console.log('Hello1' + this.state.data)
         console.log(this.state.task_array + ' ' + this.props.data.name)
-        if (prevState.up != false && this.state.data == null) {
+        if (prevProps.up != false && this.state.data == null) { //prevstate
             console.log('Hello' + this.state.data)
             this.updating()
         }
@@ -87,7 +87,8 @@ export class SuperTaskContainer extends React.Component {
     componentDidMount() {
         this.GetAll()
         this.updating()
-        this.func()
+        //this.func()
+        this.props.upd()
     }
 
     SetStatus = (value) => {
@@ -217,7 +218,7 @@ export class SuperTaskContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Taskcontext.Provider value={() => { this.GetAll() }}>
-                                <TaskContainer forceUPD={() => this.FORCE_UPDATE()} upd={() => this.func()} up={this.state.up} SetStatus={this.SetStatus} data={item} />
+                                <TaskContainer forceUPD={() => this.FORCE_UPDATE()} upd={() => this.props.upd()} up={this.props.up} SetStatus={this.SetStatus} data={item} />
                             </Taskcontext.Provider>
                         ))
                         : !isLoaded ? <Loading /> : null
@@ -295,6 +296,7 @@ class TaskContainer extends React.Component {
         this.state = {
             data: [],
             data_iss: [],
+            task_data : this.props.data,
             isLoaded: false,
             error: null,
             isOvered: false,
@@ -312,10 +314,10 @@ class TaskContainer extends React.Component {
 
     updating() {
         //console.log(this.state.data_iss.length + '1' + this.props.data.name)
-        if (this.props.data.status.id === 6) {
+        if (this.state.task_data.status.id === 6) {
             this.SetStatus(0)
         } else
-        if (this.props.data.status.id === 4) {
+        if (this.state.task_data.status.id === 4) {
             this.SetStatus(1)
         } else if (this.state.data_iss != null) {
             if (this.state.data_iss.length !== 0) {
@@ -366,9 +368,27 @@ class TaskContainer extends React.Component {
         })
     }
 
+
+    GetTask() {
+        axios.get(`/tasks/${this.state.task_data.id}`, {
+            headers: {
+                'Authorization': `Bearer ${getJWT()}`
+            }
+        })
+            .then(res => {
+                const data = res.data;
+                this.setState({
+                    task_data: data.data,
+                }, () => {
+                    this.FORCE_UPDATE()
+                    //this.updating()
+                })
+            })
+        }
+
     GetAll() {
         this.setState({ isLoaded: false })
-        axios.get(`/issueslst?task=${this.props.data.id}`, {
+        axios.get(`/issueslst?task=${this.state.task_data.id}`, {
             headers: {
                 'Authorization': `Bearer ${getJWT()}`
             }
@@ -383,7 +403,7 @@ class TaskContainer extends React.Component {
                     this.updating()
                 }*/)
             })
-        axios.get(`/subtasks?task=${this.props.data.id}&asc.orderby=task_index`, {
+        axios.get(`/subtasks?task=${this.state.task_data.id}&asc.orderby=task_index`, {
             headers: {
                 'Authorization': `Bearer ${getJWT()}`
             }
@@ -404,7 +424,7 @@ class TaskContainer extends React.Component {
             <div className={`Item_task${this.state.task_status}`} style={{ borderLeft: `3px solid ${GetStatus(this.state.task_status)}` }}>
                 <Col onMouseEnter={() => { this.setState({ isOvered: true }) }} onMouseLeave={() => { this.setState({ isOvered: false }) }}><Row style={{ position: "relative" }}>
                     <div className="d-flex align-items-center" style={{ zIndex: 1, paddingTop: 4, paddingBottom: 4 , color : this.state.task_status <= 1  ? '#6e6e6e' : 'black',
-                                    textDecoration : this.state.task_status <= 1  ? 'line-through' : null}}>Задача "{this.props.data.name}"</div>
+                                    textDecoration : this.state.task_status <= 1  ? 'line-through' : null}}>Задача "{this.state.task_data.name}"</div>
                     {
                         isOvered
                             ? <Row style={{ marginLeft: 10 }}>
@@ -419,7 +439,7 @@ class TaskContainer extends React.Component {
                     }
                     <div className="d-flex justify-content-start align-items-center" style={{ right: 0, top: 0, bottom: 0, position: "absolute" }}>
                         <div className="d-flex align-items-center" style={{ transition: 'all 300ms linear 0s', height: '100%', color: this.state.task_status !== 3 ? 'white' : 'black', paddingLeft: 6, paddingRight: 6, borderRadius: 5, fontSize: 14, backgroundColor: GetStatus(this.state.task_status) }}>
-                            <a>{GetDate(this.props.data.start)}-{GetDate(this.props.data.finish)}</a>
+                            <a>{GetDate(this.state.task_data.start)}-{GetDate(this.state.task_data.finish)}</a>
                         </div>
                         {
                             isOvered && data == null
@@ -494,10 +514,10 @@ class TaskContainer extends React.Component {
                             {
                                 isShowedStatus
                                     ? <StatusTaskModal
-                                        task_data={this.props.data}
+                                        task_data={this.state.task_data}
                                         update={() => this.GetAll()}
                                         show={this.state.isShowedStatus}
-                                        onHide={() => this.setState({ isShowedStatus: false })} />
+                                        onHide={() => {this.setState({ isShowedStatus: false }); this.GetTask()}} />
                                     : null
                             }
                         </React.Fragment>
@@ -1433,7 +1453,9 @@ class StatusTaskModal extends React.Component {
                                                 headers : {
                                                     'Authorization' : `Bearer ${getJWT()}`
                                                 }
-                                            })
+                                            }).then(() =>
+                                                this.props.onHide()
+                                            )
                                         }} variant="primary">В разработке (начать выполнение)</Button>
                                     )
                                 case 2:
@@ -1447,7 +1469,9 @@ class StatusTaskModal extends React.Component {
                                                 headers : {
                                                     'Authorization' : `Bearer ${getJWT()}`
                                                 }
-                                            })
+                                            }).then(() =>
+                                            this.props.onHide()
+                                        )
                                         }}  variant="dark">Готов</Button>
                                             <Button onClick={() => {
                                             fetch(`/task/${this.props.task_data.id}?action=abort`, {
@@ -1455,7 +1479,9 @@ class StatusTaskModal extends React.Component {
                                                 headers : {
                                                     'Authorization' : `Bearer ${getJWT()}`
                                                 }
-                                            })
+                                            }).then(() =>
+                                            this.props.onHide()
+                                        )
                                         }} variant="success">Отменён</Button>
                                         </React.Fragment>
                                     )
