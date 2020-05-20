@@ -15,6 +15,10 @@ import { ProjectViewPage } from './components/InPages/ProjectViewPage/ProjectVie
 import history from './components/Functions/history'
 import { WorkersPage } from './components/Workers/WorkersPage'
 import { ClientViewPage } from './components/Clients/ClientPage'
+import { OrgViewPage } from './components/Clients/OrgPage'
+import { ManagerViewPage } from './components/Workers/ManagerPage'
+import { WorkerViewPage } from './components/Workers/WorkerPage'
+import { TestView } from './Debug'
 
 //#--consts-with-pages--#//
 
@@ -151,6 +155,10 @@ function MainView() {
                     <Route exact path="/workspace/projects" component={StartPageMenu} />
                     <Route path="/workspace/projects/:id" component={ProjectViewPage} />
                     <Route path="/workspace/clients/:id" component={ClientViewPage} />
+                    <Route path="/workspace/orgs/:id" component={OrgViewPage} />
+                    <Route path="/workspace/managers/:id" component={ManagerViewPage} />
+                    <Route path="/workspace/devs/:id" component={WorkerViewPage} />
+                    <Route path="/workspace/debug" component={TestView} />
                   </Switch>
                 )
                 break;
@@ -164,6 +172,7 @@ function MainView() {
                     <Route exact path="/workspace/projects" component={StartPageMenu} />
                     <Route path="/workspace/projects/:id" component={ProjectViewPage} />
                     <Route path="/workspace/clients/:id" component={ClientViewPage} />
+                    <Route path="/workspace/orgs/:id" component={OrgViewPage} />
                   </Switch>
                 )
                 break;

@@ -7,8 +7,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
+	"reflect"
 	"strconv"
 	"time"
+
+	"github.com/gabriel-vasile/mimetype"
 
 	"github.com/elgris/sqrl"
 
@@ -64,7 +69,13 @@ var Organizations = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	&route: '/...'
 */
 var Clients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExClient, w, r, GetQueries(SelectClients, r))
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	querys := *SelectClients
+	if value, ok := query["orgs"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		querys.Where(sqrl.Eq{"client_organisation_id": i})
+	}
+	JSONGetAll(&database.ExClient, w, r, GetQueries(&querys, r))
 })
 
 //WorkGroups :
@@ -74,6 +85,22 @@ var Clients = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 */
 var WorkGroups = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	JSONGetAll(&database.ExWorkGroup, w, r, GetQueries(SelectWorkGroups, r))
+})
+
+//WorkGroupsLst :
+/*
+	&query: 'SELECT ... FROM workgroups'
+	&route: '/...'
+*/
+var WorkGroupsLst = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	querys := *SelectWorkGroupList
+	if value, ok := query["worker"]; ok {
+		i := value[0]
+		querys.Where(sqrl.Eq{"developer_login": i})
+	}
+	q, p, _ := querys.ToSql()
+	GetResult(w, q, p)
 })
 
 //Developers :
@@ -114,6 +141,14 @@ var Projects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if value, ok := query["client"]; ok {
 		i := value[0]
 		querys.Where(sqrl.Eq{"project_client_login": i})
+	}
+	if value, ok := query["orgs"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		querys.Where("project_client_login IN (SELECT client_login FROM clients where client_organisation_id = ?)", i)
+	}
+	if value, ok := query["worker"]; ok {
+		i := value[0]
+		querys.Where("project_workgroup_id IN (SELECT workgroup_id FROM working_developer_list WHERE developer_login = ?)", i)
 	}
 	JSONGetAll(&database.ExProject, w, r, GetQueries(&querys, r))
 })
@@ -236,6 +271,61 @@ var Issues = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	JSONGetAll(&database.ExIssue, w, r, GetQueries(&querys, r))
 })
 
+var UploadUser = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(10 << 20)
+	file, handler, err := r.FormFile("file")
+	login := r.FormValue("login")
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	//fmt.Println(fileBytes)
+	fmt.Println("-------")
+	mime := mimetype.Detect(fileBytes)
+	fmt.Println(mime.String(), mime.Extension())
+	fmt.Println("-------")
+	ioutil.WriteFile("./data/img/users/"+login+mime.Extension(), fileBytes, 0754)
+	src := "/data/img/users/" + login + mime.Extension()
+	_, err1 := pg.Update("users").Set("user_image_src", src).Where(sqrl.Eq{"user_login": login}).Exec()
+	fmt.Println(err1)
+})
+
+var UploadDoc = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(10 << 20)
+	file, handler, err := r.FormFile("file")
+	project := r.FormValue("project")
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	value, _ := strconv.Atoi(project)
+	err = os.MkdirAll("./data/files/projects/"+project, 0755)
+	ierr := ioutil.WriteFile("./data/files/projects/"+project+"/"+handler.Filename, fileBytes, 0754)
+	src := "/data/files/projects/" + project + "/" + handler.Filename
+	_, err1 := pg.Insert("files").
+		Columns("file_path", "upload_time", "file_ext", "file_name", "file_project_id").
+		Values(src, time.Now(), filepath.Ext(src), handler.Filename, value).Exec()
+	fmt.Println(err1, ierr)
+})
+
 //Workers :
 /*
 	&query: 'SELECT ... FROM workers WHERE workgroup_id = $workgroup';
@@ -252,6 +342,91 @@ var Workers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	}
 	q, p, _ := querys.ToSql()
 	GetResult(w, q, p)
+})
+
+type GraphStructs struct {
+	Items []GraphStruct `json:"items"`
+}
+
+type GraphStruct struct {
+	Progress int       `json:"progress" db:"prog"`
+	Time     time.Time `json:"time" db:"time"`
+}
+
+func (t *GraphStructs) GetItems() interface{} {
+	return &t.Items
+}
+
+func (t *GraphStructs) GetItem() interface{} {
+	return &t.Items[0]
+}
+
+func (t *GraphStructs) Clear() {
+	t.Items = nil
+}
+
+func GetTag(e interface{}) string {
+	tag := reflect.TypeOf(e).Elem().Field(0).Tag
+	return tag.Get("db")
+}
+
+func (t *GraphStructs) GetPrimaryKey() string {
+	return GetTag(t.Items)
+}
+
+var ExGraph = GraphStructs{}
+
+var ExGraphOne = GraphStruct{}
+
+var Graph = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//query, _ := url.ParseQuery(r.URL.RawQuery)
+	params := mux.Vars(r)
+
+	s := `with dates as (
+		select min(date_trunc('day', finish_date)) as startw,
+			   max(date_trunc('day', finish_date)) as endw
+		from tasks WHERE task_stage_id IN (
+		  SELECT stage_id FROM stages WHERE stage_module_id IN (
+			SELECT module_id from modules WHERE module_project_id IN (
+			  SELECT project_id from projects WHERE project_id = $1
+			)
+		  )
+		)
+	   ),
+	
+	   weeks as (
+		select startw, endw, generate_series(startw, endw, '1 days') as weekstart
+		from dates
+	   )
+	
+	
+		  
+			SELECT DISTINCT ON ((round(count(*)::decimal/(
+				SELECT count(*) from tasks where task_stage_id IN (
+				  SELECT stage_id FROM stages 
+				  WHERE stage_module_id IN (
+					  SELECT module_id FROM modules
+					  WHERE module_project_id = $1)
+			)), 1)::numeric * 100)::int4) (round(count(*)::decimal/(
+			  SELECT count(*) from tasks where task_stage_id IN (
+				SELECT stage_id FROM stages 
+				WHERE stage_module_id IN (
+					SELECT module_id FROM modules
+					WHERE module_project_id = $1)
+		  )), 1)::numeric * 100)::int4 as prog, (w.weekstart + INTERVAL '1 day') as time
+		  FROM weeks w left outer join
+			tasks i on date_trunc('day', finish_date) < (w.weekstart + INTERVAL '1 day')
+			--AND i.task_supertask_id is NOT NULL 
+			AND i.task_stage_id IN (
+				SELECT stage_id FROM stages 
+				WHERE stage_module_id IN (
+					SELECT module_id FROM modules
+					WHERE module_project_id = $1
+				)
+		  )
+			group by w.weekstart
+			order by prog, w.weekstart desc;	 `
+	JSONGetAllRaw(&ExGraph, w, r, s, params["id"])
 })
 
 //ClientsView :
@@ -274,6 +449,12 @@ var ManagersView = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 	querys := *SelectManagersList
 	q, _, _ := querys.ToSql()
 	GetResultWA(w, q)
+})
+
+var FileList = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	query, args, _ := pg.Select("*").From("files").Where(sqrl.Eq{"file_project_id": params["id"]}).ToSql()
+	GetResult(w, query, args)
 })
 
 //DevsView :
@@ -395,6 +576,15 @@ var Module = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 */
 var Stage = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	JSONGetOne(&database.ExModule, w, r, SelectStages)
+})
+
+//Task :
+/*
+	&query: 'SELECT ... FROM stages WHERE stage_id = &id';
+	&route: '/.../&id'
+*/
+var Task = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	JSONGetOne(&database.ExTask, w, r, SelectTasks)
 })
 
 //#--All-INSERTS--#//
@@ -581,6 +771,46 @@ var EditTask = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 	if er != nil || er2 != nil {
 		http.Error(w, er.Error(), 500)
+	}
+	fmt.Println(er2)
+})
+
+//EditTaskStatus func
+/*
+	&query: 'INSERT INTO tasks (...) VALUES (&json.data)
+	&route: '/...'
+*/
+var EditTaskStatus = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+
+	s := 0
+
+	if value, ok := query["action"]; ok {
+		switch value[0] {
+		case "start":
+			s = 2
+			break
+		case "finish":
+			s = 4
+			break
+		case "abort":
+			s = 6
+			break
+		}
+	}
+	params := mux.Vars(r)
+
+	var er error
+
+	_, er2 := pg.
+		Update("tasks").
+		Set("task_status_id", s).
+		Set("start_date_fact", time.Now()).
+		Where(sqrl.Eq{"task_id": params["id"]}).
+		Exec()
+
+	if er != nil || er2 != nil {
+		//http.Error(w, er.Error(), 500)
 	}
 	fmt.Println(er2)
 })
@@ -1054,10 +1284,16 @@ var UpdateProjects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 					project.StartDate,
 					project.FinishDate,
 				).Exec()
+			break
 		case "prepare":
 			_, er2 = pg.Update("projects").
 				Set("project_manager_login", project.Manager.User.UserLogin).
 				Set("project_status_id", 1).Where(sqrl.Eq{"project_id": params["id"]}).Exec()
+			break
+		case "group":
+			_, er2 = pg.Update("projects").
+				Set("project_workgroup_id", project.WorkGroup.ID).
+				Where(sqrl.Eq{"project_id": params["id"]}).Exec()
 		}
 
 	}

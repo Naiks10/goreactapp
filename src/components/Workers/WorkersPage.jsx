@@ -240,7 +240,7 @@ class ManagersElement extends React.Component {
                         })
                     }}
                     onClick={() => {
-                        history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
+                        history.push({ pathname: `/workspace/managers/${this.props.data.manager_login}` })
                     }}
                 >
                     <Col>
@@ -292,7 +292,7 @@ class WorkerElement extends React.Component {
                         })
                     }}
                     onClick={() => {
-                        history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
+                        history.push({ pathname: `/workspace/devs/${this.props.data.developer_login}` })
                     }}
                 >
                     <Col>
@@ -357,17 +357,17 @@ class GroupElement extends React.Component {
                             <Col className="d-flex align-items-center justify-content-center">
                                 <div className="d-flex align-items-center justify-content-center">
                                     <img
-                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'red', borderWidth: 3, borderStyle: 'solid' }}
+                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'white', borderWidth: 3, borderStyle: 'solid' }}
                                         width="40"
                                         height="40"
                                         src={this.props.data.user_image_src} />
                                     <img
-                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'red', zIndex: 2, borderWidth: 3, left: '-14px', borderStyle: 'solid' }}
+                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'white', zIndex: 2, borderWidth: 3, left: '-14px', borderStyle: 'solid' }}
                                         width="40"
                                         height="40"
                                         src={this.props.data.user_image_src} />
                                     <img
-                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'red', zIndex: 5, borderWidth: 3, left: '-28px', borderStyle: 'solid' }}
+                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'white', zIndex: 5, borderWidth: 3, left: '-28px', borderStyle: 'solid' }}
                                         width="40"
                                         height="40"
                                         src={this.props.data.user_image_src} />

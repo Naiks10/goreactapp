@@ -41,6 +41,25 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, sb
 	table.Clear()
 }
 
+//JSONGetAll converts Go data (array(s)) to JSON model
+func JSONGetAllRaw(table database.Table, w http.ResponseWriter, r *http.Request, query string, args ...interface{}) {
+	table.Clear()
+
+	query, params := query, args
+
+	if params != nil {
+		errs := db.DB.Select(table.GetItems(), query, params[0])
+		fmt.Println("hello", errs)
+	} else {
+		errs := db.DB.Select(table.GetItems(), query)
+		fmt.Println("bey", errs)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Println(table, "|||", params)
+	json.NewEncoder(w).Encode(table)
+	table.Clear()
+}
+
 //JSONGetAll1 converts Go data (array(s)) to JSON model (variant 2)
 func JSONGetAll1(table database.Table, w http.ResponseWriter, r *http.Request, sb *sqrl.SelectBuilder) []byte {
 	table.Clear()

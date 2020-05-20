@@ -9,18 +9,19 @@ import { useLocation, useParams } from "react-router-dom"
 import { getJWT } from "../Functions/Funcs"
 import { SearchPanel, ButtonPanel, ProjectNavigation, ContactNavigation } from "../BodyElements/BodyPanel"
 import "animate.css";
-import { BasicInfo, ProjectInfo } from './BasicInfo'
+import { ClientInfo, BasicInfoOrg } from './BasicInfo'
 import { TitlePanel } from './Panels'
 import axios from 'axios';
 
 
-export class ClientViewPage extends React.Component {
+export class OrgViewPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             error: null,
             isLoaded: false,
             data: {},
+            p_data: {},
             work_data: {},
             current: null,
             plan: null,
@@ -62,21 +63,35 @@ export class ClientViewPage extends React.Component {
                     this.setState({
                         data: result.data,
                     })
-                    axios.get(`/clients?org=${result.data.login}`, {
+                    axios.get(`/clients?orgs=${this.props.match.params.id}`, {
                         headers: {
                             'Authorization': `Bearer ${getJWT()}`
                         }
+                        
                     })
                         .then(res => {
                             const data = res.data;
                             this.setState({
                                 work_data: data.items,
-                                isLoaded: true
                             })
                         })
                 },
                 (error) => { this.setState({ error }) }
             )
+            .then(()=> {
+                axios.get(`/projects?orgs=${this.props.match.params.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${getJWT()}`
+                    }
+                })
+                    .then(res => {
+                        const data = res.data;
+                        this.setState({
+                            p_data: data.items,
+                            isLoaded: true
+                        })
+                    })
+            })
 
         this.updateValue(this.props.match.params.id)
     }
@@ -87,13 +102,13 @@ export class ClientViewPage extends React.Component {
                 {
                     this.state.isLoaded
                         ? <Container fluid>
-                            <ContactNavigation title={` ${this.state.data.name} `} />
+                            <ContactNavigation title={` ${this.state.data.full_name} `} />
                             <Col>
                                 <Row>
-                                    <Col><BasicInfo data={this.state.data} /></Col>
+                                    <Col><BasicInfoOrg data={this.state.data} /></Col>
                                 </Row>
                                 <Row>
-                                    <Col><ProjectInfo data={this.state.work_data} /></Col>
+                                    <Col><ClientInfo data={this.state.work_data} p_data={this.state.p_data} /></Col>
                                 </Row>
                             </Col>
                         </Container>

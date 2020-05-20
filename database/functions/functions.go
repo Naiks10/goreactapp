@@ -44,6 +44,9 @@ var (
 		Join("organisations on client_organisation_id = organisation_id")
 	//SelectWorkGroups as SELECT func
 	SelectWorkGroups = postgres.Select("*").From("workgroups") //+
+	//SelectWorkGroupList as SELECT func
+	SelectWorkGroupList = postgres.Select("workgroup_name, head_status").From("working_developer_list").
+				Join("workgroups ON workgroups.workgroup_id = working_developer_list.workgroup_id")
 	//SelectDevs as SELECT func
 	SelectDevs = postgres.Select(
 		"user_login",
@@ -282,7 +285,7 @@ FROM  issues`)
 	SelectValues = postgres.Select(`(
 		SELECT  COUNT(*)
 		  FROM  (
-			  SELECT *FROM tasks
+			  SELECT *FROM tasks t
 			   WHERE  task_stage_id IN (
 				   SELECT  stage_id 
 					 FROM  stages 
@@ -291,13 +294,13 @@ FROM  issues`)
 						  FROM  modules
 						 WHERE  module_project_id = project_id
 					)
-				   )
+				   ) AND (SELECT COUNT(*) FROM tasks WHERE task_supertask_id = t.task_id) = 0
 		  ) AS tasks_2
 	) AS count_all,
 	(
 		SELECT  COUNT(*)
 		  FROM  (
-			  SELECT *FROM tasks
+			  SELECT *FROM tasks y
 			   WHERE  task_stage_id IN (
 				   SELECT  stage_id 
 					 FROM  stages 
@@ -306,7 +309,7 @@ FROM  issues`)
 						  FROM  modules
 						 WHERE  module_project_id = project_id
 					)
-				   ) AND task_status_id = 4
+				   ) AND (SELECT COUNT(*) FROM tasks WHERE task_supertask_id = y.task_id) = 0 AND y.task_status_id = 4
 		  ) AS tasks_2
 	) AS count,
 	(

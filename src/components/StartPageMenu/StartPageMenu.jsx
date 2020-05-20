@@ -1,15 +1,16 @@
 import React from "react"
-import { Col, Row, Container, Button, Spinner, Badge, Modal } from "react-bootstrap"
+import { Col, Row, Container, Button, Spinner, Badge, Modal, Form, Dropdown } from "react-bootstrap"
 import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
-import { getJWT, getRole, getLogin } from "../Functions/Funcs"
+import { getJWT, getRole, getLogin, GetDate } from "../Functions/Funcs"
 import { Link, Redirect, withRouter, useHistory, useLocation } from "react-router-dom"
-import { br } from "react-router-dom"
 import "animate.css"
 import "hover.css"
 import history from '../Functions/history'
+import { GroupContext } from '../InPages/ProjectViewPage/Consts'
 import { MainNavigation } from "../BodyElements/BodyPanel"
+import { CustomToggle, CustomMenu } from "../InPages/ProjectViewPage/Containers/CustomControl"
 
 const jwt = getJWT()
 
@@ -21,12 +22,25 @@ export class StartPageMenu extends React.Component {
             Items: [],
             isLoaded: false,
             error: null,
-            CurrentElement: 'start'
+            CurrentElement: 'start',
+            Group: [],
+            vis : false,
         }
     }
     //prepare function
     componentDidMount() {
         this.UpdateFunc()
+        fetch('/groups?offset=1', {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({ Group: result.items })
+                }
+            )
     }
 
     //UpdateFunc for prepare and callback
@@ -99,12 +113,13 @@ export class StartPageMenu extends React.Component {
                         }
                     )
         }
+        this.setState({vis : false})
     }
 
     //rendering
     render() {
         //state values
-        const { isLoaded, error, Items } = this.state;
+        const { isLoaded, error, Items, Group } = this.state;
         //if async Prepare finished
         if (isLoaded) {
             return (
@@ -121,7 +136,8 @@ export class StartPageMenu extends React.Component {
                                         ? Items.map(item => (
                                             item.status_id === 0
                                                 || (item.status_id === 1 && item.group_id === 0)
-                                                ? <StartPageMenuElement
+                                                ? (!this.state.vis ? this.setState({vis : true}) : null, 
+                                                <StartPageMenuElement
                                                     Upd={() => { this.UpdateFunc() }}
                                                     data={
                                                         {
@@ -138,16 +154,17 @@ export class StartPageMenu extends React.Component {
                                                             pdatestart: item.start,
                                                             pdatefinish: item.finish,
                                                             fdatestart: item.start_fact,
-                                                            fdatefinish: item.finish_fact
+                                                            fdatefinish: item.finish_fact,
+                                                            group_data: Group
                                                         }
                                                     }
-                                                />
+                                                />)
                                                 : null //else
                                         ))
                                         : null //else
                                 }
                             </div>
-                            <div
+                            {this.state.vis ? <div
                                 style={
                                     {
                                         width: '100%',
@@ -159,7 +176,7 @@ export class StartPageMenu extends React.Component {
                                         backgroundColor: '#2098D1'
                                     }
                                 }>
-                            </div>
+                            </div>: null} 
                             <div className="box_xss">
                                 <StartPageMenuElementNew />
                                 {//rendering by mapping
@@ -181,7 +198,8 @@ export class StartPageMenu extends React.Component {
                                                         pdatestart: item.start,
                                                         pdatefinish: item.finish,
                                                         fdatestart: item.start_fact,
-                                                        fdatefinish: item.finish_fact
+                                                        fdatefinish: item.finish_fact,
+                                                        group_data: Group
                                                     }
                                                 }
                                                 />
@@ -218,13 +236,16 @@ class StartPageMenuElement extends React.Component {
             isTasksOver: false,
             LoadedState: 'start',
             isModal: false,
+            isModal1: false,
+            index: null,
+            text: 'Нет группы'
         }
     }
 
     //rendering
     render() {
         //state values
-        const { isModal } = this.state
+        const { isModal, isModal1 } = this.state
         if (getRole() === '6' //view for client
             && (this.props.data.status_id === 0 //if status "НАЧАТ" or project wo group
                 || (this.props.data.status_id === 1 && this.props.data.group_id === 0))) {
@@ -304,7 +325,7 @@ class StartPageMenuElement extends React.Component {
         } else
             return (
                 <React.Fragment>
-                    <div 
+                    <div
                         className="StartMenuElement hvr-grow"
                         onMouseLeave={() => {
                             this.setState({
@@ -316,8 +337,11 @@ class StartPageMenuElement extends React.Component {
                                 case (this.props.data.status_id === 0):
                                     this.setState({ isModal: true })
                                     break;
-                                case (this.props.data.status_id !== 0):
-                                    history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
+                                case (this.props.data.status_id === 1 && getRole() !== '6' && this.props.data.group_id === 0):
+                                    this.setState({ isModal1: true })
+                                    break;
+                                case (this.props.data.status_id !== 0 && this.props.data.group_id !== 0):
+                                    history.push(`/workspace/projects/${this.props.data.id}`)
                                     break;
                             }
                         }
@@ -404,7 +428,9 @@ class StartPageMenuElement extends React.Component {
                                                                 })()
                                                             }</p>
                                                         <p style={{ fontSize: '17px', marginBottom: 0 }}>Фактический период</p>
-                                                        <p style={{ fontSize: '15px' }}>{
+                                                        <p style={{ fontSize: '15px' }}>{ 
+                                                        GetDate(this.props.data.fdatestart)
+                                                       ? <React.Fragment>{
                                                             (() => {
                                                                 var data = new Date(this.props.data.fdatestart)
                                                                 return data.toLocaleDateString("ru-RU")
@@ -414,7 +440,11 @@ class StartPageMenuElement extends React.Component {
                                                                     var data = new Date(this.props.data.fdatefinish)
                                                                     return data.toLocaleDateString("ru-RU")
                                                                 })()
-                                                            }</p>
+                                                            }
+                                                            </React.Fragment>
+                                                            : 'Нет Данных'
+                                        }
+                                                            </p>
                                                     </Col>
                                                 )
                                             case 'status':
@@ -559,7 +589,7 @@ class StartPageMenuElement extends React.Component {
                                 show={isModal}
                                 onHide={() => { this.setState({ isModal: false }) }}>
                                 <Modal.Header>
-                                    <Modal.Title>Принять проект {isModal}</Modal.Title>
+                                    <Modal.Title>Принять проект {this.props.data.name}</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
                                     <p>Вы готовы принять проект?</p>
@@ -588,6 +618,80 @@ class StartPageMenuElement extends React.Component {
                                             }
                                             )
                                         this.setState({ isModal: false })
+                                    }}
+                                        variant="primary">
+                                        Принять
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                            : null
+                    }
+                    {
+                        isModal1
+                            ? <Modal
+                                show={isModal1}
+                                onHide={() => { this.setState({ isModal: false }) }}>
+                                <Modal.Header>
+                                    <Modal.Title>Выбрать группу {this.props.data.name}</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <Form>
+                                        <Form.Group controlId="exampleForm.SelectCustom">
+                                            <Form.Label>Группа</Form.Label>
+                                            <Dropdown>
+                                                <Dropdown.Toggle
+                                                    as={CustomToggle}
+                                                    id="dropdown-custom-components">
+                                                    {this.state.text}
+                                                </Dropdown.Toggle>
+
+                                                <Dropdown.Menu as={CustomMenu}>
+                                                    {
+                                                        this.props.data.group_data.map(item => (
+                                                            <Dropdown.Item
+                                                                eventKey={item.id}
+                                                                onSelect={
+                                                                    (e) => {
+                                                                        this.setState(
+                                                                            {
+                                                                                index: e,
+                                                                                text: item.name
+                                                                            }
+                                                                        )
+                                                                    }}>
+                                                                <Row style={{ position: 'relative' }}>
+                                                                    {item.name}
+                                                                </Row>
+                                                            </Dropdown.Item>
+                                                        ))
+                                                    }
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                        </Form.Group>
+                                    </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button onClick={() => {
+                                        this.setState({ isModal1: false })
+                                    }} variant="secondary">Отмена</Button>
+                                    <Button onClick={() => {
+                                        fetch(`/projects/${this.props.data.id}?mode=group`, {
+                                            method: "PUT",
+                                            headers: {
+                                                'Authorization': `Bearer ${jwt}`
+                                            },
+                                            body: JSON.stringify({
+                                                workgroup : {
+                                                    id : Number(this.state.index)
+                                                }
+                                            })
+                                        })
+                                            .then(() => {
+                                                this.props.Upd()
+                                                this.setState({ isModal1: false })
+                                            }
+                                            )
+                                        this.setState({ isModal1: false })
                                     }}
                                         variant="primary">
                                         Принять

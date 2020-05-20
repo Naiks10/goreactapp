@@ -43,3 +43,13 @@ export const getLogin = () => {
       return decode.login
    }
 }
+
+export function GetDate(value) {
+   var date = new Date(value)
+   var date1 = new Date('2000-05-16T00:00:00Z')
+   if (date > date1) {
+       return true
+   } else {
+       return false
+   }
+}

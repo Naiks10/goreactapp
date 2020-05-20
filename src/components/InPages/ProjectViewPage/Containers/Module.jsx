@@ -18,13 +18,41 @@ export class ModuleContainer extends React.Component {
             isOvered: false,
             isShowedCreate: false,
             isShowedSub: false,
-            isShowedDelete: false
+            isShowedDelete: false,
+            task_status : 2,
+            task_array : [],
+            mode_new : true
         }
     }
 
     //prepare
     componentDidMount() {
         this.GetAll()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.data != this.state.data) {
+            this.setState({ mode_new: true })
+        }
+    }
+
+    SetStatus = (value) => {
+        if (this.state.mode_new) {
+            this.setState({ task_array: [] }, () => {
+                var tasks = this.state.task_array
+                tasks.push(value)
+                var max = Math.max(...tasks)
+                this.setState({ task_status: max, task_array: tasks })
+                //this.props.SetStatus(max)
+            })
+        } else {
+            var tasks = this.state.task_array
+            tasks.push(value)
+            var max = Math.max(...tasks)
+            this.setState({ task_status: max, task_array: tasks })
+            //this.props.SetStatus(max) 
+        }
+        //this.setState({mode_new : false})
     }
 
     //GetAll function
@@ -49,8 +77,8 @@ export class ModuleContainer extends React.Component {
         const { isLoaded, data, error, isOvered, isShowedCreate, isShowedSub, isShowedDelete } = this.state;
         return (
             <div
-                className={`Item_task${this.props.data.status.id}`}
-                style={{ borderLeft: `3px solid ${GetStatus(this.props.data.status.id)}` }}>
+                className={`Item_task${this.state.task_status}`}
+                style={{ borderLeft: `3px solid ${GetStatus(this.state.task_status)}` }}>
                 <Col
                     onMouseEnter={() => { this.setState({ isOvered: true }) }}
                     onMouseLeave={() => { this.setState({ isOvered: false }) }}>
@@ -61,7 +89,10 @@ export class ModuleContainer extends React.Component {
                                 {
                                     zIndex: 1,
                                     paddingTop: 4,
-                                    paddingBottom: 4
+                                    paddingBottom: 4,
+                                    color : this.state.task_status <= 1  ? '#6e6e6e' : 'black',
+                                    textDecoration : this.state.task_status <= 1  ? 'line-through' : null
+
                                 }
                             }>Модуль "{this.props.data.name}"</div>
                         {
@@ -83,12 +114,12 @@ export class ModuleContainer extends React.Component {
                                     bottom: 0,
                                     position: "absolute",
                                     zIndex: 2,
-                                    color: 'white',
+                                    color: this.state.task_status !== 3  ? 'white' : 'black',
                                     paddingLeft: 6,
                                     paddingRight: 6,
                                     borderRadius: 5,
                                     fontSize: 14,
-                                    backgroundColor: GetStatus(this.props.data.status.id)
+                                    backgroundColor: GetStatus(this.state.task_status)
                                 }}>
                             <a>{GetDate(this.props.data.start)}-{GetDate(this.props.data.finish)}</a>
                         </div>
@@ -98,7 +129,7 @@ export class ModuleContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Stagecontext.Provider value={() => { this.GetAll() }}>
-                                <StageContainer data={item} />
+                                <StageContainer SetStatus={this.SetStatus} data={item} />
                             </Stagecontext.Provider>
                         ))
                         : null

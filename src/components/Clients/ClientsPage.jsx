@@ -175,6 +175,7 @@ class ClientsElement extends React.Component {
                                 <img
                                     width="75"
                                     height="75"
+                                    style={{borderRadius : '50%'}}
                                     src={this.props.data.user_image_src} />
                             </Col>
                             <Col className="d-flex align-items-center justify-content-end">
@@ -238,7 +239,7 @@ class OrgsElement extends React.Component {
                         })
                     }}
                     onClick={() => {
-                        history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
+                        history.push({ pathname: `/workspace/orgs/${this.props.data.id}` })
                     }}
                 >
                     <Col>
@@ -248,6 +249,7 @@ class OrgsElement extends React.Component {
                                     width="75"
                                     height="75"
                                     src={this.props.data.src}
+                                    style={{borderRadius : '50%'}}
                                 />
                             </Col>
                             <Col className="d-flex align-items-center justify-content-end">

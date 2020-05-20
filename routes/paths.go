@@ -20,6 +20,8 @@ var (
 		{path: "/modules", function: functions.CreateModule},
 		{path: "/submodules", function: functions.CreateSubModule},
 		{path: "/issues", function: functions.CreateIssue},
+		{path: "/uploaduser", function: functions.UploadUser},
+		{path: "/uploaddoc", function: functions.UploadDoc},
 	}
 
 	//ReadAllData slice to get all data from model
@@ -40,9 +42,12 @@ var (
 		{path: "/subtasks", function: functions.SubTasks},
 		{path: "/issueslst", function: functions.Issues},
 		{path: "/workers", function: functions.Workers},
+		{path: "/workerslst", function: functions.WorkGroupsLst},
 		{path: "/clientslst", function: functions.ClientsView},
 		{path: "/managerslst", function: functions.ManagersView},
 		{path: "/developerslst", function: functions.DevsView},
+		{path: "/stat/{id}", function: functions.Graph},
+		{path: "/files/{id}", function: functions.FileList},
 	}
 
 	//ReadOne slice to get current data from model
@@ -55,6 +60,7 @@ var (
 		{path: "/projects/{id}", function: functions.Project},
 		{path: "/managers/{id}", function: functions.Manager},
 		{path: "/projectvalues/{id}", function: functions.Value},
+		{path: "/tasks/{id}", function: functions.Task},
 	}
 
 	//UpdateOne slice to update current data from model
@@ -66,6 +72,7 @@ var (
 		{path: "/devs/{id}", function: functions.UpdateDevelopers},
 		{path: "/projects/{id}", function: functions.UpdateProjects},
 		{path: "/managers/{id}", function: functions.UpdateClients},
+		{path: "/task/{id}", function: functions.EditTaskStatus},
 	}
 
 	//DeleteOne slice to delete current data from model

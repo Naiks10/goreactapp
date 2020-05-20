@@ -8,6 +8,14 @@ export class IssueContainer extends React.Component {
         super(props)
     }
 
+
+    componentDidMount() {
+        console.log(this.props.children)
+        if (this.props.children !== null) {
+            //this.props.SetStatus()
+        }
+    }
+
     render() {
         return (
             <Col style={{ marginTop: 5 }}>

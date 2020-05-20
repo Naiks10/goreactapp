@@ -15,7 +15,7 @@ import { OrgInfo } from "./OrgInfo";
 import { ProjectChartView } from './Chart'
 import { ProjectDocs } from "./Docs";
 import { ProjectStatsView } from './Stats'
-import { WorkGroupContext, ProjectContext, ProjectValueContext } from './Consts'
+import { WorkGroupContext, ProjectContext, ProjectValueContext, ProjectGraphContext } from './Consts'
 import { TitlePanel } from './Panels'
 import axios from 'axios';
 
@@ -34,8 +34,12 @@ export class ProjectViewPage extends React.Component {
             count_all: 0,
             count: 0,
             issues: 0,
-            id : this.props.match.params.id,
+            id: this.props.match.params.id,
             updateValue: this.updateValue,
+            updateGraph: this.updateGraph,
+            ItemsFact: [],
+            Items: [],
+            isLoaded: false,
         }
     }
 
@@ -54,6 +58,21 @@ export class ProjectViewPage extends React.Component {
                     count_all: data.data.count_all,
                     count: data.data.count,
                     issues: data.data.issues,
+                })
+            })
+    }
+
+    updateGraph = (value) => {
+        axios.get(`/stat/${value}`, {
+            headers: {
+                'Authorization': `Bearer ${getJWT()}`
+            }
+        })
+            .then(res => {
+                const data = res.data
+                this.setState({
+                    Items: data.items,
+                    isLoaded: true
                 })
             })
     }
@@ -85,9 +104,11 @@ export class ProjectViewPage extends React.Component {
                         })
                 },
                 (error) => { this.setState({ error }) }
-            )
+            ).then(() => this.updateValue(this.props.match.params.id))
+            .then(() => this.updateGraph(this.props.match.params.id))
 
-        this.updateValue(this.props.match.params.id)
+
+
     }
 
     //rendering
@@ -104,19 +125,20 @@ export class ProjectViewPage extends React.Component {
                                     <Col><OrgInfo data={this.state.data} /></Col>
                                 </Row>
                                 <Row>
-                                    <ProjectValueContext.Provider value={{
-                                        current: this.state.current,
-                                        plan: this.state.plan,
-                                        count_all: this.state.count_all,
-                                        count: this.state.count,
-                                        issues: this.state.issues,
-                                        updateValue: this.state.updateValue
-                                    }}>
-                                        <Col><ProjectChartView /></Col>
-                                    </ProjectValueContext.Provider>
+                                    <Col>
+                                        <ProjectGraphContext.Provider value={{
+                                            ID: this.state.id,
+                                            Items: this.state.Items,
+                                            Items_fact: this.state.ItemsFact,
+                                            updateValue: this.state.updateGraph,
+                                            isLoaded: this.state.isLoaded
+                                        }}>
+                                            <ProjectChartView />
+                                        </ProjectGraphContext.Provider>
+                                    </Col>
                                 </Row>
                                 <Row>
-                                    <Col><ProjectDocs /></Col>
+                                    <Col><ProjectDocs project={this.props.match.params.id} /></Col>
                                 </Row>
                                 <Row>
                                     <Col>
@@ -131,7 +153,15 @@ export class ProjectViewPage extends React.Component {
                                                     issues: this.state.issues,
                                                     updateValue: this.state.updateValue
                                                 }}>
-                                                    <ProjectControlView />
+                                                    <ProjectGraphContext.Provider value={{
+                                                        ID: this.state.id,
+                                                        Items: this.state.Items,
+                                                        Items_fact: this.state.ItemsFact,
+                                                        updateValue: this.state.updateGraph,
+                                                        isLoaded: this.state.isLoaded
+                                                    }}>
+                                                        <ProjectControlView />
+                                                    </ProjectGraphContext.Provider>
                                                 </ProjectValueContext.Provider>
                                             </WorkGroupContext.Provider>
                                         </ProjectContext.Provider>
