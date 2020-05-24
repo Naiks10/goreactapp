@@ -113,14 +113,16 @@ export class Auth extends React.Component {
         var birthdate = React.createRef();
 
         return (
-            <div style={{ height: '100%' }}>
-                <div style={{ height: '30%' }}></div>
-                <Container
+            <div style={{ height: '100%' }} className="d-flex align-items-center">
+              <div style={{ position : "absolute", left : 0, right : 0, top : 0, bottom : 0, opacity : '60%', backgroundColor : '#2098D1'}}>
+            </div>  
+                <div
                     className="bg-white animated fadeIn mx-auto"
                     style={styles.bodyStyle}>
                     <Helmet
                         title="Авторизация"
-                        bodyAttributes={{ style: 'background-color : #2098D1' }} />
+                        bodyAttributes={{ style: `background : url(assets/img/authback.png) no-repeat;
+                        background-size: 100%;` }} />
                     <Row
                         style={
                             {
@@ -140,7 +142,7 @@ export class Auth extends React.Component {
                                 <div>
                                     <Form.Group
                                         as={Col}
-                                        style={{ width: "50%" }}>
+                                        >
                                         <Form.Label
                                             column
                                             sm={2}>Логин</Form.Label>
@@ -155,7 +157,7 @@ export class Auth extends React.Component {
                                     </Form.Group>
                                     <Form.Group
                                         as={Col}
-                                        style={{ width: "50%" }}
+                                        
                                         controlId="formHorizontalPassword">
                                         <Form.Label
                                             column
@@ -170,23 +172,23 @@ export class Auth extends React.Component {
                                         </Col>
                                     </Form.Group>
                                 </div>
-                                <div
+                            </Form>
+                            <div
                                     className="d-flex align-items-center"
-                                    style={{ position: "absolute", bottom: 0 }}>
+                                    >
                                     <Link
                                         onClick={e => this.submit(e)}
-                                        className="btn btn-outline-primary"
+                                        className="btn btn-outline-light"
                                     >Войти в систему</Link>
                                     <Button
-                                        variant="primary"
+                                        variant="light"
                                         style={{ marginLeft: 10 }}
                                         onClick={() => { this.setState({ isOpened: true }) }}
                                     >Зарегистрироваться</Button>
                                 </div>
-                            </Form>
                         </Col>
                     </Row>
-                </Container>
+                </div>
                 <Modal
                     onHide={() => { this.setState({ isOpened: false }) }}
                     show={this.state.isOpened}
@@ -346,7 +348,7 @@ export class Auth extends React.Component {
                             }}>Сохранить изменения</Button>
                     </Modal.Footer>
                 </Modal>
-                <div style={{ height: '30%' }}></div>
+                
             </div >
         )
     }
@@ -360,9 +362,9 @@ const styles = {
         height: "4.7%"
     },
     bodyStyle: {
-        width: '40%',
+        
         verticalAlign: 'middle',
-        height: '40%',
+        
         padding: 30,
         boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)",
         borderRadius: 9

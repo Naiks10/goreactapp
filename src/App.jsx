@@ -67,7 +67,6 @@ function MainView() {
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/clients" text="Клиенты" src="assets/img/users.png" />
-                  <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
                   <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
                   <BackMenuButton path="/workspace/settings" text="Отладка" src="assets/img/debug_ico.png" />
@@ -79,7 +78,6 @@ function MainView() {
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/clients" text="Клиенты" src="assets/img/users.png" />
-                  <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
                   <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
                 </BackMenu>
@@ -89,7 +87,6 @@ function MainView() {
                 <BackMenu>
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
-                  <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
                   <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
                 </BackMenu>
@@ -100,7 +97,6 @@ function MainView() {
                 <BackMenu>
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
-                  <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
                   <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
                 </BackMenu>
@@ -111,7 +107,6 @@ function MainView() {
                 <BackMenu>
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
-                  <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
                   <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
                 </BackMenu>
@@ -122,18 +117,8 @@ function MainView() {
                 <BackMenu>
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
-                  <BackMenuButton path="/workspace/messages" text="Сообщения" src="assets/img/messages.png" />
+                  <BackMenuButton path="/workspace/clients" text="Клиенты" src="assets/img/users.png" />
                   <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
-                </BackMenu>
-              )
-              break;
-            case '4':
-              return (
-                <BackMenu>
-                  <MainMenuButton />
-                  <BackMenuButton path="/projects" text="Проекты" src="assets/img/orders.png" />
-                  <BackMenuButton path="/messages" text="Сообщения" src="assets/img/messages.png" />
-                  <BackMenuButton path="/settings" text="Настройки" src="assets/img/options.png" />
                 </BackMenu>
               )
               break;
@@ -214,10 +199,12 @@ function MainView() {
                   <Switch>
                     <Route path="/workspace/start" exact component={StartPageMenu} />
                     <Route path="/workspace/create_project" component={ProjetcNewPage} />
-                    <Route path="/workspace/clients" component={ClientsPage} />
+                    <Route exact path="/workspace/clients" component={ClientsPage} />
                     <Route path="/workspace/workers" component={WorkersPage} />
                     <Route exact path="/workspace/projects" component={StartPageMenu} />
                     <Route path="/workspace/projects/:id" component={ProjectViewPage} />
+                    <Route path="/workspace/clients/:id" component={ClientViewPage} />
+                    <Route path="/workspace/orgs/:id" component={OrgViewPage} />
                   </Switch>
                 )
                 break;

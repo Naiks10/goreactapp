@@ -29,8 +29,8 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, sb
 	query, params, _ := sb.ToSql()
 
 	if params != nil {
-		errs := db.DB.Select(table.GetItems(), query, params[0])
-		fmt.Println("hello", errs)
+		errs := db.DB.Select(table.GetItems(), query, params...)
+		fmt.Println("hello", errs, query)
 	} else {
 		errs := db.DB.Select(table.GetItems(), query)
 		fmt.Println("bey", errs)

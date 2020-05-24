@@ -53,3 +53,26 @@ export function GetStatus(value) {
     }
     return val
 }
+
+export function GetStatusAlpha(value) {
+    var val = null
+    switch (value) {
+        case 0:
+            val = 'rgba(110, 110, 110, .15)'
+            break;
+        case 1:
+            val = 'rgba(27, 214, 74, .15)'
+            break;
+        case 2:
+            val = 'rgba(32,152,209, .15)'
+            break;
+        case 3:
+            val = 'rgba(255, 196, 0, .15)'
+            break;
+        case 4:
+            val = 'rgba(255, 0, 0, .15)'
+            break;
+
+    }
+    return val
+}

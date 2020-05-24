@@ -3,7 +3,7 @@ import { Col, Row, Container, Button, Spinner, Tabs, Tab } from "react-bootstrap
 import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
-import { getJWT } from "../Functions/Funcs"
+import { getJWT, getRole, getLogin } from "../Functions/Funcs"
 import { Link, Redirect, withRouter, useHistory, useLocation } from "react-router-dom"
 import { br } from "react-router-dom"
 import "animate.css"
@@ -21,14 +21,19 @@ export class ClientsPage extends React.Component {
             isLoaded_I: false,
             isLoaded_II: false,
             error: null,
-            CurrentElement: 'start'
+            CurrentElement: 'start',
+            keyWord : '',
         }
     }
 
     componentDidMount() {
+        this.UpdateFunc()
+    }
+
+    UpdateFunc() {
         var jwt = getJWT()
 
-        fetch("/clientslst", {
+        fetch(`/clientslst${getRole() === '6' ? `?client=${getLogin()}` : ''}`, {
             headers: {
                 'Authorization': `Bearer ${jwt}`
             }
@@ -49,7 +54,7 @@ export class ClientsPage extends React.Component {
                 }
             )
 
-        fetch("/orgs?offset=1", {
+        fetch(`/orgs${getRole() === '6' ? `?client=${getLogin()}` : '?offset=1'}`, {
             headers: {
                 'Authorization': `Bearer ${jwt}`
             }
@@ -71,12 +76,17 @@ export class ClientsPage extends React.Component {
             )
     }
 
+    search = (value) => {
+        this.setState({ keyWord: value })
+        this.UpdateFunc()
+    }
+
     render() {
         const { isLoaded_I, isLoaded_II, error, Items, Orgs } = this.state;
         if (isLoaded_I && isLoaded_II) {
             return (
                 <div>
-                    <MainNavigation />
+                    <MainNavigation search={this.search}/>
                     <Container
                         fluid
                         style={{ marginTop: 20 }}
@@ -90,11 +100,12 @@ export class ClientsPage extends React.Component {
                                 <Tab
                                     eventKey="home"
                                     title="Клиенты">
-                                    {
-                                        Items.map(item => (
+                                    {Items != []
+                                        ? Items.map(item => (
                                             <ClientsElement data={item}
                                             />
                                         ))
+                                        : null
                                     }
                                 </Tab>
                                 <Tab
@@ -102,9 +113,11 @@ export class ClientsPage extends React.Component {
                                     title="Организации">
                                     <div className="box_x">
                                         {
-                                            Orgs.map(item => (
-                                                <OrgsElement data={item} />
-                                            ))
+                                            Orgs != []
+                                                ? Orgs.map(item => (
+                                                    <OrgsElement data={item} />
+                                                ))
+                                                : null
                                         }
                                     </div>
                                 </Tab>
@@ -175,7 +188,7 @@ class ClientsElement extends React.Component {
                                 <img
                                     width="75"
                                     height="75"
-                                    style={{borderRadius : '50%'}}
+                                    style={{ borderRadius: '50%' }}
                                     src={this.props.data.user_image_src} />
                             </Col>
                             <Col className="d-flex align-items-center justify-content-end">
@@ -249,7 +262,7 @@ class OrgsElement extends React.Component {
                                     width="75"
                                     height="75"
                                     src={this.props.data.src}
-                                    style={{borderRadius : '50%'}}
+                                    style={{ borderRadius: '50%' }}
                                 />
                             </Col>
                             <Col className="d-flex align-items-center justify-content-end">

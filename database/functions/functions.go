@@ -125,7 +125,7 @@ var (
 		`(
             SELECT  COUNT(*)
               FROM  (
-                  SELECT *FROM tasks
+                  SELECT *FROM tasks t
                    WHERE  task_stage_id IN (
                        SELECT  stage_id 
                          FROM  stages 
@@ -134,13 +134,13 @@ var (
                               FROM  modules
                              WHERE  module_project_id = project_id
                         )
-                       )
+                       ) AND (SELECT COUNT(*) FROM tasks WHERE task_supertask_id = t.task_id) = 0
               ) AS tasks_2
 		) AS tasks_all`,
 		`(
             SELECT  COUNT(*)
               FROM  (
-                  SELECT *FROM tasks
+                  SELECT *FROM tasks y
                    WHERE  task_stage_id IN (
                        SELECT  stage_id 
                          FROM  stages 
@@ -149,7 +149,7 @@ var (
                               FROM  modules
                              WHERE  module_project_id = project_id
                         )
-                       ) AND task_status_id = 4
+                       ) AND (SELECT COUNT(*) FROM tasks WHERE task_supertask_id = y.task_id) = 0 AND task_status_id = 4
               ) AS tasks_2
 		) AS tasks_finished`,
 		`(
@@ -168,7 +168,7 @@ var (
                                  WHERE  module_project_id = project_id
                         )
                        )
-                   )
+                   ) AND issue_close_status = false
               ) AS issues_2
 		) AS project_issues`,
 		"start_date",
@@ -328,7 +328,7 @@ FROM  issues`)
 							 WHERE  module_project_id = project_id
 					)
 				   )
-			   )
+			   ) AND issue_close_status = false
 		  ) AS issues_2
 	) AS issues
 FROM  projects

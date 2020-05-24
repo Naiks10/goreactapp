@@ -1,25 +1,28 @@
 import React from "react";
-import { Row, Col, Modal, Form, Button } from "react-bootstrap";
+import { Row, Col, Modal, Form, Button, Accordion, Card } from "react-bootstrap";
 import { getJWT } from "../../../Functions/Funcs"
 import { ProjectValueContext } from "../Consts";
 
 export class IssueContainer extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            isShow: false
+        }
     }
 
 
     componentDidMount() {
         console.log(this.props.children)
         if (this.props.children !== null) {
-            //this.props.SetStatus()
+
         }
     }
 
     render() {
         return (
             <Col style={{ marginTop: 5 }}>
-                <Col><Row>
+                <Col><Row onClick={() => this.setState({ isShow: true })}>
                     {
                         React.Children.map(this.props.children, (child, i) => {
                             return (
@@ -62,6 +65,61 @@ export class IssueContainer extends React.Component {
                             : null
                     }
                 </Row></Col>
+                {this.state.isShow ?
+                    <Modal centered size="lg" show={this.state.isShow} onHide={() => this.setState({ isShow: false })}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Список проблем <Button onClick={() => this.props.onCreate()} style={{ marginLeft: 20 }} variant="primary">Создать</Button></Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Accordion>
+                                {this.props.data.map((child, i) => {
+                                    return (
+                                        <Card>
+                                            <Card.Header>
+                                                <Row>
+                                                    <Col xs={6}>
+                                                        <Accordion.Toggle as={Button} variant="link" eventKey={i}>
+                                                            {child.name} ({(() => {
+                                                                var dt = new Date(child.date)
+                                                                return dt.toLocaleDateString("ru-RU")
+                                                            })()})
+                                                    </Accordion.Toggle>
+                                                    </Col>
+                                                    <Col style={{ position: 'relative' }}>
+                                                        {child.status
+                                                            ? <Button style={{ position: 'absolute', right: 20 }} disabled={true} variant="success">Закрыто</Button>
+                                                            : <ProjectValueContext.Consumer>
+                                                                {value =>
+                                                                    <Button onClick={() => {
+                                                                        fetch(`/issueslst/${child.id}`, {
+                                                                            headers: {
+                                                                                'Authorization': `Bearer ${getJWT()}`
+                                                                            },
+                                                                            method: "PUT"
+                                                                        }).then(
+                                                                            () => { 
+                                                                                this.props.update() 
+                                                                                value.updateValue(value.id)
+                                                                            }
+                                                                        )
+                                                                    }} style={{ position: 'absolute', right: 20 }} variant="danger">Закрыть проблему</Button>
+                                                                }
+                                                            </ProjectValueContext.Consumer>
+                                                        }
+
+                                                    </Col>
+                                                </Row>
+                                            </Card.Header>
+                                            <Accordion.Collapse eventKey={i}>
+                                                <Card.Body>{child.desc}</Card.Body>
+                                            </Accordion.Collapse>
+                                        </Card>
+                                    )
+                                })}
+                            </Accordion>
+                        </Modal.Body>
+                    </Modal>
+                    : null}
             </Col>
         )
     }

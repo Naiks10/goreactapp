@@ -22,6 +22,7 @@ var (
 		{path: "/issues", function: functions.CreateIssue},
 		{path: "/uploaduser", function: functions.UploadUser},
 		{path: "/uploaddoc", function: functions.UploadDoc},
+		{path: "/uploadorg", function: functions.UploadOrg},
 	}
 
 	//ReadAllData slice to get all data from model
@@ -47,7 +48,9 @@ var (
 		{path: "/managerslst", function: functions.ManagersView},
 		{path: "/developerslst", function: functions.DevsView},
 		{path: "/stat/{id}", function: functions.Graph},
+		{path: "/stat_fact/{id}", function: functions.GraphFact},
 		{path: "/files/{id}", function: functions.FileList},
+		{path: "/workersprev", function: functions.WorkersList},
 	}
 
 	//ReadOne slice to get current data from model
@@ -73,6 +76,7 @@ var (
 		{path: "/projects/{id}", function: functions.UpdateProjects},
 		{path: "/managers/{id}", function: functions.UpdateClients},
 		{path: "/task/{id}", function: functions.EditTaskStatus},
+		{path: "/issueslst/{id}", function: functions.EditIssue},
 	}
 
 	//DeleteOne slice to delete current data from model

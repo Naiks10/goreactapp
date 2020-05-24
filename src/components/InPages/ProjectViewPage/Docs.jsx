@@ -51,7 +51,7 @@ export class ProjectDocs extends React.Component {
                                     <ProjectDocsElementNew upd={() => this.UpdateValues()} project={this.props.project} />
                                     {
                                         this.state.fileData.map(item => (
-                                            <ProjectDocsElement data={item}/>
+                                            <ProjectDocsElement upd={() => this.UpdateValues()} project={this.props.project} data={item}/>
                                         ))
                                     }
                                 </Row>
@@ -66,6 +66,12 @@ export class ProjectDocs extends React.Component {
 
 
 class ProjectDocsElement extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isModal : false
+        }
+    }
     render() {
         var value = 'others'
         switch(this.props.data.file_ext) {
@@ -97,14 +103,57 @@ class ProjectDocsElement extends React.Component {
         return (
             <div>
                 <div className="ProjectElementFMT" 
-                onClick={() => window.open(this.props.data.file_path, '_blank')}>
+                onClick={() => this.setState({isModal : true})}>
                     <img
                         width="48"
                         height="48"
                         src={`/assets/img/docs/${value}.png`} />
                 </div>
                 <div><p style={{fontSize : 14}} className="text-center">{String(this.props.data.file_name).length > 10 ? String(this.props.data.file_name).substring(0, 2) + '...' + this.props.data.file_ext : this.props.data.file_name}</p></div>
+                <ProjectDocsElementOpen show={this.state.isModal} onHide={() => this.setState({isModal : false})} upd={() => this.props.upd()} project={this.props.project} data={this.props.data} />
             </div>
+        )
+    }
+}
+
+class ProjectDocsElementOpen extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isModal: false
+        }
+    }
+    render() {
+        bsCustomFileInput.init()
+        return (
+                <Modal {...this.props}>
+                    <Modal.Header>
+                        <Modal.Title>
+                            Документ "{this.props.data.file_name}"
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Footer>
+                        <Button variant="danger" onClick={() => {
+                            const formData = new FormData();
+                            formData.append('project', this.props.project);
+                            fetch('/deletedoc', {
+                                headers: {
+                                    'Authorization': `Bearer ${getJWT()}`
+                                },
+                                method: 'DELETE',
+                                body: formData
+                            })
+                            .then(() => {
+                                this.props.upd()
+                                this.props.onHide()
+                            })
+                        }}>Удалить</Button>
+                        <Button onClick={() => {
+                             window.open(this.props.data.file_path, '_blank')
+                             this.props.onHide()
+                        }}>Открыть</Button>
+                    </Modal.Footer>
+                </Modal>
         )
     }
 }
