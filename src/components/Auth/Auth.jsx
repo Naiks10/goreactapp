@@ -129,7 +129,7 @@ export class Auth extends React.Component {
                             }
                         }>
                         <Col style={{ verticalAlign: "middle" }}>
-                            <h1 style={{ textAlign: "center" }}>ВХОД</h1>
+                            <h1 style={{ textAlign: "center" }}>ВХОД1</h1>
                             <Form
                                 style={
                                     {
