@@ -1,5 +1,5 @@
 import React from "react"
-import { Col, Row, Container, Button, Spinner, Badge, Modal, Form, Dropdown, Pagination } from "react-bootstrap"
+import { Col, Row, Container, Button, Spinner, Badge, Modal, Form, Dropdown } from "react-bootstrap"
 import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
@@ -24,8 +24,7 @@ export class StartPageMenu extends React.Component {
             error: null,
             CurrentElement: 'start',
             Group: [],
-            vis: false,
-            keyWord: ''
+            vis : false,
         }
     }
     //prepare function
@@ -42,14 +41,14 @@ export class StartPageMenu extends React.Component {
                     this.setState({ Group: result.items })
                 }
             )
-            }
+    }
 
     //UpdateFunc for prepare and callback
     UpdateFunc() {
         //GetRole?
         switch (true) {
             case getRole() === '1': //admin
-                fetch(`/projectsview${this.state.keyWord === '' ? '' : `?search=${this.state.keyWord}`}`, {
+                fetch(`/projectsview`, {
                     headers: {
                         'Authorization': `Bearer ${jwt}`
                     }
@@ -71,29 +70,7 @@ export class StartPageMenu extends React.Component {
                     )
                 break;
             case getRole() === '2': //manager
-                fetch(`/projectsview?manager=${getLogin()}${this.state.keyWord === '' ? '' : `&search=${this.state.keyWord}`}`, {
-                    headers: {
-                        'Authorization': `Bearer ${jwt}`
-                    }
-                })
-                    .then(res => res.json())
-                    .then(
-                        (result) => {
-                            this.setState({
-                                isLoaded: true,
-                                Items: result.items
-                            });
-                        },
-                        (error) => {
-                            this.setState({
-                                isLoaded: true,
-                                error
-                            });
-                        }
-                    )
-                break;
-            case getRole() === '3': case getRole() === '4': //developer
-                fetch(`/projectsview?developer=${getLogin()}${this.state.keyWord === '' ? '' : `&search=${this.state.keyWord}`}`, {
+                fetch(`/projectsview?manager=${getLogin()}`, {
                     headers: {
                         'Authorization': `Bearer ${jwt}`
                     }
@@ -115,7 +92,7 @@ export class StartPageMenu extends React.Component {
                     )
                 break;
             case getRole() === '6': //Client
-                fetch(`/projectsview?client=${getLogin()}${this.state.keyWord === '' ? '' : `&search=${this.state.keyWord}`}`, {
+                fetch(`/projectsview?client=${getLogin()}`, {
                     headers: {
                         'Authorization': `Bearer ${jwt}`
                     }
@@ -136,12 +113,7 @@ export class StartPageMenu extends React.Component {
                         }
                     )
         }
-        this.setState({ vis: false })
-    }
-
-    search = (value) => {
-        this.setState({ keyWord: value })
-        this.UpdateFunc()
+        this.setState({vis : false})
     }
 
     //rendering
@@ -152,7 +124,7 @@ export class StartPageMenu extends React.Component {
         if (isLoaded) {
             return (
                 <div>
-                    <MainNavigation search={this.search} />
+                    <MainNavigation />
                     <Container
                         fluid
                         style={{ marginTop: 20 }}
@@ -164,29 +136,29 @@ export class StartPageMenu extends React.Component {
                                         ? Items.map(item => (
                                             item.status_id === 0
                                                 || (item.status_id === 1 && item.group_id === 0)
-                                                ? (!this.state.vis ? this.setState({ vis: true }) : null,
-                                                    <StartPageMenuElement
-                                                        Upd={() => { this.UpdateFunc() }}
-                                                        data={
-                                                            {
-                                                                id: item.id,
-                                                                name: item.name,
-                                                                issues: item.project_issues,
-                                                                exist: item.tasks_finished,
-                                                                fact: item.tasks_all,
-                                                                org_id: item.org_id,
-                                                                group_id: item.group_id,
-                                                                src: item.src,
-                                                                status_id: item.status_id,
-                                                                status_name: item.status_name,
-                                                                pdatestart: item.start,
-                                                                pdatefinish: item.finish,
-                                                                fdatestart: item.start_fact,
-                                                                fdatefinish: item.finish_fact,
-                                                                group_data: Group
-                                                            }
+                                                ? (!this.state.vis ? this.setState({vis : true}) : null, 
+                                                <StartPageMenuElement
+                                                    Upd={() => { this.UpdateFunc() }}
+                                                    data={
+                                                        {
+                                                            id: item.id,
+                                                            name: item.name,
+                                                            issues: item.project_issues,
+                                                            exist: item.tasks_finished,
+                                                            fact: item.tasks_all,
+                                                            org_id: item.org_id,
+                                                            group_id: item.group_id,
+                                                            src: item.src,
+                                                            status_id: item.status_id,
+                                                            status_name: item.status_name,
+                                                            pdatestart: item.start,
+                                                            pdatefinish: item.finish,
+                                                            fdatestart: item.start_fact,
+                                                            fdatefinish: item.finish_fact,
+                                                            group_data: Group
                                                         }
-                                                    />)
+                                                    }
+                                                />)
                                                 : null //else
                                         ))
                                         : null //else
@@ -204,9 +176,9 @@ export class StartPageMenu extends React.Component {
                                         backgroundColor: '#2098D1'
                                     }
                                 }>
-                            </div> : null}
+                            </div>: null} 
                             <div className="box_xss">
-                                {getRole() === '3' || getRole() === '4' ? null : <StartPageMenuElementNew />}
+                                <StartPageMenuElementNew />
                                 {//rendering by mapping
                                     this.state.Items //if items isn't null
                                         ? Items.map(item => (
@@ -456,23 +428,23 @@ class StartPageMenuElement extends React.Component {
                                                                 })()
                                                             }</p>
                                                         <p style={{ fontSize: '17px', marginBottom: 0 }}>Фактический период</p>
-                                                        <p style={{ fontSize: '15px' }}>{
-                                                            GetDate(this.props.data.fdatestart)
-                                                                ? <React.Fragment>{
-                                                                    (() => {
-                                                                        var data = new Date(this.props.data.fdatestart)
-                                                                        return data.toLocaleDateString("ru-RU")
-                                                                    })()
-                                                                }-{
-                                                                        (() => {
-                                                                            var data = new Date(this.props.data.fdatefinish)
-                                                                            return data.toLocaleDateString("ru-RU")
-                                                                        })()
-                                                                    }
-                                                                </React.Fragment>
-                                                                : 'Нет Данных'
-                                                        }
-                                                        </p>
+                                                        <p style={{ fontSize: '15px' }}>{ 
+                                                        GetDate(this.props.data.fdatestart)
+                                                       ? <React.Fragment>{
+                                                            (() => {
+                                                                var data = new Date(this.props.data.fdatestart)
+                                                                return data.toLocaleDateString("ru-RU")
+                                                            })()
+                                                        }-{
+                                                                (() => {
+                                                                    var data = new Date(this.props.data.fdatefinish)
+                                                                    return data.toLocaleDateString("ru-RU")
+                                                                })()
+                                                            }
+                                                            </React.Fragment>
+                                                            : 'Нет Данных'
+                                        }
+                                                            </p>
                                                     </Col>
                                                 )
                                             case 'status':
@@ -488,42 +460,19 @@ class StartPageMenuElement extends React.Component {
                                                                     minHeight: 126
                                                                 }
                                                             }>
+                                                            <Link
+                                                                to="/workspace/client_s">
                                                                 <p style={{ marginBottom: 1 }}>
-                                                                   { this.props.data.status_id == 1
-                                                                   ? <a style={{marginRight : 5,color: 'rgb(32, 153, 209)' }}>
+                                                                    <a style={{ color: 'rgb(32, 153, 209)' }}>
                                                                         &#8226;
                                                                         </a>
-                                                                    : null }
                                                                         Начат
                                                                     </p>
-                                                            <p style={{ marginBottom: 1 }}>
-                                                            { this.props.data.status_id == 2
-                                                                   ? <a style={{ marginRight : 5, color: 'rgb(32, 153, 209)' }}>
-                                                                        &#8226;
-                                                                        </a>
-                                                                    : null }
-                                                                В разработке</p>
-                                                            <p style={{ marginBottom: 1 }}>
-                                                            { this.props.data.status_id == 3
-                                                                   ? <a style={{ marginRight : 5, color: 'rgb(32, 153, 209)' }}>
-                                                                        &#8226;
-                                                                        </a>
-                                                                    : null }
-                                                                На отладке</p>
-                                                            <p style={{ marginBottom: 1 }}>
-                                                            { this.props.data.status_id == 4
-                                                                   ? <a style={{ marginRight : 5, color: 'rgb(32, 153, 209)' }}>
-                                                                        &#8226;
-                                                                        </a>
-                                                                    : null }
-                                                                Готов</p>
-                                                            <p style={{ marginBottom: 1 }}>
-                                                            { this.props.data.status_id == 6
-                                                                   ? <a style={{ marginRight : 5, color: 'rgb(32, 153, 209)' }}>
-                                                                        &#8226;
-                                                                        </a>
-                                                                    : null }
-                                                                Отменён</p>
+                                                            </Link>
+                                                            <p style={{ marginBottom: 1 }}>В разработке</p>
+                                                            <p style={{ marginBottom: 1 }}>На отладке</p>
+                                                            <p style={{ marginBottom: 1 }}>Готов</p>
+                                                            <p style={{ marginBottom: 1 }}>Отменён</p>
                                                         </Col>
                                                     </Col>
                                                 )
@@ -732,8 +681,8 @@ class StartPageMenuElement extends React.Component {
                                                 'Authorization': `Bearer ${jwt}`
                                             },
                                             body: JSON.stringify({
-                                                workgroup: {
-                                                    id: Number(this.state.index)
+                                                workgroup : {
+                                                    id : Number(this.state.index)
                                                 }
                                             })
                                         })

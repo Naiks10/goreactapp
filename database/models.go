@@ -224,18 +224,6 @@ type GlobalValueModel struct {
 	PlanData    []int `json:"plan" db:"plan"`
 }
 
-//SpecLst structure
-type SpecLst struct {
-	UserImgSrc string `json:"src" db:"user_image_src"`
-}
-
-//WorkgroupLstModel structure
-type WorkgroupLstModel struct {
-	ID            int       `json:"id" db:"workgroup_id"`
-	WorkGroupName string    `json:"name" db:"workgroup_name"`
-	Specs         []SpecLst `json:"specs"`
-}
-
 /*//IssuesList structure
 type IssuesList struct {
 	ListID      int `json:"id" db:"list_id"`
@@ -266,14 +254,6 @@ type Roles struct {
 	Items []Role `json:"items"`
 }
 
-type SpecLsts struct {
-	Items []SpecLst `json:"items"`
-}
-
-type WorkgroupLstModels struct {
-	Items []WorkgroupLstModel `json:"items"`
-}
-
 type Values struct {
 	Items []GlobalValueModel `json:"items"`
 }
@@ -282,23 +262,7 @@ func (t *Roles) GetItems() interface{} {
 	return &t.Items
 }
 
-func (t *SpecLsts) GetItems() interface{} {
-	return &t.Items
-}
-
-func (t *WorkgroupLstModels) GetItems() interface{} {
-	return &t.Items
-}
-
 func (t *Roles) Clear() {
-	t.Items = nil
-}
-
-func (t *SpecLsts) Clear() {
-	t.Items = nil
-}
-
-func (t *WorkgroupLstModels) Clear() {
 	t.Items = nil
 }
 
@@ -498,6 +462,4 @@ var (
 	//ExIssueList      = IssuesLists{}
 	ExManager = Managers{}
 	ExValue   = Values{}
-	ExSpec    = SpecLsts{}
-	ExWorks   = WorkgroupLstModels{}
 )

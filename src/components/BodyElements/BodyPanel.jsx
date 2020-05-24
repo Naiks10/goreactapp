@@ -56,7 +56,7 @@ class MainNavigation extends React.Component {
                                         })()}
                                     </Button>
                                 </div>
-                                <SearchPanel search={this.props.search} />
+                                <SearchPanel />
                                 <ButtonPanel src="/assets/img/filter.png" />
                                 <ButtonPanel src="/assets/img/sort.png" />
                             </Row>
@@ -312,33 +312,24 @@ export class SearchPanel extends React.Component {
         return (
             <Col>
                 <Row>
-                    <input
+                    <div
                         style={
                             {
                                 backgroundColor: 'whitesmoke',
                                 borderRadius: 4,
                                 paddingLeft: 15,
                                 paddingRight: 15,
-                                height: 40,
-                                display: 'inline-block',
-  								border: '1px solid #ccc',
-  								boxSizing: 'border-box'
+                                height: 40
                             }
                         }
-                        placeholder="Поиск"
-                        onKeyUp={(e)=> {
-                            this.props.search(e.target.value)
-                            //alert(1)
-                        }}
-                        onKeyDown={(e)=> {
-                            this.props.search(e.target.value)
-                            //alert(1)
-                        }}
-                        onKeyPress={(e)=> {
-                            this.props.search(e.target.value)
-                            //alert(1)
-                        }}
-                        className="hvr-icon-fade hvr-underline-from-left d-flex align-items-center"/>
+                        className="hvr-icon-fade hvr-underline-from-left d-flex align-items-center">
+                        <a>Поиск
+                            <i
+                                style={{ marginLeft: 200 }}
+                                className="far fa-search hvr-icon">
+                            </i>
+                        </a>
+                    </div>
                 </Row>
             </Col>
         )

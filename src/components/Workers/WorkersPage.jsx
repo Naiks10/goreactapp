@@ -1,5 +1,5 @@
 import React from "react"
-import { Col, Row, Container, Button, Spinner, Tabs, Tab, Badge } from "react-bootstrap"
+import { Col, Row, Container, Button, Spinner, Tabs, Tab } from "react-bootstrap"
 import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
@@ -18,7 +18,6 @@ export class WorkersPage extends React.Component {
         this.state = {
             Items: [],
             Orgs: [],
-            Groups: [],
             isLoaded_I: false,
             isLoaded_II: false,
             error: null,
@@ -74,34 +73,13 @@ export class WorkersPage extends React.Component {
                     });
                 }
             )
-        //? RESTapi method
-        fetch("/groups?offset=1", {
-            headers: {
-                'Authorization': `Bearer ${jwt}`
-            }
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        Groups: result.items
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        error
-                    });
-                }
-            )
     }
     //---------------------------------------------------------------------
 
     // rendering
     render() {
         // * consts from state
-        const { isLoaded_I, isLoaded_II, Items, Orgs, Groups } = this.state;
+        const { isLoaded_I, isLoaded_II, Items, Orgs } = this.state;
 
         // * IF ALL DATA LOADED
         if (isLoaded_I && isLoaded_II) {
@@ -146,7 +124,7 @@ export class WorkersPage extends React.Component {
                                     title="Рабочие группы">
                                     <div className="box_xs">
                                         {// * mapping Groups to ElementGrid
-                                            Groups.map(item => (
+                                            Orgs.map(item => (
                                                 <GroupElement data={item} />
                                             ))
                                         }
@@ -313,15 +291,10 @@ class WorkerElement extends React.Component {
                             LoadedState: 'start'
                         })
                     }}
-                    style={{position : 'relative'}}
                     onClick={() => {
                         history.push({ pathname: `/workspace/devs/${this.props.data.developer_login}` })
                     }}
                 >
-                    <Row style={{position : 'absolute', right : 20, top : 7}}>
-                        <h5><Badge style={{marginRight : 5}} variant="warning">QA</Badge></h5>
-                        <h5><Badge style={{marginRight : 5}}   variant="primary">ITO</Badge></h5>
-                    </Row>
                     <Col>
                         <Row style={{ marginTop: 7, marginBottom: 7 }}>
                             <Col>
@@ -356,26 +329,12 @@ class GroupElement extends React.Component {
         super(props)
         this.state = {
             isContext: false,
-            isLoaded : false,
             isImgOver: false,
             isStatusOver: false,
             isErrorOver: false,
             isTasksOver: false,
-            LoadedState: 'start',
-            srcs: []
+            LoadedState: 'start'
         }
-    }
-
-    componentDidMount() {
-        fetch(`/workersprev?group=${this.props.data.id}`, {
-            headers: {
-                'Authorization': `Bearer ${getJWT()}`
-            }
-        })
-            .then(res => res.json())
-            .then((result) => {
-                this.setState({ srcs: result.items, isLoaded : true })
-            })
     }
 
 
@@ -397,24 +356,26 @@ class GroupElement extends React.Component {
                         <Row style={{ marginTop: 7, marginBottom: 7 }}>
                             <Col className="d-flex align-items-center justify-content-center">
                                 <div className="d-flex align-items-center justify-content-center">
-                                    {
-                                        this.state.isLoaded && this.state.srcs != null
-                                        ? this.state.srcs.map(
-                                            (value, index) => (
-                                                <img
-                                                    style={{ borderRadius: '50%', position: 'relative', left : (14 - 14*index), borderColor: 'white', borderWidth: 3, borderStyle: 'solid' }}
-                                                    width="40"
-                                                    height="40"
-                                                    src={value.src} />
-                                            )
-                                        )
-                                        : null
-                                    }
+                                    <img
+                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'white', borderWidth: 3, borderStyle: 'solid' }}
+                                        width="40"
+                                        height="40"
+                                        src={this.props.data.user_image_src} />
+                                    <img
+                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'white', zIndex: 2, borderWidth: 3, left: '-14px', borderStyle: 'solid' }}
+                                        width="40"
+                                        height="40"
+                                        src={this.props.data.user_image_src} />
+                                    <img
+                                        style={{ borderRadius: '50%', position: 'relative', borderColor: 'white', zIndex: 5, borderWidth: 3, left: '-28px', borderStyle: 'solid' }}
+                                        width="40"
+                                        height="40"
+                                        src={this.props.data.user_image_src} />
                                 </div>
                             </Col>
                             <Col className="d-flex align-items-center justify-content-end">
                                 <div>
-                                    <p style={{ marginBottom: 0 }} className="d-flex justify-content-end">{this.props.data.name}</p>
+                                    <p style={{ marginBottom: 0 }} className="d-flex justify-content-end">{this.props.data.fio}</p>
                                 </div>
                             </Col>
                         </Row>
@@ -458,7 +419,7 @@ const styles = {
         paddingLeft: 0,
         paddingRight: 0
     },
-
+    
 }
 
 export default withRouter(ClientsElement);

@@ -30,7 +30,7 @@ export class InfoPanel extends React.Component {
                         style={{ marginLeft: 15 }}
                         className="d-flex justify-content-center align-items-center">
                         <img
-                            src={ this.props.status ? "/assets/img/issue_ok.png" : "/assets/img/issue_warn.png"}
+                            src="/assets/img/issue_warn.png"
                             width="20"
                             height="20" />
                     </div>}

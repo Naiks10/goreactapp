@@ -142,7 +142,7 @@ export class ModuleContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <Stagecontext.Provider value={() => { this.GetAll() }}>
-                                <StageContainer task_data={this.props.data} up={this.state.up} upd={() => this.func()} forceUPD={() => this.FORCE_UPDATE()} SetStatus={this.SetStatus} data={item} />
+                                <StageContainer forceUPD={() => this.FORCE_UPDATE()} SetStatus={this.SetStatus} data={item} />
                             </Stagecontext.Provider>
                         ))
                         : null
@@ -221,9 +221,6 @@ class CreateModuleModal extends React.Component {
                             <Form.Control
                                 type="date"
                                 placeholder="Дата начала"
-                                disabled={this.state.formTask === '' ? true : false}
-                                min={formatDate(this.props.task_data.start)}
-                                max={formatDate(this.props.task_data.finish)}
                                 onChange={(e) => { this.setState({ formTaskStart: e.target.value }) }} />
                         </Form.Group>
                         <Form.Group
@@ -231,10 +228,7 @@ class CreateModuleModal extends React.Component {
                             controlId="formBasicDateFinish">
                             <Form.Label>Дата окончания (плановавая)</Form.Label>
                             <Form.Control
-                                disabled={this.state.formTaskStart === null ? true : false}
                                 type="date"
-                                min={formatDate(this.state.formTaskStart === null ? this.props.task_data.start : this.state.formTaskStart)}
-                                max={formatDate(this.props.task_data.finish)}
                                 placeholder="Дата конца"
                                 onChange={(e) => { this.setState({ formTaskFin: e.target.value }) }} />
                         </Form.Group>
@@ -272,7 +266,6 @@ class CreateModuleModal extends React.Component {
                                         }
                                     )
                             }}
-                                disabled={this.state.formTask === '' ||this.state.formTaskStart === null || this.state.formTaskFin === null ? true : false}
                                 variant="outline-success">Создать</Button>
                         }
                     </Modulecontext.Consumer>
@@ -280,20 +273,6 @@ class CreateModuleModal extends React.Component {
             </Modal>
         )
     }
-}
-
-function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-
-    return [year, month, day].join('-');
 }
 
 export class CreateSubModuleModal extends React.Component {
@@ -335,9 +314,6 @@ export class CreateSubModuleModal extends React.Component {
                             <Form.Label>Дата начала (плановавая)</Form.Label>
                             <Form.Control
                                 type="date"
-                                disabled={this.state.formTask === '' ? true : false}
-                                min={formatDate(this.props.task_data.start)}
-                                max={formatDate(this.props.task_data.finish)}
                                 placeholder="Дата начала"
                                 onChange={(e) => { this.setState({ formTaskStart: e.target.value }) }} />
                         </Form.Group>
@@ -347,9 +323,6 @@ export class CreateSubModuleModal extends React.Component {
                             <Form.Label>Дата окончания (плановавая)</Form.Label>
                             <Form.Control
                                 type="date"
-                                disabled={this.state.formTaskStart === null ? true : false}
-                                min={formatDate(this.state.formTaskStart === null ? this.props.task_data.start : this.state.formTaskStart)}
-                                max={formatDate(this.props.task_data.finish)}
                                 placeholder="Дата конца"
                                 onChange={(e) => { this.setState({ formTaskFin: e.target.value }) }} />
                         </Form.Group>
@@ -384,7 +357,6 @@ export class CreateSubModuleModal extends React.Component {
                                 }
                             )
                     }}
-                        disabled={this.state.formTask === '' || this.state.formTaskStart === null || this.state.formTaskFin === null ? true : false}
                         variant="outline-success">Создать</Button>
                 </Modal.Footer>
             </Modal>

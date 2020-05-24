@@ -30,7 +30,7 @@ export class OrgInfo extends React.Component {
                                         <Row>{this.props.data.client.organisation.short_name}</Row>
                                         <br />
                                         <Row style={{ fontWeight: 'bold' }}><b>Об организации</b></Row>
-                                        <Row>{this.props.data.client.organisation.desc}</Row>
+                                        <Row>"НЕИЗВЕТСНО"</Row>
                                     </Col>
                                     <Col
                                         sm={4}

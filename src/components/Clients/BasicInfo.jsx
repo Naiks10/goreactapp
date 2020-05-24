@@ -1,8 +1,8 @@
 import React from "react"
 import { TitlePanel } from './Panels'
-import { Row, Col, Table, Tabs, Tab, Modal, Form, Button } from "react-bootstrap"
+import { Row, Col, Table, Tabs, Tab } from "react-bootstrap"
 import history from "../Functions/history"
-import { GetDate, getJWT } from "../Functions/Funcs"
+import { GetDate } from "../Functions/Funcs"
 
 export class BasicInfo extends React.Component {
     constructor(props) {
@@ -57,10 +57,7 @@ export class BasicInfoOrg extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isExpanded: true,
-            infoSrc : this.props.data.src,
-            src : null,
-            isModal : false
+            isExpanded: true
         }
     }
     render() {
@@ -89,61 +86,11 @@ export class BasicInfoOrg extends React.Component {
                                     </Col>
                                     <Col>
                                         <div className="d-flex justify-content-end">
-                                            <img onClick={() => {
-                                                this.setState({ isModal: true })
-                                            }} width="90" height="90" src={this.state.infoSrc} />
+                                            <img width="90" height="90" src={this.props.data.src} />
                                         </div>
                                     </Col>
                                 </Row>
                             </Col>
-                            <Modal show={this.state.isModal} onHide={() => this.setState({ isModal: false })}>
-                    <Modal.Header>
-                        <Modal.Title>Обновить изображение</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div>
-                            <div className="d-flex justify-content-center">
-                                <img 
-                                    width="150" 
-                                    height="150" 
-                                    src={this.state.src} 
-                                    style={{ margin: 30, borderRadius: '50%' }} />
-                            </div>
-                            <Form>
-                                <Form.File onChange={(event) => {
-                                    var reader = new FileReader();
-                                    var vex
-                                    reader.onloadend = function () {
-                                        this.setState({ src: [reader.result] })
-                                    }.bind(this)
-                                    vex = reader.readAsDataURL(event.target.files[0]);
-                                }
-                                } id="custom-file"
-                                    label="Custom file input" custom></Form.File>
-                            </Form>
-                        </div >
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={() => {
-                            const fileInput = document.querySelector('#custom-file');
-                            const formData = new FormData();
-                            console.log(fileInput.files[0])
-                            formData.append('file', fileInput.files[0]);
-                            formData.append('id', this.props.data.id);
-                            fetch('/uploadorg', {
-                                headers: {
-                                    'Authorization': `Bearer ${getJWT()}`
-                                },
-                                method: 'POST',
-                                body: formData
-                            }).then(() => {
-                                this.setState({infoSrc : this.state.src})
-                                this.setState({ isModal: false })
-                            }
-                            )
-                        }}>Сохранить</Button>
-                    </Modal.Footer>
-                </Modal>
                         </div>
                         : null
                 }

@@ -53,7 +53,7 @@ export class ProjectChartViewContainer extends React.Component {
             series: [{
                 name: 'Фактические данные ',
                 data: [1, 2, 3],
-                color: '#6e6e6e'
+                color: '#2098D1'
             },
             {
                 name: 'Плановые данные ',
@@ -67,19 +67,13 @@ export class ProjectChartViewContainer extends React.Component {
         var scndDate = new Date("2020-05-08T00:00:00").getTime()
 
         var s = []
-        var s_fact = []
         console.log('context ' + this.props.context.Items)
         //alert(this.props.context.IsLoaded)
         if (this.props.context.isLoaded && this.props.context.Items !== null) {
-        var items = this.props.context.Items === null ? [] : this.props.context.Items
+        var items = this.props.context.Items
          items.map(item => (
             s.push([GetUTCDate(item.time), item.progress])
         )) }
-        if (this.props.context.isLoaded && this.props.context.ItemsFact !== null) {
-            var items = this.props.context.Items_fact === null ? [] : this.props.context.Items_fact
-             items.map(item => (
-                s_fact.push([GetUTCDate(item.time), item.progress])
-            )) }
 
         const options1 = {
             chart: {
@@ -98,15 +92,14 @@ export class ProjectChartViewContainer extends React.Component {
                     year: '%b'
                 },
                 title: {
-                    text: 'Дата'
+                    text: 'Date'
                 }
             },
             yAxis: {
                 title: {
-                    text: 'Прогресс выполненния (%)'
+                    text: 'Snow depth (m)'
                 },
-                min: 0,
-                max : 100
+                min: 0
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br>',
@@ -121,19 +114,14 @@ export class ProjectChartViewContainer extends React.Component {
                 }
             },
 
-            //colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+            colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
 
             // Define the data points. All series have a dummy year
             // of 1970/71 in order to be compared on the same x axis. Note
             // that in JavaScript, months start at 0 for January, 1 for February etc.
             series: [{
                 name: "Плановый проект",
-                color : '#6CF',
                 data: s
-            }, {
-                name: "Фактический проект",
-                color : '#6e6e6e',
-                data: s_fact
             }],
 
             responsive: {
@@ -169,7 +157,7 @@ export class ProjectChartViewContainer extends React.Component {
                                     <b>Период проекта</b>
                                 </Row>
                                 <div>
-                                    {this.props.context.isLoaded && (this.props.context.Items || this.props.context.Items_fact) !== null
+                                    {this.props.context.isLoaded && this.props.context.Items !== null
                                         ? <HighchartsReact
                                             highcharts={Highcharts}
                                             options={options1}

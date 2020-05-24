@@ -10,14 +10,6 @@ func (t *Users) GetItem() interface{} {
 	return &t.Items[0]
 }
 
-func (t *WorkgroupLstModels) GetItem() interface{} {
-	return &t.Items[0]
-}
-
-func (t *SpecLsts) GetItem() interface{} {
-	return &t.Items[0]
-}
-
 func (t *Roles) GetItem() interface{} {
 	return &t.Items[0]
 }
@@ -69,15 +61,6 @@ func (t *Projects) GetItem() interface{} {
 func (t *Roles) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }
-
-func (t *SpecLsts) GetPrimaryKey() string {
-	return GetTag(t.Items)
-}
-
-func (t *WorkgroupLstModels) GetPrimaryKey() string {
-	return GetTag(t.Items)
-}
-
 func (t *Managers) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }

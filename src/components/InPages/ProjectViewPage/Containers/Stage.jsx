@@ -28,7 +28,6 @@ export class StageContainer extends React.Component {
 
     componentDidMount() {
         this.updateAndGetMethod()
-        this.props.upd()
     }
 
     FORCE_UPDATE() {
@@ -46,7 +45,7 @@ export class StageContainer extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.data != this.state.data) {
-            this.props.upd()
+            this.props.forceUPD() //func
             this.setState({ mode_new: true })
         }
     }
@@ -143,7 +142,7 @@ export class StageContainer extends React.Component {
                     isLoaded && data != null
                         ? data.map(item => (
                             <SuperTaskcontext.Provider value={() => { this.updateAndGetMethod() }}>
-                                <SuperTaskContainer task_data={this.props.data} forceUPD={() => this.FORCE_UPDATE()} up={this.props.up} upd={() => this.props.upd()} SetStatus={this.SetStatus} data={item} />
+                                <SuperTaskContainer forceUPD={() => this.FORCE_UPDATE()} up={this.props.up} upd={() => this.func()} SetStatus={this.SetStatus} data={item} />
                             </SuperTaskcontext.Provider>
                         ))
                         : null
@@ -196,9 +195,9 @@ class CreateStageModal extends React.Component {
             error: null,
             text: 'Выбрать исполнителя',
             formTask: '',
-            formTaskStart: null,
-            formTaskFin: null,
-            index: null
+            formTaskStart: '',
+            formTaskFin: '',
+            index: ''
         }
     }
     static contextType = Taskcontext;
@@ -227,9 +226,6 @@ class CreateStageModal extends React.Component {
                             <Form.Control
                                 type="date"
                                 placeholder="Дата начала"
-                                disabled={this.state.formTask === '' ? true : false}
-                                min={formatDate(this.props.task_data.start)}
-                                max={formatDate(this.props.task_data.finish)}
                                 onChange={(e) => { this.setState({ formTaskStart: e.target.value }) }} />
                         </Form.Group>
                         <Form.Group
@@ -239,9 +235,6 @@ class CreateStageModal extends React.Component {
                             <Form.Control
                                 type="date"
                                 placeholder="Дата конца"
-                                disabled={this.state.formTaskStart === null ? true : false}
-                                min={formatDate(this.state.formTaskStart === null ? this.props.task_data.start : this.state.formTaskStart)}
-                                max={formatDate(this.props.task_data.finish)}
                                 onChange={(e) => { this.setState({ formTaskFin: e.target.value }) }} />
                         </Form.Group>
                     </Form.Row>
@@ -277,7 +270,6 @@ class CreateStageModal extends React.Component {
                                         }
                                     )
                             }}
-                                disabled={this.state.formTask === '' || this.state.formTaskStart === null || this.state.formTaskFin === null ? true : false}
                                 variant="outline-success">Создать</Button>
                         }
                     </Stagecontext.Consumer>
@@ -285,20 +277,6 @@ class CreateStageModal extends React.Component {
             </Modal>
         )
     }
-}
-
-function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-
-    return [year, month, day].join('-');
 }
 
 export class CreateSubStageModal extends React.Component {
@@ -310,8 +288,8 @@ export class CreateSubStageModal extends React.Component {
             error: null,
             text: 'Выбрать исполнителя',
             formTask: '',
-            formTaskStart: null,
-            formTaskFin: null,
+            formTaskStart: '',
+            formTaskFin: '',
             index: ''
         }
     }
@@ -341,9 +319,6 @@ export class CreateSubStageModal extends React.Component {
                             <Form.Control
                                 type="date"
                                 placeholder="Дата начала"
-                                disabled={this.state.formTask === '' ? true : false}
-                                min={formatDate(this.props.task_data.start)}
-                                max={formatDate(this.props.task_data.finish)}
                                 onChange={(e) => { this.setState({ formTaskStart: e.target.value }) }} />
                         </Form.Group>
                         <Form.Group
@@ -353,9 +328,6 @@ export class CreateSubStageModal extends React.Component {
                             <Form.Control
                                 type="date"
                                 placeholder="Дата конца"
-                                disabled={this.state.formTaskStart === null ? true : false}
-                                min={formatDate(this.state.formTaskStart === null ? this.props.task_data.start : this.state.formTaskStart)}
-                                max={formatDate(this.props.task_data.finish)}
                                 onChange={(e) => { this.setState({ formTaskFin: e.target.value }) }} />
                         </Form.Group>
                     </Form.Row>
@@ -388,7 +360,6 @@ export class CreateSubStageModal extends React.Component {
                                 }
                             )
                     }}
-                        disabled={this.state.formTask === '' || this.state.formTaskStart === null || this.state.formTaskFin === null ? true : false}
                         variant="outline-success">Создать</Button>
                 </Modal.Footer>
             </Modal>

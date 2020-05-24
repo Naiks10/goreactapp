@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ModuleContainer, CreateSubModuleModal } from './Module'
 import {Row, Col} from "react-bootstrap";
 import { SubButton } from "../Buttons"
-import { Modulecontext, GetDate, GetStatus, ProjectGraphContext } from '../Consts'
+import { Modulecontext, GetDate, GetStatus } from '../Consts'
 import { getJWT } from "../../../Functions/Funcs"
 
 //ProjectContainer 
@@ -85,12 +85,12 @@ export class ProjectContainer extends React.Component {
                                     bottom: 0,
                                     position: "absolute",
                                     zIndex: 2,
-                                    color: 'black',
+                                    color: 'white',
                                     paddingLeft: 6,
                                     paddingRight: 6,
                                     borderRadius: 5,
                                     fontSize: 14,
-                                    backgroundColor: 'white'
+                                    backgroundColor: GetStatus(this.props.data.status.id)
                                 }
                             }><a>{GetDate(this.props.data.start)}-{GetDate(this.props.data.finish)}</a>
                         </div>
@@ -100,9 +100,7 @@ export class ProjectContainer extends React.Component {
                     isLoaded && data != null //if loaded
                         ? data.map(item => (
                             <Modulecontext.Provider value={() => this.GetData()}>
-                                <ProjectGraphContext.Consumer>
-                                    {value => <ModuleContainer exec={()=> value.updateValue()} task_data={this.props.data} data={item} />}
-                                </ProjectGraphContext.Consumer>
+                                <ModuleContainer data={item} />
                             </Modulecontext.Provider>
                         ))
                         : null //else
