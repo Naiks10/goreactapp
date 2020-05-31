@@ -13,32 +13,34 @@ import (
 
 //Main function => Entry point
 func main() {
-	fmt.Println("listening default port")
+	fmt.Println("APP STARTED")
 
 	defer func() {
 		fmt.Println("Server Stopped!")
 	}()
 
+	conf := GetConf()
+
 	router := mux.NewRouter()
 	routes.Register(router)
 
-	router.PathPrefix("/data/").
+	router.PathPrefix(conf.Controller.Data).
 		Handler(
 			http.StripPrefix(
-				"/data/",
-				http.FileServer(http.Dir("./data/")),
+				conf.Controller.Data,
+				http.FileServer(http.Dir("."+conf.Controller.Data)),
 			),
 		)
 
 	spa := utils.SpaHandler{
-		StaticPath: "build",
-		IndexPath:  "index.html",
+		StaticPath: conf.View.Dest,
+		IndexPath:  conf.View.Index,
 	}
 
 	router.PathPrefix("/").Handler(spa)
 
 	server := &http.Server{
-		Addr:           ":8085", //os.Getenv("PORT") //for Heroku hosting
+		Addr:           conf.Controller.Port, //os.Getenv("PORT") //for Heroku hosting
 		Handler:        router,
 		ReadTimeout:    1000 * time.Second,
 		WriteTimeout:   1000 * time.Second,

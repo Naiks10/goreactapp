@@ -85,8 +85,9 @@ type WorkGroup struct {
 
 //Developer structure
 type Developer struct {
-	User    `json:"user"`
-	OSScpec bool `json:"is_outsource" db:"outsource_spec"`
+	User     `json:"user"`
+	OSScpec  bool `json:"is_outsource" db:"outsource_spec"`
+	TestSpec bool `json:"is_tester" db:"tester_spec"`
 }
 
 //WorkGroupList structure
@@ -99,7 +100,8 @@ type WorkGroupList struct {
 
 //Manager structure
 type Manager struct {
-	User `json:"user"`
+	User    `json:"user"`
+	OSScpec bool `json:"is_outsource" db:"outsource_spec"`
 }
 
 //Status structure
@@ -236,6 +238,15 @@ type WorkgroupLstModel struct {
 	Specs         []SpecLst `json:"specs"`
 }
 
+type Note struct {
+	ID       int       `json:"id" db:"note_id"`
+	NoteName string    `json:"name" db:"note_name"`
+	Desc     string    `json:"desc" db:"note_desc"`
+	Date     time.Time `json:"date" db:"note_date"`
+	UserName string    `json:"login" db:"note_client_login"`
+	Task     int       `json:"task" db:"note_task_id"`
+}
+
 /*//IssuesList structure
 type IssuesList struct {
 	ListID      int `json:"id" db:"list_id"`
@@ -266,6 +277,10 @@ type Roles struct {
 	Items []Role `json:"items"`
 }
 
+type Notes struct {
+	Items []Note `json:"items"`
+}
+
 type SpecLsts struct {
 	Items []SpecLst `json:"items"`
 }
@@ -284,6 +299,14 @@ func (t *Roles) GetItems() interface{} {
 
 func (t *SpecLsts) GetItems() interface{} {
 	return &t.Items
+}
+
+func (t *Notes) GetItems() interface{} {
+	return &t.Items
+}
+
+func (t *Notes) Clear() {
+	t.Items = nil
 }
 
 func (t *WorkgroupLstModels) GetItems() interface{} {
@@ -500,4 +523,5 @@ var (
 	ExValue   = Values{}
 	ExSpec    = SpecLsts{}
 	ExWorks   = WorkgroupLstModels{}
+	ExNote    = Notes{}
 )

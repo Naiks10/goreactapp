@@ -57,8 +57,8 @@ class MainNavigation extends React.Component {
                                     </Button>
                                 </div>
                                 <SearchPanel search={this.props.search} />
-                                <ButtonPanel src="/assets/img/filter.png" />
-                                <ButtonPanel src="/assets/img/sort.png" />
+                                {/*<ButtonPanel src="/assets/img/filter.png" />
+                                <ButtonPanel src="/assets/img/sort.png" />*/}
                             </Row>
                         </Col>
                         <Col>
@@ -321,7 +321,7 @@ export class SearchPanel extends React.Component {
                                 paddingRight: 15,
                                 height: 40,
                                 display: 'inline-block',
-  								border: '1px solid #ccc',
+  								border: '0px solid #ccc',
   								boxSizing: 'border-box'
                             }
                         }

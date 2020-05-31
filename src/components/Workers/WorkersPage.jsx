@@ -1,5 +1,5 @@
 import React from "react"
-import { Col, Row, Container, Button, Spinner, Tabs, Tab, Badge } from "react-bootstrap"
+import { Col, Row, Container, Button, Spinner, Tabs, Tab, Badge, Modal, Form } from "react-bootstrap"
 import Highcharts from "highcharts"
 import HighchartsReact from 'highcharts-react-official'
 import { throws } from "assert"
@@ -28,73 +28,77 @@ export class WorkersPage extends React.Component {
 
     //---------|prepare-data-for-component|------------------------------------------
     componentDidMount() {
-        // get JWT
-        var jwt = getJWT()
+      this.upd()
+    }
 
-        //? RESTapi method
-        fetch("/managerslst", {
-            headers: {
-                'Authorization': `Bearer ${jwt}`
-            }
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded_I: true,
-                        Items: result.items
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        error
-                    });
-                }
-            )
+    upd() {
+          // get JWT
+          var jwt = getJWT()
 
-        //? RESTapi method
-        fetch("/developerslst", {
-            headers: {
-                'Authorization': `Bearer ${jwt}`
-            }
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        Orgs: result.items
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        error
-                    });
-                }
-            )
-        //? RESTapi method
-        fetch("/groups?offset=1", {
-            headers: {
-                'Authorization': `Bearer ${jwt}`
-            }
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        Groups: result.items
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded_II: true,
-                        error
-                    });
-                }
-            )
+          //? RESTapi method
+          fetch("/managerslst", {
+              headers: {
+                  'Authorization': `Bearer ${jwt}`
+              }
+          })
+              .then(res => res.json())
+              .then(
+                  (result) => {
+                      this.setState({
+                          isLoaded_I: true,
+                          Items: result.items
+                      });
+                  },
+                  (error) => {
+                      this.setState({
+                          isLoaded_II: true,
+                          error
+                      });
+                  }
+              )
+  
+          //? RESTapi method
+          fetch("/developerslst", {
+              headers: {
+                  'Authorization': `Bearer ${jwt}`
+              }
+          })
+              .then(res => res.json())
+              .then(
+                  (result) => {
+                      this.setState({
+                          isLoaded_II: true,
+                          Orgs: result.items
+                      });
+                  },
+                  (error) => {
+                      this.setState({
+                          isLoaded_II: true,
+                          error
+                      });
+                  }
+              )
+          //? RESTapi method
+          fetch("/groups?offset=1", {
+              headers: {
+                  'Authorization': `Bearer ${jwt}`
+              }
+          })
+              .then(res => res.json())
+              .then(
+                  (result) => {
+                      this.setState({
+                          isLoaded_II: true,
+                          Groups: result.items
+                      });
+                  },
+                  (error) => {
+                      this.setState({
+                          isLoaded_II: true,
+                          error
+                      });
+                  }
+              )
     }
     //---------------------------------------------------------------------
 
@@ -122,6 +126,7 @@ export class WorkersPage extends React.Component {
                                     eventKey="man"
                                     title="Менеджеры">
                                     <div className="box_xs">
+                                        <ManagersElementNew upd={() => {this.upd()}}/>
                                         {// * mapping Managers to ElementGrid
                                             Items.map(item => (
                                                 <ManagersElement data={item}
@@ -134,6 +139,7 @@ export class WorkersPage extends React.Component {
                                     eventKey="work"
                                     title="Разработчики">
                                     <div className="box_xs">
+                                        <DevElementNew />
                                         {// * mapping Workers to ElementGrid
                                             Orgs.map(item => (
                                                 <WorkerElement data={item} />
@@ -145,6 +151,7 @@ export class WorkersPage extends React.Component {
                                     eventKey="group"
                                     title="Рабочие группы">
                                     <div className="box_xs">
+                                        <GroupElementNew />
                                         {// * mapping Groups to ElementGrid
                                             Groups.map(item => (
                                                 <GroupElement data={item} />
@@ -237,6 +244,393 @@ class ClientsElement extends React.Component {
 }
 
 
+// ManagersElementNew class
+class ManagersElementNew extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isContext: false,
+            isImgOver: false,
+            isStatusOver: false,
+            isErrorOver: false,
+            isTasksOver: false,
+            LoadedState: 'start',
+            Showed: false,
+            FormMiddleName: '',
+            FormName: '',
+            FormSurName: '',
+            FormPhone: '',
+            FormMail: '',
+            FormDate: '',
+            FormOS: false,
+        }
+    }
+
+    render() {
+        return (
+            <div style={{ padding: '20px 10px 20px 10px' }}>
+                <div
+                    className="ListElementNew col-xs-auto col-lg-auto"
+                    onMouseLeave={() => {
+                        this.setState({
+                            LoadedState: 'start'
+                        })
+                    }}
+                    onClick={() => {
+                        this.setState({ Showed: true })
+                    }}
+                >
+                    <Col className="hvr-icon-shrink">
+                        <Row style={{ marginTop: 7, marginBottom: 7 }}>
+                            <Col className="d-flex align-items-center justify-content-center">
+                                <img
+                                    style={{ borderRadius: '50%' }}
+                                    className="hvr-icon"
+                                    width="75"
+                                    height="75"
+                                    src="/assets/img/add.png" />
+                            </Col>
+                        </Row>
+                    </Col>
+                </div>
+                <Modal show={this.state.Showed} onHide={() => { this.setState({ Showed: false }) }}>
+                    <Modal.Header>
+                        <Modal.Title>Добавить менеджера</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group>
+                            <Form.Label>Введите фамилию менеджера</Form.Label>
+                            <Form.Control
+                                type="input"
+                                placeholder="Фамилия"
+                                onChange={(e) => {
+                                    this.setState({ FormSurName: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите имя менеджера</Form.Label>
+                            <Form.Control
+                                type="input"
+                                placeholder="Имя"
+                                onChange={(e) => {
+                                    this.setState({ FormName: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите отчество менеджера</Form.Label>
+                            <Form.Control
+                                type="input"
+                                placeholder="Отчество"
+                                onChange={(e) => {
+                                    this.setState({ FormMiddleName: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите дату рождения менеджера</Form.Label>
+                            <Form.Control
+                                type="date"
+                                placeholder="Дата"
+                                onChange={(e) => {
+                                    this.setState({ FormDate: e.target.valueAsDate })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите телефон менеджера</Form.Label>
+                            <Form.Control
+                                as="input"
+                                type="tel"
+                                pattern="8[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}"
+                                placeholder="Телефон"
+                                onChange={(e) => {
+                                    this.setState({ FormPhone: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите почту менеджера</Form.Label>
+                            <Form.Control
+                                as="input"
+                                type="email"
+                                
+                                placeholder="Почта"
+                                onChange={(e) => {
+                                    this.setState({ FormMail: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Аут-соурс</Form.Label>
+                            <Form.Check
+                                id="swth"
+                                type="switch"
+                                label="Аут-соурс"
+                                onChange={(e) => {
+                                    this.setState({ FormOS: e.target.value == "on" ? true : false })
+                                }} />
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => {
+                            var password = Math.random().toString(36).slice(-8);
+                            fetch('/managers', {
+                                method : 'POST',
+                                headers : {
+                                    'Authorization' : `Bearer ${getJWT()}`
+                                },
+                                body : JSON.stringify({
+                                    user : {
+                                        login : this.state.FormName.charAt(0).toLowerCase()
+                                                + '.' + this.state.FormSurName.toLowerCase() + parseFloat(Math.random() * 10).toFixed(3),
+                                        password : password,
+                                        surname : this.state.FormSurName,
+                                        name : this.state.FormName,
+                                        midname : this.state.FormMiddleName,
+                                        birthdate : this.state.FormDate,
+                                        phone : this.state.FormPhone,
+                                        mail : this.state.FormMail
+                                    },
+                                    is_outsource : this.state.FormOS == true
+                                })
+                            }).then(
+                                () => {
+                                    
+                                    this.setState({ Showed: false })
+                                    this.props.upd()
+                                    alert('Пароль для аккуанта : ' + password)
+                                }
+                            )
+                            
+                        }} variant="outline-success">Создать</Button>
+                        <Button onClick={() => {
+                            this.setState({ Showed: false })
+                        }} variant="primary">Отмена</Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        )
+    }
+}
+
+
+// DevElementNew class
+class DevElementNew extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isContext: false,
+            isImgOver: false,
+            isStatusOver: false,
+            isErrorOver: false,
+            isTasksOver: false,
+            LoadedState: 'start',
+            Showed: false,
+            FormMiddleName: '',
+            FormName: '',
+            FormSurName: '',
+            FormPhone: '',
+            FormMail: '',
+            FormDate: '',
+            FormOS: false,
+            FormTest : false
+        }
+    }
+
+    render() {
+        return (
+            <div style={{ padding: '20px 10px 20px 10px' }}>
+                <div
+                    className="ListElementNew col-xs-auto col-lg-auto"
+                    onMouseLeave={() => {
+                        this.setState({
+                            LoadedState: 'start'
+                        })
+                    }}
+                    onClick={() => {
+                        this.setState({ Showed: true })
+                    }}
+                >
+                    <Col className="hvr-icon-shrink">
+                        <Row style={{ marginTop: 7, marginBottom: 7 }}>
+                            <Col className="d-flex align-items-center justify-content-center">
+                                <img
+                                    style={{ borderRadius: '50%' }}
+                                    className="hvr-icon"
+                                    width="75"
+                                    height="75"
+                                    src="/assets/img/add.png" />
+                            </Col>
+                        </Row>
+                    </Col>
+                </div>
+                <Modal show={this.state.Showed} onHide={() => { this.setState({ Showed: false }) }}>
+                    <Modal.Header>
+                        <Modal.Title>Добавить разработчика</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group>
+                            <Form.Label>Введите фамилию разработчика</Form.Label>
+                            <Form.Control
+                                type="input"
+                                placeholder="Фамилия"
+                                onChange={(e) => {
+                                    this.setState({ FormSurName: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите имя разработчика</Form.Label>
+                            <Form.Control
+                                type="input"
+                                placeholder="Имя"
+                                onChange={(e) => {
+                                    this.setState({ FormName: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите отчество разработчика</Form.Label>
+                            <Form.Control
+                                type="input"
+                                placeholder="Отчество"
+                                onChange={(e) => {
+                                    this.setState({ FormMiddleName: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите дату рождения разработчика</Form.Label>
+                            <Form.Control
+                                type="date"
+                                placeholder="Дата"
+                                onChange={(e) => {
+                                    this.setState({ FormDate: e.target.valueAsDate })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите телефон разработчика</Form.Label>
+                            <Form.Control
+                                as="input"
+                                type="tel"
+                                pattern="8[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}"
+                                placeholder="Телефон"
+                                onChange={(e) => {
+                                    this.setState({ FormPhone: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Введите почту разработчика</Form.Label>
+                            <Form.Control
+                                as="input"
+                                type="email"
+                                
+                                placeholder="Почта"
+                                onChange={(e) => {
+                                    this.setState({ FormMail: e.target.value })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Аут-соурс</Form.Label>
+                            <Form.Check
+                                id="swth"
+                                type="switch"
+                                label="Аут-соурс"
+                                onChange={(e) => {
+                                    this.setState({ FormOS: e.target.value == "on" ? true : false })
+                                }} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Тестировщик</Form.Label>
+                            <Form.Check
+                                id="test"
+                                type="switch"
+                                label="Тестировщик"
+                                onChange={(e) => {
+                                    this.setState({ FormTest: e.target.value == "on" ? true : false })
+                                }} />
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => {
+                            var password = Math.random().toString(36).slice(-8);
+                            fetch('/devs', {
+                                method : 'POST',
+                                headers : {
+                                    'Authorization' : `Bearer ${getJWT()}`
+                                },
+                                body : JSON.stringify({
+                                    user : {
+                                        login : this.state.FormName.charAt(0).toLowerCase()
+                                                + '.' + this.state.FormSurName.toLowerCase() + parseFloat(Math.random() * 10).toFixed(3),
+                                        password : password,
+                                        surname : this.state.FormSurName,
+                                        name : this.state.FormName,
+                                        midname : this.state.FormMiddleName,
+                                        birthdate : this.state.FormDate,
+                                        phone : this.state.FormPhone,
+                                        mail : this.state.FormMail
+                                    },
+                                    is_outsource : this.state.FormOS == true,
+                                    is_tester : this.state.FormTest == true
+                                })
+                            }).then(
+                                () => {
+                                    alert('Пароль для аккуанта : ' + password)
+                                    this.setState({ Showed: false })
+                                }
+                            )
+                            
+                        }} variant="outline-success">Создать</Button>
+                        <Button onClick={() => {
+                            this.setState({ Showed: false })
+                        }} variant="primary">Отмена</Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        )
+    }
+}
+
+// GroupElementNew class
+class GroupElementNew extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isContext: false,
+            isImgOver: false,
+            isStatusOver: false,
+            isErrorOver: false,
+            isTasksOver: false,
+            LoadedState: 'start'
+        }
+    }
+
+    render() {
+        return (
+            <div style={{ padding: '20px 10px 20px 10px' }}>
+                <div
+                    className="ListElementNew col-xs-auto col-lg-auto"
+                    onMouseLeave={() => {
+                        this.setState({
+                            LoadedState: 'start'
+                        })
+                    }}
+                    onClick={() => {
+
+                    }}
+                >
+                    <Col className="hvr-icon-shrink">
+                        <Row style={{ marginTop: 7, marginBottom: 7 }}>
+                            <Col className="d-flex align-items-center justify-content-center">
+                                <img
+                                    style={{ borderRadius: '50%' }}
+                                    className="hvr-icon"
+                                    width="40"
+                                    height="40"
+                                    src="/assets/img/add.png" />
+                            </Col>
+                        </Row>
+                    </Col>
+                </div>
+            </div>
+        )
+    }
+}
+
 // ManagersElement class
 class ManagersElement extends React.Component {
     constructor(props) {
@@ -285,8 +679,6 @@ class ManagersElement extends React.Component {
             </div>
         )
     }
-
-
 }
 
 // WorkersElemet class
@@ -313,14 +705,14 @@ class WorkerElement extends React.Component {
                             LoadedState: 'start'
                         })
                     }}
-                    style={{position : 'relative'}}
+                    style={{ position: 'relative' }}
                     onClick={() => {
                         history.push({ pathname: `/workspace/devs/${this.props.data.developer_login}` })
                     }}
                 >
-                    <Row style={{position : 'absolute', right : 20, top : 7}}>
-                        <h5><Badge style={{marginRight : 5}} variant="warning">QA</Badge></h5>
-                        <h5><Badge style={{marginRight : 5}}   variant="primary">ITO</Badge></h5>
+                    <Row style={{ position: 'absolute', right: 20, top: 7 }}>
+                        <h5> { this.props.data.tester_spec == 'true' ? <Badge style={{ marginRight: 5 }} variant="warning">QA</Badge> : null}</h5>
+                        <h5>{ this.props.data.outsource_spec == 'true' ? <Badge style={{ marginRight: 5 }} variant="primary">ITO</Badge> : null}</h5>
                     </Row>
                     <Col>
                         <Row style={{ marginTop: 7, marginBottom: 7 }}>
@@ -356,7 +748,7 @@ class GroupElement extends React.Component {
         super(props)
         this.state = {
             isContext: false,
-            isLoaded : false,
+            isLoaded: false,
             isImgOver: false,
             isStatusOver: false,
             isErrorOver: false,
@@ -374,7 +766,7 @@ class GroupElement extends React.Component {
         })
             .then(res => res.json())
             .then((result) => {
-                this.setState({ srcs: result.items, isLoaded : true })
+                this.setState({ srcs: result.items, isLoaded: true })
             })
     }
 
@@ -390,7 +782,7 @@ class GroupElement extends React.Component {
                         })
                     }}
                     onClick={() => {
-                        history.push({ pathname: `/workspace/projects/${this.props.data.id}` })
+                        history.push({ pathname: `/workspace/groups/${this.props.data.id}` })
                     }}
                 >
                     <Col>
@@ -399,16 +791,16 @@ class GroupElement extends React.Component {
                                 <div className="d-flex align-items-center justify-content-center">
                                     {
                                         this.state.isLoaded && this.state.srcs != null
-                                        ? this.state.srcs.map(
-                                            (value, index) => (
-                                                <img
-                                                    style={{ borderRadius: '50%', position: 'relative', left : (14 - 14*index), borderColor: 'white', borderWidth: 3, borderStyle: 'solid' }}
-                                                    width="40"
-                                                    height="40"
-                                                    src={value.src} />
+                                            ? this.state.srcs.map(
+                                                (value, index) => (
+                                                    <img
+                                                        style={{ borderRadius: '50%', position: 'relative', left: (14 - 14 * index), borderColor: 'white', borderWidth: 3, borderStyle: 'solid' }}
+                                                        width="40"
+                                                        height="40"
+                                                        src={value.src} />
+                                                )
                                             )
-                                        )
-                                        : null
+                                            : null
                                     }
                                 </div>
                             </Col>

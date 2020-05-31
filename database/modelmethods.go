@@ -14,6 +14,10 @@ func (t *WorkgroupLstModels) GetItem() interface{} {
 	return &t.Items[0]
 }
 
+func (t *Notes) GetItem() interface{} {
+	return &t.Items[0]
+}
+
 func (t *SpecLsts) GetItem() interface{} {
 	return &t.Items[0]
 }
@@ -75,6 +79,10 @@ func (t *SpecLsts) GetPrimaryKey() string {
 }
 
 func (t *WorkgroupLstModels) GetPrimaryKey() string {
+	return GetTag(t.Items)
+}
+
+func (t *Notes) GetPrimaryKey() string {
 	return GetTag(t.Items)
 }
 

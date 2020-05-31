@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Modal, Form, Button, Accordion, Card } from "react-bootstrap";
-import { getJWT } from "../../../Functions/Funcs"
+import { getJWT, getLogin } from "../../../Functions/Funcs"
 import { ProjectValueContext } from "../Consts";
 
 export class IssueContainer extends React.Component {
@@ -125,6 +125,66 @@ export class IssueContainer extends React.Component {
     }
 }
 
+export class NoteContainer extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isShow: false
+        }
+    }
+
+
+    componentDidMount() {
+        console.log(this.props.children)
+        if (this.props.children !== null) {
+
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <img src="/assets/img/notes.png" onClick={() => this.setState({isShow : true})} width="20" height="20" style={{marginRight : 10}} />
+                {this.state.isShow ?
+                    <Modal centered size="lg" show={this.state.isShow} onHide={() => this.setState({ isShow: false })}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Список правок <Button onClick={() => this.props.onCreate()} style={{ marginLeft: 20 }} variant="primary">Создать</Button></Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Accordion>
+                                {this.props.data.map((child, i) => {
+                                    return (
+                                        <Card>
+                                            <Card.Header>
+                                                <Row>
+                                                    <Col xs={6}>
+                                                        <Accordion.Toggle as={Button} variant="link" eventKey={i}>
+                                                            {child.name} ({(() => {
+                                                                var dt = new Date(child.date)
+                                                                return dt.toLocaleDateString("ru-RU")
+                                                            })()})
+                                                    </Accordion.Toggle>
+                                                    </Col>
+                                                    <Col style={{ position: 'relative' }}>
+                                                        <a style={{ position : 'absolute', right : 10, top : 0, bottom : 0}}>@{child.login}</a>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Header>
+                                            <Accordion.Collapse eventKey={i}>
+                                                <Card.Body>{child.desc}</Card.Body>
+                                            </Accordion.Collapse>
+                                        </Card>
+                                    )
+                                })}
+                            </Accordion>
+                        </Modal.Body>
+                    </Modal>
+                    : null}
+            </div>
+        )
+    }
+}
+
 export class CreateIssueModal extends React.Component {
     constructor(props) {
         super(props)
@@ -186,6 +246,87 @@ export class CreateIssueModal extends React.Component {
                                         name: this.state.formTask,
                                         desc: this.state.formDesc,
                                         issue_task: this.props.task_data.id
+                                    })
+                                })
+                                    .then(
+                                        () => {
+                                            this.props.onHide()
+                                            this.props.update()
+                                            value.updateValue(value.id)
+                                        }
+                                    )
+                            }}
+                                variant="outline-success">Создать</Button>
+                        }
+                    </ProjectValueContext.Consumer>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+}
+
+export class CreateNoteModal extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            data: [],
+            isLoaded: false,
+            error: null,
+            text: 'Выбрать исполнителя',
+            formTask: '',
+            formDesc: '',
+            formTaskStart: null,
+            formTaskFin: null,
+            index: ''
+        }
+    }
+
+    render() {
+        return (
+            <Modal
+                {...this.props}
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title>Создать новую правку</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group controlId="formBasicName">
+                        <Form.Label>Название правки</Form.Label>
+                        <Form.Control
+                            placeholder="Введите название проблемы"
+                            onChange={(e) => { this.setState({ formTask: e.target.value }) }} />
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                        <Form.Label>Описание правки</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows="5"
+                            placeholder="Опишите свою проблему"
+                            onChange={(e) => { this.setState({ formDesc: e.target.value }) }} />
+                    </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        onClick={() => {
+                            this.props.onHide();
+                            this.setState({ text: 'Выбрать исполнителя' })
+                        }}
+                        variant="outline-primary">Отмена</Button>
+                    <ProjectValueContext.Consumer>
+                        {value =>
+                            <Button onClick={() => {
+                                fetch('/notes', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${getJWT()}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        name: this.state.formTask,
+                                        desc: this.state.formDesc,
+                                        task: this.props.task_data.id,
+                                        login : getLogin()
                                     })
                                 })
                                     .then(

@@ -10,9 +10,9 @@ var (
 		{path: "/orgs", function: functions.CreateOrg},
 		{path: "/clients", function: functions.CreateClient},
 		{path: "/groups", function: functions.CreateGroup},
-		{path: "/devs", function: functions.CreateDeveloper},
+		{path: "/devs", function: functions.CreateDeveloperOne},
 		{path: "/projects", function: functions.CreateProjects},
-		{path: "/managers", function: functions.CreateManager},
+		{path: "/managers", function: functions.CreateManagerOne},
 		{path: "/tasks", function: functions.CreateTask},
 		{path: "/subtasks", function: functions.CreateSubTask},
 		{path: "/stages", function: functions.CreateStage},
@@ -23,6 +23,7 @@ var (
 		{path: "/uploaduser", function: functions.UploadUser},
 		{path: "/uploaddoc", function: functions.UploadDoc},
 		{path: "/uploadorg", function: functions.UploadOrg},
+		{path: "/notes", function: functions.CreateNote},
 	}
 
 	//ReadAllData slice to get all data from model
@@ -51,6 +52,7 @@ var (
 		{path: "/stat_fact/{id}", function: functions.GraphFact},
 		{path: "/files/{id}", function: functions.FileList},
 		{path: "/workersprev", function: functions.WorkersList},
+		{path: "/notes", function: functions.Notes},
 	}
 
 	//ReadOne slice to get current data from model

@@ -57,12 +57,12 @@ func (con *PostgreSQLConnection) OpenConnection() (bool, error) {
 		fmt.Println(err)
 		defer func() {
 			con.DB = db
-			fmt.Println("database opened")
+			//fmt.Println("database opened")
 		}()
 	} else {
 		isError, what = false, err
 		con.DB = db
-		fmt.Println("database opened")
+		//fmt.Println("database opened")
 	}
 
 	return isError, what

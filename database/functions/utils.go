@@ -16,6 +16,11 @@ import (
 
 //---ENTRY-VARIABLES---//
 
+func SetDB(driver string, setting string) {
+	database.Inizialize(setting, driver)
+	db = database.DBexist()
+}
+
 var db = database.DB()
 
 var pg = postgres.RunWith(db.DB)
@@ -30,13 +35,17 @@ func JSONGetAll(table database.Table, w http.ResponseWriter, r *http.Request, sb
 
 	if params != nil {
 		errs := db.DB.Select(table.GetItems(), query, params...)
-		fmt.Println("hello", errs, query)
+		if errs != nil {
+			fmt.Println("error :", errs.Error())
+		}
 	} else {
 		errs := db.DB.Select(table.GetItems(), query)
-		fmt.Println("bey", errs)
+		if errs != nil {
+			fmt.Println("error :", errs.Error())
+		}
+
 	}
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println(table, "|||", params)
 	json.NewEncoder(w).Encode(table)
 	table.Clear()
 }
@@ -49,13 +58,17 @@ func JSONGetAllRaw(table database.Table, w http.ResponseWriter, r *http.Request,
 
 	if params != nil {
 		errs := db.DB.Select(table.GetItems(), query, params[0])
-		fmt.Println("hello", errs)
+		if errs != nil {
+			fmt.Println("error :", errs.Error())
+		}
 	} else {
 		errs := db.DB.Select(table.GetItems(), query)
-		fmt.Println("bey", errs)
+		if errs != nil {
+			fmt.Println("error :", errs.Error())
+		}
+
 	}
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println(table, "|||", params)
 	json.NewEncoder(w).Encode(table)
 	table.Clear()
 }
@@ -69,13 +82,16 @@ func JSONGetAll1(table database.Table, w http.ResponseWriter, r *http.Request, s
 
 	if params != nil {
 		errs := db.DB.Select(table.GetItems(), query, params[0])
-		fmt.Println("hello", errs)
+		if errs != nil {
+			fmt.Println("error :", errs.Error())
+		}
 	} else {
 		errs := db.DB.Select(table.GetItems(), query)
-		fmt.Println("bey", errs)
+		if errs != nil {
+			fmt.Println("error :", errs.Error())
+		}
 	}
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println(table, "|||", params)
 	e, _ := json.Marshal(table)
 	json.NewEncoder(w).Encode(table)
 	table.Clear()
@@ -101,8 +117,6 @@ func JSONGetOne(table database.Table, w http.ResponseWriter, r *http.Request, sb
 	type Item struct {
 		Data interface{} `json:"data"`
 	}
-
-	fmt.Println(val)
 
 	query, params, queryErr := exSb.
 		Where(sqrl.Eq{table.GetPrimaryKey(): val}).
@@ -173,7 +187,6 @@ func InsertNewData(table interface{}, w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = json.Unmarshal(b, &table)
-	fmt.Println("inInsert", table)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

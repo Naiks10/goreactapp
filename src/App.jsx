@@ -19,6 +19,7 @@ import { OrgViewPage } from './components/Clients/OrgPage'
 import { ManagerViewPage } from './components/Workers/ManagerPage'
 import { WorkerViewPage } from './components/Workers/WorkerPage'
 import { TestView } from './Debug'
+import { GroupViewPage } from './components/Workers/GroupPage'
 
 //#--consts-with-pages--#//
 
@@ -68,8 +69,6 @@ function MainView() {
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/clients" text="Клиенты" src="assets/img/users.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
-                  <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
-                  <BackMenuButton path="/workspace/settings" text="Отладка" src="assets/img/debug_ico.png" />
                 </BackMenu>
               )
             case '2': //manager
@@ -79,7 +78,6 @@ function MainView() {
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/clients" text="Клиенты" src="assets/img/users.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
-                  <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
                 </BackMenu>
               )
             case '3': //developer-head
@@ -88,7 +86,7 @@ function MainView() {
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
-                  <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
+                  
                 </BackMenu>
               )
               break;
@@ -98,7 +96,7 @@ function MainView() {
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
-                  <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
+                  
                 </BackMenu>
               )
               break;
@@ -108,7 +106,7 @@ function MainView() {
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/workers" text="Сотрудники" src="assets/img/customer.png" />
-                  <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
+                  
                 </BackMenu>
               )
               break;
@@ -118,7 +116,7 @@ function MainView() {
                   <MainMenuButton />
                   <BackMenuButton path="/workspace/projects" text="Проекты" src="assets/img/orders.png" />
                   <BackMenuButton path="/workspace/clients" text="Клиенты" src="assets/img/users.png" />
-                  <BackMenuButton path="/workspace/settings" text="Настройки" src="assets/img/options.png" />
+                  
                 </BackMenu>
               )
               break;
@@ -143,6 +141,7 @@ function MainView() {
                     <Route path="/workspace/orgs/:id" component={OrgViewPage} />
                     <Route path="/workspace/managers/:id" component={ManagerViewPage} />
                     <Route path="/workspace/devs/:id" component={WorkerViewPage} />
+                    <Route path="/workspace/groups/:id" component={GroupViewPage} />
                     <Route path="/workspace/debug" component={TestView} />
                   </Switch>
                 )

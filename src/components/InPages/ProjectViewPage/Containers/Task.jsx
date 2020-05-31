@@ -1,6 +1,6 @@
 import React from "react";
 import axios from 'axios';
-import { IssueContainer, CreateIssueModal } from "./Issue"
+import { IssueContainer, CreateIssueModal, CreateNoteModal, NoteContainer } from "./Issue"
 import { Row, Col, Modal, Form, Button, Dropdown, ButtonGroup } from "react-bootstrap";
 import { Loading } from './LoadingContainer'
 import { AddButton, EditButton, DeleteButton, SubButton, IssueButton, CalendButton, StatusButton } from "../Buttons"
@@ -17,6 +17,7 @@ export class SuperTaskContainer extends React.Component {
         this.state = {
             data: [],
             data_iss: [],
+            data_not: [],
             isLoaded: false,
             error: null,
             isOvered: false,
@@ -26,6 +27,7 @@ export class SuperTaskContainer extends React.Component {
             isShowedSub: false,
             isShowedIssue: false,
             isShowedStatus: false,
+            isShowedNote: false,
             task_status: 2,
             task_array: [],
             task_data: this.props.data,
@@ -154,11 +156,23 @@ export class SuperTaskContainer extends React.Component {
                     isLoaded: true
                 })
             })
+            axios.get(`/notes?task=${this.state.task_data.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${getJWT()}`
+                }
+            })
+                .then(res => {
+                    const data = res.data;
+                    this.setState({
+                        data_not: data.items,
+                        isLoaded: true
+                    })
+                })
     }
 
     render() {
         console.log(this.state.task_array)
-        const { isLoaded, data, error, data_iss, isOvered, isShowedCreate, isShowedEdit, isShowedDelete, isShowedSub, isShowedIssue, isShowedStatus } = this.state;
+        const { isLoaded, data, error, data_iss, isOvered, isShowedCreate, isShowedNote, isShowedEdit, isShowedDelete, isShowedSub, isShowedIssue, isShowedStatus } = this.state;
         return (
             <div
                 className={`Item_task${this.state.task_status}`}
@@ -182,7 +196,7 @@ export class SuperTaskContainer extends React.Component {
                                     color: this.state.task_status <= 1 ? '#6e6e6e' : 'black',
                                     textDecoration: this.state.task_status <= 1 ? 'line-through' : null
                                 }
-                            }>Задача "{this.state.task_data.name}"</div>
+                            }> { this.state.data_not != null ? <img src="/assets/img/notes.png" width="20" height="20" style={{marginRight : 10}} /> : null} Задача "{this.state.task_data.name}"</div>
                         {
                             isOvered
                                 ? <Row style={{ marginLeft: 10 }}>
@@ -191,7 +205,7 @@ export class SuperTaskContainer extends React.Component {
                                     <DeleteButton onClick={() => this.setState({ isShowedDelete: true })} />
                                     <StatusButton onClick={() => this.setState({ isShowedStatus: true })} />
                                     <SubButton onClick={() => this.setState({ isShowedSub: true })} />
-                                    <IssueButton onClick={() => this.setState({ isShowedIssue: true })} />
+                                    <IssueButton onClickNote={() => this.setState({ isShowedNote: true })} onClickIssue={() => this.setState({ isShowedIssue: true })} />
                                 </Row>
                                 : null
                         }
@@ -282,6 +296,15 @@ export class SuperTaskContainer extends React.Component {
                                     : null
                             }
                             {
+                                isShowedNote
+                                    ? <CreateNoteModal
+                                        task_data={this.props.data}
+                                        update={() => this.GetAll()}
+                                        show={this.state.isShowedNote}
+                                        onHide={() => this.setState({ isShowedNote: false })} />
+                                    : null
+                            }
+                            {
                                 isShowedIssue
                                     ? <CreateIssueModal
                                         task_data={this.state.task_data}
@@ -319,6 +342,7 @@ class TaskContainer extends React.Component {
         this.state = {
             data: [],
             data_iss: [],
+            data_not : [],
             task_data: this.props.data,
             isLoaded: false,
             error: null,
@@ -329,6 +353,7 @@ class TaskContainer extends React.Component {
             isShowedSub: false,
             isShowedIssue: false,
             isShowedStatus: false,
+            isShowedNote : false,
             task_status: 2,
             task_array: [],
             active_issue: -1
@@ -445,11 +470,23 @@ class TaskContainer extends React.Component {
                     isLoaded: true
                 })
             })
+            axios.get(`/notes?task=${this.state.task_data.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${getJWT()}`
+                }
+            })
+                .then(res => {
+                    const data = res.data;
+                    this.setState({
+                        data_not: data.items,
+                        isLoaded: true
+                    })
+                })
     }
 
 
     render() {
-        const { isLoaded, data, error, data_iss, isShowedStatus, isOvered, isShowedCreate, isShowedEdit, isShowedDelete, isShowedSub, isShowedIssue } = this.state;
+        const { isLoaded, data, error, isShowedNote, data_iss, isShowedStatus, isOvered, isShowedCreate, isShowedEdit, isShowedDelete, isShowedSub, isShowedIssue } = this.state;
         console.log(data)
         return (
             <div className={`Item_task${this.state.task_status}`} style={{ borderLeft: `3px solid ${GetStatus(this.state.task_status)}`, backgroundColor: this.state.task_data.developer.login === getLogin() ? GetStatusAlpha(this.state.task_status) : 'white' }}>
@@ -458,7 +495,7 @@ class TaskContainer extends React.Component {
                     <div className="d-flex align-items-center" style={{
                         zIndex: 1, paddingTop: 4, paddingBottom: 4, color: this.state.task_status <= 1 ? '#6e6e6e' : 'black',
                         textDecoration: this.state.task_status <= 1 ? 'line-through' : null
-                    }}><img src="/assets/img/notes.png" width="20" height="20" style={{marginRight : 10}} />
+                    }}>{ this.state.data_not != null ? <NoteContainer onCreate={() => this.setState({isShowedNote : true})} data={this.state.data_not}/> : null}
                         Задача "{this.state.task_data.name}"</div>
                     {
                         isOvered
@@ -468,7 +505,7 @@ class TaskContainer extends React.Component {
                                 <DeleteButton onClick={() => this.setState({ isShowedDelete: true })} />
                                 <StatusButton onClick={() => this.setState({ isShowedStatus: true })} />
                                 <SubButton onClick={() => this.setState({ isShowedSub: true })} />
-                                <IssueButton onClick={() => this.setState({ isShowedIssue: true })} />
+                                <IssueButton onClickNote={() => this.setState({ isShowedNote: true })} onClickIssue={() => this.setState({ isShowedIssue: true })} />
                             </Row>
                             : null
                     }
@@ -547,6 +584,15 @@ class TaskContainer extends React.Component {
                                         update={() => this.GetAll()}
                                         show={this.state.isShowedIssue}
                                         onHide={() => this.setState({ isShowedIssue: false })} />
+                                    : null
+                            }
+                            {
+                                isShowedNote
+                                    ? <CreateNoteModal
+                                        task_data={this.props.data}
+                                        update={() => this.GetAll()}
+                                        show={this.state.isShowedNote}
+                                        onHide={() => this.setState({ isShowedNote: false })} />
                                     : null
                             }
                             {

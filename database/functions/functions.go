@@ -57,12 +57,9 @@ var (
 		"phone_num",
 		"email_addr",
 		"user_image_src",
-		"outsource_spec",
-		"role_id",
-		"role_name").
+		"outsource_spec").
 		From("developers").
-		Join("users ON user_login = developer_login").
-		Join("roles ON user_role = role_id")
+		Join("users ON user_login = developer_login")
 
 	//SelectStatus as SELECT func
 	SelectStatus = postgres.Select("*").From("status") //+
@@ -181,10 +178,17 @@ var (
 		Join("status ON status_id = project_status_id")
 	//SelectManagers as SELECT func
 	SelectManagers = postgres.
-			Select("user_login", "user_surname", "user_name", "user_midname", "user_birthdate", "user_phone", "user_email", "role_id", "role_name").
-			From("managers").
-			Join("users ON users.user_login = managers.manager_user_login").
-			Join("roles ON users.user_role = role_id")
+			Select("user_login",
+			"sur_name",
+			"first_name",
+			"middle_name",
+			"birth_date",
+			"phone_num",
+			"email_addr",
+			"user_image_src",
+			"outsource_spec").
+		From("managers").
+		Join("users ON users.user_login = managers.manager_login")
 
 	//SelectModules as SELECT func
 	SelectModules = postgres.
@@ -272,6 +276,10 @@ var (
 			issue_name, issue_desc, issue_date, issue_task_id, issue_close_status
 FROM  issues`)
 
+	//SelectIssues as SELECT func
+	SelectNotes = postgres.
+			Select(`*
+FROM  notes`)
 	//SelectWorkers as SELECT func
 	SelectWorkers = postgres.
 			Select(`developer_login,
@@ -359,6 +367,7 @@ JOIN  organisations ON organisation_id = client_organisation_id`)
 	phone_num,
 	email_addr,
 	user_image_src,
+	outsource_spec,
 	(
 		SELECT COUNT(*) FROM projects WHERE project_manager_login = manager_login
 	) as COUNT,
@@ -374,7 +383,9 @@ JOIN  organisations ON organisation_id = client_organisation_id`)
 	developer_login,
 	phone_num,
 	email_addr,
-	user_image_src
+	user_image_src,
+	outsource_spec,
+	tester_spec
 	FROM  developers
 	JOIN  users ON user_login = developer_login`)
 )

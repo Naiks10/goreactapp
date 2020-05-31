@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"goreactapp/database/postgres"
 )
 
@@ -24,8 +23,11 @@ func Inizialize(connection, driver string) (bool, error) {
 	}
 
 	isConnectedSuccessfully, err := mySiteDataBaseConnection.OpenConnection()
-	fmt.Println(isConnectedSuccessfully)
-	fmt.Println(err)
+	//fmt.Println(isConnectedSuccessfully)
+	//fmt.Println(err)
+	if err != nil {
+		panic(err)
+	}
 	return isConnectedSuccessfully, err
 }
 

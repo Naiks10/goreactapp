@@ -1,5 +1,6 @@
 import React from "react"
 import { GetStatus } from './Consts'
+import { Modal, Button} from "react-bootstrap"
 
 export class AddButton extends React.Component {
     constructor(props) {
@@ -90,12 +91,15 @@ export class DeleteButton extends React.Component {
 export class IssueButton extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            visible : false
+        }
     }
     render() {
         return (
 
             <div
-                onClick={this.props.onClick}
+                onClick={() => this.setState({visible : true})}
                 className="d-flex align-items-center InButton"
                 style={style.ButtonStyle}>
                 <div className="d-flex justify-content-center align-items-center">
@@ -104,6 +108,26 @@ export class IssueButton extends React.Component {
                         width="20"
                         height="20" />
                 </div>
+                <Modal
+                show={this.state.visible}
+                onHide={() => this.setState({visible : false})}
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title>Выберите действие</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer style={{ position: 'relative' }}>
+                    <Button
+                        onClick={() => this.setState({visible : false})}
+                        variant="outline-primary">Отмена</Button>
+                    <Button
+                        onClick={() => { this.props.onClickNote(); this.setState({visible : false}) }}
+                        variant="outline-success">Добавить правку</Button>
+                        <Button
+                        onClick={() => { this.props.onClickIssue(); this.setState({visible : false}) }}
+                        variant="outline-warning">Добавить проблему</Button>
+                </Modal.Footer>
+            </Modal>
             </div>
         )
     }

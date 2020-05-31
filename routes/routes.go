@@ -67,23 +67,29 @@ func Register(r *mux.Router) {
 
 	//#--< GET >queries--#//
 
-	fmt.Println("Создайте новый ключ-пароль для входа в панель администратора :")
+	//fmt.Println("Создайте новый ключ-пароль для входа в панель администратора :")
 	//fmt.Fscan(os.Stdin, &sessionAdminKey)
-	fmt.Println("Пароль успещно создан")
+	//fmt.Println("Пароль успещно создан")
 
 	//sessionAdminKey = wordGenerator.GetWord(128)
 
-	fmt.Println("session key for admin =>  | ", sessionAdminKey, " | ")
+	//fmt.Println("session key for admin =>  | ", sessionAdminKey, " | ")
 
 	r.HandleFunc("/admin", subdomainIndexHandler)
 	r.HandleFunc("/admin/login", postHandler).Methods("POST")
 	r.HandleFunc("/get-token", security.GetTokenHandler).Methods("POST")
 
-	StartRouting(r, GET, ReadAllData)
-	StartRouting(r, GET, ReadOne)
-	StartRouting(r, POST, CreateData)
-	StartRouting(r, PUT, UpdateOne)
-	StartRouting(r, DELETE, DeleteOne)
+	//var waitgroup sync.WaitGroup
+
+	//waitgroup.Add(5)
+	//{
+	StartRouting(r, GET, ReadAllData /*&waitgroup*/)
+	StartRouting(r, GET, ReadOne /*&waitgroup*/)
+	StartRouting(r, POST, CreateData /*&waitgroup*/)
+	StartRouting(r, PUT, UpdateOne /*&waitgroup*/)
+	StartRouting(r, DELETE, DeleteOne /*&waitgroup*/)
+	//}
+	//waitgroup.Wait()
 
 	fmt.Println("status : all RESTapi requests registered1")
 }

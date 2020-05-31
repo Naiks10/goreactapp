@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"goreactapp/security"
 	"goreactapp/utils"
 	"net/http"
@@ -33,9 +34,11 @@ func (_route *route) Init() {
 }
 
 //StartRouting function get slice of routes and prepare it for listen
-func StartRouting(router *mux.Router, HTTPMethod string, routes []route) {
+func StartRouting(router *mux.Router, HTTPMethod string, routes []route /*, wg *sync.WaitGroup*/) {
 	for _, value := range routes {
 		value.Init()
 		router.Handle(value.path, value.function).Methods(HTTPMethod)
 	}
+	fmt.Println("->", HTTPMethod, "methods registred successfully")
+	//wg.Done()
 }

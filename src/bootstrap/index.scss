@@ -111,6 +111,40 @@ $newcolor : theme-color("danger");
   cursor: pointer;
 }
 
+.ListElementNew {
+  background-color : transparent;
+  //width: 100%;
+  //height: 131px;
+  padding-left: 27px;
+  padding-right: 27px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  //margin: 20px 10px;
+  border-radius : 8px;
+  border-color: rgba(32, 153, 209, 0.13) ;
+  border-width: 5px;
+  border-style: dashed;
+  //box-shadow: 0 0 5px rgba(49, 49, 49, 0.151);;
+  font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
+.ListElementNew:hover {
+  background-color : transparent;
+  //width: 100%;
+  //height: 131px;
+  //margin: 20px 10px;
+  border-radius : 8px;
+  border-color: #2098D1;
+  border-width: 5px;
+  border-style: dashed;
+  //box-shadow: 0 0 5px rgba(49, 49, 49, 0.151);;
+  font-family: 'RobotoRegular';
+  transition: all 300ms linear 0s;
+  cursor: pointer;
+}
+
 .ListElement:hover {
   background-color : white;
   //height: 262px;

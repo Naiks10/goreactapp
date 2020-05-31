@@ -115,7 +115,13 @@ var WorkGroupsLst = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request
 	&route: '/...'
 */
 var Developers = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	JSONGetAll(&database.ExDeveloper, w, r, GetQueries(SelectDevs, r))
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	querys := *SelectDevs
+	if value, ok := query["group"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		querys.Where("developer_login IN (SELECT developer_login FROM working_developer_list WHERE workgroup_id = ?)", i)
+	}
+	JSONGetAll(&database.ExDeveloper, w, r, GetQueries(&querys, r))
 })
 
 //ProjectStatuses :
@@ -155,6 +161,10 @@ var Projects = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	if value, ok := query["worker"]; ok {
 		i := value[0]
 		querys.Where("project_workgroup_id IN (SELECT workgroup_id FROM working_developer_list WHERE developer_login = ?)", i)
+	}
+	if value, ok := query["group"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		querys.Where(sqrl.Eq{"project_workgroup_id ": i})
 	}
 	JSONGetAll(&database.ExProject, w, r, GetQueries(&querys, r))
 })
@@ -285,6 +295,16 @@ var Issues = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		querys.Where(sqrl.Eq{"issue_task_id": i})
 	}
 	JSONGetAll(&database.ExIssue, w, r, GetQueries(&querys, r))
+})
+
+var Notes = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	query, _ := url.ParseQuery(r.URL.RawQuery)
+	querys := *SelectNotes
+	if value, ok := query["task"]; ok {
+		i, _ := strconv.Atoi(value[0])
+		querys.Where(sqrl.Eq{"note_task_id": i})
+	}
+	JSONGetAll(&database.ExNote, w, r, GetQueries(&querys, r))
 })
 
 var WorkersList = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -1056,6 +1076,134 @@ var CreateStage = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 	fmt.Println(er2)
 })
 
+//CreateStage func
+/*
+	&query: 'INSERT INTO stages (...) VALUES (&json.data)
+	&route: '/...'
+*/
+var CreateManagerOne = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var user database.Manager
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(err)
+
+	err = json.Unmarshal(b, &user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(err)
+
+	var er2 error
+
+	_, er2 = pg.Insert("users").
+		Columns(
+			"user_login",
+			"user_password",
+			"first_name",
+			"middle_name",
+			"sur_name",
+			"birth_date",
+			"phone_num",
+			"email_addr",
+			"user_image_src",
+		).
+		Values(
+			user.User.UserLogin,
+			user.User.UserPassword,
+			user.User.UserName,
+			user.User.UserMidname,
+			user.User.UserSurname,
+			user.User.UserBirthdate,
+			user.User.UserPhone,
+			user.User.UserMail,
+			sqrl.Expr("DEFAULT"),
+		).Exec()
+
+	_, er1 := pg.Insert("managers").
+		Columns("manager_login", "outsource_spec").
+		Values(user.User.UserLogin, user.OSScpec).Exec()
+
+	if er2 != nil || er1 != nil {
+		//http.Error(w, er2.Error(), 500)
+	}
+	fmt.Println(er2)
+	fmt.Println(er1)
+})
+
+//CreateStage func
+/*
+	&query: 'INSERT INTO stages (...) VALUES (&json.data)
+	&route: '/...'
+*/
+var CreateDeveloperOne = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var user database.Developer
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(err)
+
+	err = json.Unmarshal(b, &user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(err)
+
+	var er2 error
+
+	_, er2 = pg.Insert("users").
+		Columns(
+			"user_login",
+			"user_password",
+			"first_name",
+			"middle_name",
+			"sur_name",
+			"birth_date",
+			"phone_num",
+			"email_addr",
+			"user_image_src",
+		).
+		Values(
+			user.User.UserLogin,
+			user.User.UserPassword,
+			user.User.UserName,
+			user.User.UserMidname,
+			user.User.UserSurname,
+			user.User.UserBirthdate,
+			user.User.UserPhone,
+			user.User.UserMail,
+			sqrl.Expr("DEFAULT"),
+		).Exec()
+
+	_, er1 := pg.Insert("developers").
+		Columns("developer_login", "outsource_spec", "tester_spec").
+		Values(user.User.UserLogin, user.OSScpec, user.TestSpec).Exec()
+
+	if er2 != nil || er1 != nil {
+		//http.Error(w, er2.Error(), 500)
+	}
+	fmt.Println(er2)
+	fmt.Println(er1)
+})
+
 //CreateIssue func
 /*
 	&query: 'INSERT INTO issues (...) VALUES (&json.data)
@@ -1093,6 +1241,47 @@ var CreateIssue = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 			issue.IssuesDesc,
 			time.Now(),
 			false,
+		).Exec()
+
+	if er2 != nil {
+		//&trash http.Error(w, er.Error(), 500)
+	}
+	fmt.Println("Hello___")
+	fmt.Println(er2)
+})
+
+var CreateNote = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var issue database.Note
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	err = json.Unmarshal(b, &issue)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	var er2 error
+
+	_, er2 = pg.Insert("notes").
+		Columns(
+			"note_name",
+			"note_task_id",
+			"note_desc",
+			"note_date",
+			"note_client_login",
+		).
+		Values(
+			issue.NoteName,
+			issue.Task,
+			issue.Desc,
+			time.Now(),
+			issue.UserName,
 		).Exec()
 
 	if er2 != nil {
